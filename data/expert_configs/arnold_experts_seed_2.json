@@ -1,0 +1,33 @@
+
+{
+    "kinesis": {
+        "expert": "kinesis_265_72974700",
+        "algo": "bc_ppo",
+        "train_env": "MuscleKinesis",
+        "use_arnold": true
+    },
+    "baoding_p2": {
+        "expert": "baoding_p2_269_62974700",
+        "algo": "bc_ppo",
+        "train_env": "MuscleBaodingP2",
+        "use_arnold": true
+    },
+    "baoding_p2_overlap": {
+        "expert": "baoding_p2_overlap_270_77274700",
+        "algo": "bc_ppo",
+        "train_env": "MuscleBaodingP2Overlap",
+        "use_arnold": true
+    },
+    "elbow_pose": {
+        "expert": "elbow_pose_271_95774700",
+        "algo": "bc_ppo",
+        "train_env": "MuscleElbowPoseRandom",
+        "use_arnold": true
+    },
+    "reorient": {
+        "expert": "reorient_266_84974700",
+        "algo": "bc_ppo",
+        "train_env": "MuscleReorientP0",
+        "use_arnold": true
+    }
+}

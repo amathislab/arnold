@@ -1,0 +1,62 @@
+{
+    "kinesis": {
+        "expert": "stage2_seed1_policies/kinesis",
+        "algo": "bc_ppo",
+        "train_env": "MuscleKinesis",
+        "use_arnold": true
+    },
+    "baoding_p2": {
+        "expert": "stage2_seed1_policies/baoding_p2",
+        "algo": "bc_ppo",
+        "train_env": "MuscleBaodingP2",
+        "use_arnold": true
+    },
+    "baoding_p2_overlap": {
+        "expert": "stage2_seed1_policies/baoding_p2_overlap",
+        "algo": "bc_ppo",
+        "train_env": "MuscleBaodingP2Overlap",
+        "use_arnold": true
+    },
+    "elbow_pose": {
+        "expert": "stage2_seed1_policies/elbow_pose",
+        "algo": "bc_ppo",
+        "train_env": "MuscleElbowPoseRandom",
+        "use_arnold": true
+    },
+    "reorient": {
+        "expert": "stage2_seed1_policies/reorient",
+        "algo": "bc_ppo",
+        "train_env": "MuscleReorientP0",
+        "use_arnold": true
+    },
+    "hand_thumb_reach": {
+        "expert": "stage2_seed1_policies/hand_thumb_reach",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandThumbReachRandom",
+        "use_arnold": false
+    },
+    "hand_index_reach": {
+        "expert": "stage2_seed1_policies/hand_index_reach",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandIndexReachRandom",
+        "use_arnold": false
+    },
+    "hand_middle_reach": {
+        "expert": "stage2_seed1_policies/hand_middle_reach",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandMiddleReachRandom",
+        "use_arnold": false
+    },
+    "hand_ring_reach": {
+        "expert": "stage2_seed1_policies/hand_ring_reach",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandRingReachRandom",
+        "use_arnold": false
+    },
+    "hand_little_reach": {
+        "expert": "stage2_seed1_policies/hand_little_reach",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandLittleReachRandom",
+        "use_arnold": false
+    }
+}

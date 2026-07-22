@@ -1,0 +1,110 @@
+{
+    "elbow_pose": {
+        "expert": "elbow_pose_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanElbowPose",
+        "use_arnold": false
+    },
+    "finger_pose": {
+        "expert": "finger_pose_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanFingerPose",
+        "use_arnold": false
+    },
+    "finger_reach": {
+        "expert": "finger_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanFingerReach",
+        "use_arnold": false
+    },
+    "baoding_p1_ccw": {
+        "expert": "baoding_phase_1",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanBaodingBallsP1CCW",
+        "use_arnold": false
+    },
+    "baoding_p1_cw": {
+        "expert": "baoding_phase_1",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanBaodingBallsP1CW",
+        "use_arnold": false
+    },
+    "baoding_p2": {
+        "expert": "baoding_phase_2",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanBaodingBallsP2",
+        "use_arnold": false
+    },
+    "baoding_p2_overlap": {
+        "expert": "baoding_phase_2",
+        "algo": "recurrent_ppo",
+        "train_env": "CleanBaodingBallsP2Overlap",
+        "use_arnold": false
+    },
+    "hand_thumb_reach": {
+        "expert": "thumb_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandThumbReachRandom",
+        "use_arnold": false
+    },
+    "hand_index_reach": {
+        "expert": "index_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandIndexReachRandom",
+        "use_arnold": false
+    },
+    "hand_middle_reach": {
+        "expert": "middle_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandMiddleReachRandom",
+        "use_arnold": false
+    },
+    "hand_ring_reach": {
+        "expert": "ring_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandRingReachRandom",
+        "use_arnold": false
+    },
+    "hand_little_reach": {
+        "expert": "little_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "myoHandLittleReachRandom",
+        "use_arnold": false
+    },
+    "hand_reach": {
+        "expert": "hand_reach_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "HandReachRandom",
+        "use_arnold": false
+    },
+    "hand_pose": {
+        "expert": "hand_pose_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "HandPoseRandom",
+        "use_arnold": false
+    },
+    "pen": {
+        "expert": "pen_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "CustomMyoPenTwirlRandom",
+        "use_arnold": false
+    },
+    "reorient": {
+        "expert": "reorient_lattice",
+        "algo": "recurrent_ppo",
+        "train_env": "CustomMyoReorientP0",
+        "use_arnold": false
+    },
+    "relocate": {
+        "expert": "relocate",
+        "algo": "recurrent_ppo",
+        "train_env": "CustomRelocate",
+        "use_arnold": false
+    },
+    "kinesis": {
+        "expert": "kinesis",
+        "algo": "ppo",
+        "train_env": "Kinesis",
+        "use_arnold": false
+    }
+}
