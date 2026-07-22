@@ -4,6 +4,8 @@ Something exciting is leaving the gym soon.
 
 Arnold is pumping iron right now, but what drives his muscles will be revealed soon. "We'll be back" with the details.
 
+Data: https://zenodo.org/records/21493316
+
 Check out the [preprint for the time being!](https://www.arxiv.org/abs/2508.18066)
 
 # Reference
