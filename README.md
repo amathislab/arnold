@@ -1,12 +1,7 @@
-# You have found Arnold. 
+# Arnold: A multi-task, multi-embodiment muscle transformer policy
 
-Something exciting is leaving the gym soon.
-
-Arnold is pumping iron right now, but what drives his muscles will be revealed soon. "We'll be back" with the details.
-
-Data: https://zenodo.org/records/21493316
-
-Check out the [preprint for the time being!](https://www.arxiv.org/abs/2508.18066)
+## Model checkpoints and benchmark results
+Available on [Zenodo](https://zenodo.org/records/21493316?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYyZjg2NzFmLTFjNDUtNDAyZS04ZGY3LWVkOWY2OWE2ODM0OCIsImRhdGEiOnt9LCJyYW5kb20iOiIwNzc1MDkwYjMxYTY4MWM5YjQwZjk1OTQwNTgwZmVjOSJ9.T4Qw3-t9hmBYO4T8q1ofYsMJTOy9EejqbSkZ3WF2Iigf0_Ro8oKm1qi6WmAVEl9H7Lz-uVyRZIO8w2UXy8hElA)
 
 # Reference
 
