@@ -10,7 +10,7 @@ data/videos/
 data/benchmarks
 data/final_benchmarks
 data/final_benchmarks_extra
-data/fingures
+data/figures
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
