@@ -1,0 +1,18 @@
+/* Slightly wider content area — several tables and commands are long. */
+.md-grid {
+  max-width: 68rem;
+}
+
+/* Keep long training commands readable rather than wrapped mid-flag. */
+.md-typeset pre > code {
+  white-space: pre;
+}
+
+/* Tables in this project are reference material: never let them squeeze. */
+.md-typeset table:not([class]) {
+  font-size: 0.72rem;
+}
+
+.md-typeset__table {
+  overflow-x: auto;
+}

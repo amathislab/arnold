@@ -1,0 +1,103 @@
+site_name: Arnold
+site_description: A generalist muscle transformer policy
+site_url: https://amathislab.github.io/arnold/
+repo_url: https://github.com/amathislab/arnold
+repo_name: amathislab/arnold
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Data and checkpoints: data.md
+      - Tasks: tasks.md
+  - Usage:
+      - Training: training.md
+      - Evaluation: evaluation.md
+  - Reproducing the paper:
+      - Replicate plots: replicate-plots.md
+      - CSI analysis: csi-analysis.md
+      - CSI-Finetuning: csi-finetuning.md
+      - Multi-task RL baselines: mt-baselines.md
+  - License: license.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+
+exclude_docs: |
+  requirements.txt
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/amathislab/arnold
+    - icon: fontawesome/solid/database
+      link: https://zenodo.org/records/21493316
+
+extra_css:
+  - stylesheets/extra.css
