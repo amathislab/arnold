@@ -1,0 +1,15 @@
+{
+    "env_name": "MuscleElbowPoseRandom",
+    "seed": 0,
+    "weighted_reward_keys": {
+        "pose": 0,
+        "bonus": 0,
+        "penalty": 0,
+        "act_reg": 0,
+        "solved": 5,
+        "done": 0,
+        "sparse": 0
+    },
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}

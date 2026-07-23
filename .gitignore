@@ -7,6 +7,10 @@ data/myosuite_old
 data/myosuite
 data/student_policies
 data/videos/
+data/benchmarks
+data/final_benchmarks
+data/final_benchmarks_extra
+data/fingures
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

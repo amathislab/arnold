@@ -1,0 +1,29 @@
+{
+    "env_name": "MuscleRelocate",
+    "seed": 12,
+    "include_adapt_state": true,
+    "num_memory_steps": 5,
+    "weighted_reward_keys": {
+        "done": 0,
+        "act_reg": 0.0,
+        "sparse": 0.0,
+        "solved": 20.0,
+        "alive": 0.0,
+        "pos_dist": 10.0,
+        "rot_dist": 0.0,
+        "reach_dist": 0.0,
+        "reach_dist_xy": 0,
+        "reach_dist_z": 0,
+        "lift_bonus": 0.0,
+        "pos_dist_z": 0.0,
+        "max_app": 0.0,
+        "contact_hand_obj": 0.0,
+        "rot_palm_obj": 0,
+        "min_app": 0,
+        "close_bonus": 0,
+        "obj_shift": 0.0,
+        "palm_dist": 1.0,
+        "open_hand": 0.0,
+        "tip_dist": 0.1
+    }
+}

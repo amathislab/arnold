@@ -1,0 +1,9 @@
+{
+    "env_name": "MuscleHandRingReachRandom",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "solved": 5
+    },
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}
