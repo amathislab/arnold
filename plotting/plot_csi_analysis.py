@@ -476,66 +476,6 @@ def merge_results(default_subspaces, results_list):
             
     return merged_result
 
-def generate_extra_runs(task, results_list):
-    """Generate extra runs for a task."""
-    
-    all_checkpoints = {
-        "elbow_pose": "output/training/ongoing/111_gpu_csi_all_bc_student_elbow_poseelbow_pose_bc_ppo_seed_0_20251009074830/rl_model_5000000_steps.zip",
-        "hand_index_reach": "output/training/ongoing/111_gpu_csi_all_bc_student_hand_index_reachhand_index_reach_bc_ppo_seed_0_20251009074508/rl_model_5000000_steps.zip",
-        "hand_little_reach": "output/training/ongoing/111_gpu_csi_all_bc_student_hand_little_reachhand_little_reach_bc_ppo_seed_0_20251009074831/rl_model_5000000_steps.zip",
-        "hand_middle_reach": "output/training/ongoing/111_gpu_csi_all_bc_student_hand_middle_reachhand_middle_reach_bc_ppo_seed_0_20251009074833/rl_model_5000000_steps.zip",
-        "hand_ring_reach": "output/training/ongoing/111_gpu_csi_all_bc_student_hand_ring_reachhand_ring_reach_bc_ppo_seed_0_20251009074833/rl_model_5000000_steps.zip",
-        "hand_thumb_reach": "output/training/ongoing/111_gpu_csi_all_bc_student_hand_thumb_reachhand_thumb_reach_bc_ppo_seed_0_20251009074840/rl_model_5000000_steps.zip",
-        "kinesis": "output/training/ongoing/111_gpu_csi_all_bc_student_kinesiskinesis_bc_ppo_seed_0_20251009074840/rl_model_5000000_steps.zip",
-        "pen": "output/training/ongoing/111_gpu_csi_all_bc_student_penpen_bc_ppo_seed_0_20251009074833/rl_model_5000000_steps.zip",
-        "relocate": "output/training/ongoing/111_gpu_csi_all_bc_student_relocaterelocate_bc_ppo_seed_0_20251009074834/rl_model_5000000_steps.zip",
-        "reorient": "output/training/ongoing/111_gpu_csi_all_bc_student_reorientreorient_bc_ppo_seed_0_20251009074841/rl_model_5000000_steps.zip",
-        "baoding_p1_ccw": "output/training/ongoing/111_gpu_csi_all_bc_student_baoding_p1_ccwbaoding_p1_ccw_bc_ppo_seed_0_20251009074841/rl_model_5000000_steps.zip",
-        "baoding_p1_cw": "output/training/ongoing/111_gpu_csi_all_bc_student_baoding_p1_cwbaoding_p1_cw_bc_ppo_seed_0_20251009074842/rl_model_5000000_steps.zip",
-        "baoding_p2": "output/training/ongoing/111_gpu_csi_all_bc_student_baoding_p2baoding_p2_bc_ppo_seed_0_20251009074842/rl_model_5000000_steps.zip",
-        "baoding_p2_overlap": "output/training/ongoing/111_gpu_csi_all_bc_student_baoding_p2_overlapbaoding_p2_overlap_bc_ppo_seed_0_20251009074844/rl_model_5000000_steps.zip"
-    }
-    run_prefix = ["666", "777", "888"]
-    for result in results_list:
-        dim, num, valid_runs = result
-        if num < 3 :
-            for runid in range(0, 3) :
-                if valid_runs[runid] == 0 :
-                    command = f"""
-                    runai delete job "gpu-csi-bc-finetune-{task.replace('_', '-')}-csi{dim}-seed-{runid+1}"
-                    
-                    runai submit\\
-                    --name "gpu-csi-bc-finetune-{task.replace('_', '-')}-csi{dim}-seed-{runid+1}"\\
-                    --image registry.rcp.epfl.ch/arnold/bc\\
-                    --run-as-uid 283092\\
-                    --run-as-gid 79678\\
-                    --gpu 0.3\\
-                    --cpu 16 --memory 48Gi --cpu-limit 16 --memory-limit 64Gi\\
-                    --existing-pvc claimname=upamathis-scratch,path=/users\\
-                    --environment WANDB_API_KEY="c5dcfb879b6cfd9259b7f9e6c0bb6b969dc6f2d3"\\
-                    --backoff-limit 0\\
-                    --command\\
-                    -- python\\
-                    "/users/boshi/projects/Arnold/src/main_bc_ppo.py"\\
-                    "--project_name=csi_all_bc_finetune"\\
-                    "--seed=3"\\
-                    "--task={task}"\\
-                    "--num_envs=16"\\
-                    "--ent_coef=0.0"\\
-                    "--vf_coef=0.5"\\
-                    "--pg_coef=0.0"\\
-                    "--imitation_coef=1.0"\\
-                    "--network=csi"\\
-                    "--load_path={all_checkpoints[task]}"\\
-                    "--load_csi_subspace=output/csi/{task}_csi/subspace.npy"\\
-                    "--csi_subspace={dim}"\\
-                    "--num_steps=5000000"\\
-                    "--out_prefix={run_prefix[runid]}_{task}_csi{dim}_"\\
-                    "--device=cuda"\\
-                    """
-                    print(command)
-                    # print(f"Generating extra runs {valid_runs} for {task} with {dim} components...")
-
 def main_all_tasks():
     """Main function to create plots for all tasks in one figure"""
     # Setup
@@ -632,8 +572,6 @@ def main_all_tasks():
                 print("notrain:", [d["num"] for d in csi_notrain_results])
                 print("finetune:", [d["num"] for d in csi_finetune_results])
                 print("bc-finetune:", [d["num"] for d in csi_bc_finetune_results])
-                
-                # generate_extra_runs(task, [(dim, d["num"], d["valid_runs"]) for dim, d in zip(this_csi_subspaces, csi_bc_finetune_results)])
                 
                 # print(f"  Loaded {len(csi_notrain_results)} notrain, {len(csi_finetune_results)} finetune and {len(csi_bc_finetune_results)} bc-finetune results")
             else:

@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.ticker import PercentFormatter
@@ -12,6 +13,16 @@ mpl.rcParams.update({"font.size": 20, "axes.titlesize": 20, "axes.labelsize": 20
 
 sys.path.insert(0, os.path.dirname(__file__))
 from definitions import ROOT_DIR
+
+# Local cache of the wandb learning curves (one CSV per run) so this script can
+# run without live wandb access. Missing runs are fetched from wandb on demand
+# and cached here (delete a CSV to force a refresh).
+MT_CURVES_DIR = os.path.join(ROOT_DIR, "data", "final_benchmarks_extra", "mt-curves")
+
+
+def run_path_to_filename(path):
+    """Turn a wandb run path (/entity/project/run_id) into a flat CSV filename."""
+    return path.strip("/").replace("/", "__") + ".csv"
 
 # Maps wandb env ID to the task name used in expert benchmark files
 ENV_ID_TO_TASK = {
@@ -115,15 +126,6 @@ def smooth(values, window=SMOOTH_WINDOW):
     return smoothed, indices
 
 
-def inspect_keys(run):
-    """Print all 'solved' keys available in the run summary."""
-    solved_keys = sorted(k for k in run.summary.keys() if "solved" in k.lower())
-    print(f"\n  Run '{run.name}' solved keys ({len(solved_keys)}):")
-    for k in solved_keys:
-        print(f"    {k}")
-    return solved_keys
-
-
 def fetch_history(run, keys):
     # Fetch the task metrics. Requesting X_KEY together with them would return an
     # empty intersection, because global_steps is logged on different rows than
@@ -145,6 +147,28 @@ def fetch_history(run, keys):
             )
             return df
     print(f"  WARNING: '{X_KEY}' not available for run '{run.name}', it will be skipped.")
+    return df
+
+
+def load_run_history(path):
+    """Load one run's history from the local cache in ``MT_CURVES_DIR``.
+
+    Falls back to a live wandb fetch (and caches the result) when the CSV is not
+    present, so the plot works offline once the curves have been cached."""
+    csv_path = os.path.join(MT_CURVES_DIR, run_path_to_filename(path))
+    if os.path.exists(csv_path):
+        return pd.read_csv(csv_path)
+
+    print(f"  [{path}] no local cache at {csv_path}, fetching from wandb...")
+    run = wandb.Api().run(path)
+    solved_keys = [k for k in run.summary.keys() if "solved" in k.lower()]
+    task_keys = [
+        k for k in sorted(solved_keys)
+        if "/" in k and k.rsplit("/", 1)[0] in ENV_ID_TO_DISPLAY
+    ]
+    df = fetch_history(run, task_keys)
+    os.makedirs(MT_CURVES_DIR, exist_ok=True)
+    df.to_csv(csv_path, index=False)
     return df
 
 
@@ -255,33 +279,27 @@ def aggregate_seeds(seed_curves, x_max=X_MAX, n_points=N_GRID):
 def create_plot():
     expert_scores = load_expert_scores()
 
-    api = wandb.Api()
-
     # Map every method -> list of seeds, each seed a list of run paths.
     method_seeds = {name: get_seed_lists(cfg) for name, cfg in RUN_CONFIGS.items()}
 
-    # Fetch each unique run's object once.
+    # Load each unique run's history from the local cache in
+    # data/final_benchmarks_extra/mt-curves (falling back to wandb if missing).
     unique_paths = sorted({p for seeds in method_seeds.values()
                            for seed in seeds for p in seed})
-    print(f"Fetching {len(unique_paths)} unique run(s)...")
-    run_objs = {p: api.run(p) for p in unique_paths}
-
-    print("Inspecting available keys...")
-    all_solved_keys = set()
-    for path, run in run_objs.items():
-        all_solved_keys.update(inspect_keys(run))
-
-    # Use keys that appear in at least one run and match known env IDs
-    task_keys = [k for k in sorted(all_solved_keys)
-                 if k.rsplit("/", 1)[0] in ENV_ID_TO_DISPLAY]
-    print(f"\nUsing {len(task_keys)} task keys for plotting: {task_keys}")
-
-    print("Fetching run histories...")
+    print(f"Loading {len(unique_paths)} unique run(s) from {MT_CURVES_DIR}...")
     run_hist = {}
-    for path, run in run_objs.items():
-        df = fetch_history(run, task_keys)
+    for path in unique_paths:
+        df = load_run_history(path)
         run_hist[path] = df
         print(f"  [{path}] DataFrame shape: {df.shape}")
+
+    # Use keys that appear in at least one run and match known env IDs.
+    all_keys = set()
+    for df in run_hist.values():
+        all_keys.update(df.columns)
+    task_keys = [k for k in sorted(all_keys)
+                 if "/" in k and k.rsplit("/", 1)[0] in ENV_ID_TO_DISPLAY]
+    print(f"\nUsing {len(task_keys)} task keys for plotting: {task_keys}")
 
     def key_to_display(key):
         return ENV_ID_TO_DISPLAY.get(key.rsplit("/", 1)[0], key)
