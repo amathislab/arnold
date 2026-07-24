@@ -1,7 +1,7 @@
 # Arnold: a multi-task, multi-embodiment muscle transformer policy
 
 ## Model checkpoints and benchmark results
-Available on [Zenodo](https://zenodo.org/records/21493316?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYyZjg2NzFmLTFjNDUtNDAyZS04ZGY3LWVkOWY2OWE2ODM0OCIsImRhdGEiOnt9LCJyYW5kb20iOiIwNzc1MDkwYjMxYTY4MWM5YjQwZjk1OTQwNTgwZmVjOSJ9.T4Qw3-t9hmBYO4T8q1ofYsMJTOy9EejqbSkZ3WF2Iigf0_Ro8oKm1qi6WmAVEl9H7Lz-uVyRZIO8w2UXy8hElA)
+Available on [Zenodo](https://zenodo.org/records/21493316)
 
 What is contained?
 
@@ -14,11 +14,13 @@ To reproduce the training experiments, we are providing you two ways to set up a
 
 The installation should usually take less than 30 minutes on a modern computer with fast internet connection.
 
+Both methods install the same package set, defined once in [`environment.yml`](environment.yml) (conda) and [`docker-cuda/requirements.txt`](docker-cuda/requirements.txt) (Docker).
+
 ### Method 1: Docker
 
 Use the provided Dockerfile, you can create a docker container that can be then used to run all the arnold experiments (note: this assume that Docker is installed in your system).
 
-To build the Docker image, navigate to root directory of this project containing the `Dockerfile` (docker-cuda) and run:
+To build the Docker image, navigate to the `docker-cuda` directory containing the `Dockerfile` and run:
 
 ```bash
 docker build -t arnold_image .
@@ -34,7 +36,14 @@ This will start an interactive session within the container, where you can then 
 
 ### Method 2: Conda environment
 
-You can create a conda environment and manually install all the dependencies.
+The quickest way is to create the environment from the provided file:
+
+```bash
+conda env create -f environment.yml
+conda activate arnold
+```
+
+Equivalently, you can create the environment and install the dependencies manually:
 
 ```bash
 conda create -n arnold python=3.8
@@ -55,6 +64,16 @@ pip install imitation==1.0.0
 pip install sb3-contrib==2.2.1
 pip install Shimmy==1.3.0
 pip install imageio
+
+# Needed by the analysis and plotting scripts
+pip install \
+    matplotlib\
+    seaborn\
+    scikit-learn\
+    scipy\
+    pandas\
+    tensorboard\
+    joblib
 ```
 
 You may need to install some opengl-related system packages:
@@ -90,8 +109,6 @@ For the reviewers of the paper, we are sharing a zipped folder that contains bot
 
 ## Arnold Training
 
-To start training experiments, execute `src/main_train.py`. The parameters and checkpoint will be stored at `output/training/ongoing`. Here are example commands for two primary training approaches:
-
 **1. OBC from scratch:**
 This command starts an On-policy Behavioral Cloning (OBC) training from scratch using all the 14 tasks.
 It assumes expert demonstrations are available when `imitation_coef > 0`.
@@ -100,7 +117,7 @@ It assumes expert demonstrations are available when `imitation_coef > 0`.
 python src/main_bc_ppo_multi_task.py \
     --tasks hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach \
         reorient pen baoding_p1_cw baoding_p1_ccw baoding_p2 baoding_p2_overlap elbow_pose relocate kinesis kinesis \
-        relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
+        relocate baoding_p1_cw baoding_p2 baoding_p2_overlap kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
     --num_envs_per_task 2 \
     --ent_coef=0 \
@@ -126,14 +143,17 @@ python src/main_bc_ppo_multi_task.py \
     --project_name arnold_obc_multi_task_scratch
 ```
 
-**2. Final Arnold agent (BC imitating super-experts):**
-This command trains the final Arnold agent by imitating specified super-expert policies, resuming from a pre-trained OBC model.
+**2. OBC at reduced learning rate:**
+After the first 50M steps, OBC (as well as BC and OBC-PPO) is continued for 5M additional steps at a smaller learning rate, which boosts the performance in certain tasks. This is the same command as above with `--load_path` set to the 50M checkpoint, `--num_steps=5000000` and `--lr=1e-5`. The resulting 55M-step checkpoint (`rl_model_54974700_steps.zip`) is the starting point for the RL fine-tuning and for the final Arnold agent.
+
+**3. Final Arnold agent (BC imitating super-experts):**
+This command trains the final Arnold agent by imitating specified super-expert policies, resuming from the 55M-step OBC model.
 
 ```bash
 python src/main_bc_ppo_multi_task.py \
     --tasks hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach \
         reorient pen baoding_p1_cw baoding_p1_ccw baoding_p2 baoding_p2_overlap elbow_pose relocate kinesis kinesis \
-        relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
+        relocate baoding_p1_cw baoding_p2 baoding_p2_overlap kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
     --load_path data/student_policies/obc \
     --num_envs_per_task 2 \
@@ -141,7 +161,7 @@ python src/main_bc_ppo_multi_task.py \
     --vf_coef=0.5 \
     --pg_coef=0 \
     --imitation_coef=1 \
-    --num_steps=2000000 \
+    --num_steps=10000000 \
     --batch_size=128 \
     --rollout_steps=512 \
     --embedding_size=128 \
@@ -161,12 +181,12 @@ python src/main_bc_ppo_multi_task.py \
     --project_name arnold_final_bc_super_experts
 ```
 
-Here's how to configure `src/main_train.py` for these and other training types in more detail:
+Here's how to configure `src/main_bc_ppo_multi_task.py` for these and other training types in more detail:
 
 - **PPO**: Set `--imitation_coef=0`, `--pg_coef=1`, `--ent_coef=1e-6`, and `--lr=2e-5`.
-- **OBC-PPO**: Similar to PPO, but set `--imitation_coef=1` and `--lr=1e-4`.
+- **OBC-PPO**: Similar to PPO, but set `--imitation_coef=1` and `--lr=1e-3` (reduced to `1e-5` for the additional 5M steps).
 - **BC**: This involves training with `imitation_coef > 0` and `pg_coef = 0`. The 'Final Arnold agent' command above is an example. If performing online imitation of an expert policy, the `--use_expert_actions` flag is typically used.
-- **Super-experts**: Same as PPO, but resume from an OBC training (note: the reference to "second OBC example below" in the original text may refer to evaluation model examples; ensure you are loading a relevant trained OBC model checkpoint). Use a low learning rate (`--lr=2e-6`) and 32 instances of the same task (e.g., `--num_envs_per_task=32 --tasks <single_task_name>`).
+- **Super-experts**: Same as PPO, but resume from the 55M-step OBC checkpoint. Use a low learning rate (`--lr=2e-6`) and 32 instances of the same task (e.g., `--num_envs_per_task=32 --tasks <single_task_name>`). The standard deviation of the action distribution approaches 0 during OBC pretraining and must be reset for the fine-tuning to improve over the expert: pass `--reset_std --log_std_init -3`.
 
 ## Evaluation - pretrained Models (OBC, Arnold, Experts)
 
@@ -174,7 +194,7 @@ The `src/benchmark.py` script allows you to evaluate the performance of various 
 
 ### 1. Evaluating OBC and Arnold Models
 
-To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Here](https://drive.google.com/drive/folders/1V0xFcUtpfkUid-H-8w1EIx0ipxWK122H?usp=share_link).
+To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21493316).
 
 Here's an example command:
 
@@ -192,7 +212,7 @@ python src/benchmark.py \
 - Replace `path/to/your/model.zip` with the actual path to your trained model.
 - Set `<task_names>` to one or many of the available tasks.
 - Include the `--arnold` flag if the model was trained with Arnold.
-- Adjust `--num_episodes` to set how many episodes to run for evaluation.
+- Adjust `--num_episodes` to set how many episodes to run for evaluation. The results reported in the paper use 200 episodes per task.
 - Use `--deterministic` for deterministic actions from the policy.
 - Specify the `--device` (e.g., `cpu` or `cuda`).
 - Optionally render to video with `--render` (important: on Mac this requires running `mjpython` instead of `python`)
@@ -201,7 +221,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/arnold/rl_model_64670238_steps.zip \
+    --load data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
     --num_episodes 10 \

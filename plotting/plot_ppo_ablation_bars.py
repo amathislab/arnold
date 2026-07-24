@@ -95,7 +95,7 @@ def create_bar_plots():
     results_dict = {
         "PPO": aggregate_seed_results("ppo_t_sv"),
         "PPO w/o rew norm": load_single_results("ppo_wo_rew_norm"),
-        "PPO w/o obs norm": aggregate_seed_results("ppo_t"),
+        "PPO w/o obs norm": load_single_results("ppo_wo_obs_norm"),
         "MT-PPO": aggregate_seed_results("mt_ppo"),
     }
 
