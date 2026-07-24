@@ -26,13 +26,34 @@ To build the Docker image, navigate to the `docker-cuda` directory containing th
 docker build -t arnold_image .
 ```
 
-Once the image is built, you can run a container with:
+The image contains only the Python environment. The repository itself is mounted into
+the container at run time, so that `data/` (which you download separately from Zenodo)
+and everything the runs write to `output/` live on the host and survive the container.
+From the **repository root**:
 
 ```bash
-docker run -it --rm arnold_image /bin/bash
+docker run -it --rm --gpus all \
+    -v "$PWD":/arnold -w /arnold \
+    arnold_image /bin/bash
 ```
 
-This will start an interactive session within the container, where you can then execute the training or evaluation scripts.
+This will start an interactive session within the container, where you can then execute
+the training or evaluation scripts exactly as written in the sections below, for example:
+
+```bash
+python src/main_bc_ppo.py --task elbow_pose --num_envs 16 --num_steps 5000000 --local
+```
+
+Notes:
+
+- Drop `--gpus all` if the host has no NVIDIA GPU (this also requires the
+  [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/)). The
+  image still runs CPU-only, in which case pass `--device cpu` to the scripts. On Apple
+  Silicon the image builds and runs natively, but CPU-only.
+- The image renders headlessly through OSMesa (`MUJOCO_GL=osmesa`), so `--render` works
+  without a display. With a GPU attached, `-e MUJOCO_GL=egl` is faster.
+- On Linux, files the container writes into the mounted repository are owned by `root`.
+  Add `-u "$(id -u):$(id -g)"` to the `docker run` command to keep them owned by you.
 
 ### Method 2: Conda environment
 
@@ -41,7 +62,16 @@ The quickest way is to create the environment from the provided file:
 ```bash
 conda env create -f environment.yml
 conda activate arnold
+pip install imitation==1.0.0
 ```
+
+The trailing `pip install imitation` is required and must come last. MyoSuite 2.2.0 pins
+`gym==0.13`, whose metadata demands `cloudpickle~=1.2.0`, while `imitation==1.0.0` pulls
+in `huggingface-sb3`, which demands `cloudpickle>=1.6`. pip cannot satisfy both in a
+single resolution, so `imitation` is installed in a second pass; this upgrades
+`cloudpickle` to 3.x, which is the version every package actually runs against. Only
+gym's stale pin — for a code path this project never uses — is left unsatisfied, and
+`pip check` will report it.
 
 Equivalently, you can create the environment and install the dependencies manually:
 
@@ -60,7 +90,6 @@ pip install \
 
 pip install stable-baselines3==2.2.1
 pip install MyoSuite==2.2.0
-pip install imitation==1.0.0
 pip install sb3-contrib==2.2.1
 pip install Shimmy==1.3.0
 pip install imageio
@@ -74,6 +103,9 @@ pip install \
     pandas\
     tensorboard\
     joblib
+
+# Must come last, for the reason explained above
+pip install imitation==1.0.0
 ```
 
 You may need to install some opengl-related system packages:
