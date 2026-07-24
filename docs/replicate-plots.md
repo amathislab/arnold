@@ -42,7 +42,7 @@ python plotting/plot_ppo_ablation_bars.py
 | --- | --- | --- |
 | PPO | `data/final_benchmarks/ppo_t_sv/` | 3 |
 | PPO w/o rew norm | `data/final_benchmarks_extra/ppo_wo_rew_norm/` | 1 |
-| PPO w/o obs norm | `data/final_benchmarks/ppo_t/` | 3 |
+| PPO w/o obs norm | `data/final_benchmarks_extra/ppo_wo_obs_norm/` | 1 |
 | MT-PPO | `data/final_benchmarks/mt_ppo/` | 3 |
 
 The PPO w/o reward norm arm is a single run rather than a 3-seed average, so it carries no
