@@ -1,0 +1,5 @@
+{
+    "env_name": "MuscleKinesis",
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}

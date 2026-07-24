@@ -1,0 +1,15 @@
+{
+    "env_name": "MuscleBaodingP2Overlap",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "pos_dist_1": 1,
+        "pos_dist_2": 1,
+        "act_reg": 0,
+        "alive": 1,
+        "solved": 5,
+        "done": 0,
+        "sparse": 0
+    },
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}

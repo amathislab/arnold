@@ -1,0 +1,21 @@
+{
+    "env_name": "CustomMyoHandPenTwirlRandom",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "pos_align": 0,
+        "rot_align": 0,
+        "pos_align_diff": 100.0,
+        "rot_align_diff": 100.0,
+        "alive": 1,
+        "act_reg": 0,
+        "drop": 0,
+        "bonus": 0,
+        "solved": 1,
+        "done": 0,
+        "sparse": 0
+    },
+    "goal_orient_range": [
+        -1,
+        1
+    ]
+}

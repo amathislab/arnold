@@ -1,0 +1,7 @@
+{
+    "env_name": "CustomRelocate",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "solved": 1.0
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "env_name": "MuscleHandRingReachRandom",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "reach": 1,
+        "bonus": 0,
+        "penalty": 0,
+        "act_reg": 1,
+        "solved": 1,
+        "done": 0,
+        "sparse": 0
+    },
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}

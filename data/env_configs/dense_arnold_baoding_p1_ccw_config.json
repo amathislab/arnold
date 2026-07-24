@@ -1,0 +1,20 @@
+{
+    "env_name": "MuscleBaodingP1",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "pos_dist_1": 1,
+        "pos_dist_2": 1,
+        "act_reg": 0,
+        "alive": 1,
+        "solved": 5,
+        "done": 0,
+        "sparse": 0
+    },
+    "goal_time_period": [5, 5],
+    "initial_phase": 1.5707963267948966,
+    "limit_sds_angle": 0,
+    "limit_init_angle": 0,
+    "task_choice": "ccw",
+    "include_adapt_state": true,
+    "num_memory_steps": 5
+}

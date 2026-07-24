@@ -1,0 +1,15 @@
+{
+    "env_name": "CustomMyoReorientP0",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "pos_dist": 2,
+        "rot_dist": 0.2,
+        "pos_dist_diff": 100.0,
+        "rot_dist_diff": 10.0,
+        "alive": 1,
+        "act_reg": 0,
+        "solved": 2,
+        "done": 0,
+        "sparse": 0
+    }
+}

@@ -417,7 +417,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -441,7 +441,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -465,7 +465,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -489,7 +489,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -513,7 +513,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -537,7 +537,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -561,7 +561,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -585,7 +585,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -609,7 +609,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -633,7 +633,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -657,7 +657,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -681,7 +681,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -705,7 +705,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -729,7 +729,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -753,7 +753,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -777,7 +777,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -802,7 +802,7 @@ runai submit \
     --gpu 0.25\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -826,7 +826,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -850,7 +850,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -874,7 +874,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -899,7 +899,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -924,7 +924,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -948,7 +948,7 @@ runai submit \
     --run-as-uid 174516 \
     --run-as-gid 79678 \
     --existing-pvc claimname=upamathis-scratch,path=/users \
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -976,7 +976,7 @@ runai submit\
     --gpu 0.5\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1009,7 +1009,7 @@ runai submit\
     --gpu 0.5\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1041,7 +1041,7 @@ runai submit\
     --gpu 0.5\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1073,7 +1073,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1106,7 +1106,7 @@ runai submit\
     --gpu 0.5\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1140,7 +1140,7 @@ runai submit\
     --gpu 0.5\
     --cpu 32 --memory 48Gi --cpu-limit 32 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1174,7 +1174,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1208,7 +1208,7 @@ runai submit\
     --gpu 0.5\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1242,7 +1242,7 @@ runai submit\
     --gpu 0.4\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1276,7 +1276,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1309,7 +1309,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1343,7 +1343,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1377,7 +1377,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1412,7 +1412,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1447,7 +1447,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1482,7 +1482,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1517,7 +1517,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1551,7 +1551,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1585,7 +1585,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1620,7 +1620,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1655,7 +1655,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1691,7 +1691,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1727,7 +1727,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1763,7 +1763,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1798,7 +1798,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1832,7 +1832,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1869,7 +1869,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1906,7 +1906,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1941,7 +1941,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -1978,7 +1978,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2016,7 +2016,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2053,7 +2053,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2091,7 +2091,7 @@ runai submit\
     --gpu 0.5 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2129,7 +2129,7 @@ runai submit\
     --gpu 0.25\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2162,7 +2162,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2194,7 +2194,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2228,7 +2228,7 @@ runai submit\
     --gpu 0.5 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2266,7 +2266,7 @@ runai submit\
     --gpu 0.5 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2303,7 +2303,7 @@ runai submit\
     --gpu 0.5 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2342,7 +2342,7 @@ runai submit\
     --gpu 0.6\
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2378,7 +2378,7 @@ runai submit\
     --gpu 0.5 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2419,7 +2419,7 @@ runai submit\
     --gpu 0.65 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2459,7 +2459,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2499,7 +2499,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2538,7 +2538,7 @@ runai submit\
     --gpu 0.65 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2578,7 +2578,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2619,7 +2619,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2658,7 +2658,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2697,7 +2697,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2737,7 +2737,7 @@ runai submit\
     --gpu 0.65 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2788,7 +2788,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2839,7 +2839,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2890,7 +2890,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2928,7 +2928,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -2966,7 +2966,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3004,7 +3004,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3042,7 +3042,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3080,7 +3080,7 @@ runai submit\
     --gpu 0.3 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3118,7 +3118,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3156,7 +3156,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3194,7 +3194,7 @@ runai submit\
     --gpu 0.65 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3234,7 +3234,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3274,7 +3274,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3311,7 +3311,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3348,7 +3348,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3385,7 +3385,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3422,7 +3422,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3461,7 +3461,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3499,7 +3499,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3538,7 +3538,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3577,7 +3577,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3617,7 +3617,7 @@ runai submit\
     --gpu 0.25 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3657,7 +3657,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3697,7 +3697,7 @@ runai submit \
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3740,7 +3740,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3783,7 +3783,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3824,7 +3824,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3868,7 +3868,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -3912,7 +3912,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3953,7 +3953,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -3994,7 +3994,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4035,7 +4035,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4076,7 +4076,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4121,7 +4121,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4166,7 +4166,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4211,7 +4211,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4253,7 +4253,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4298,7 +4298,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4343,7 +4343,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4385,7 +4385,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4426,7 +4426,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4468,7 +4468,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4510,7 +4510,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4552,7 +4552,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4594,7 +4594,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4636,7 +4636,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4678,7 +4678,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4720,7 +4720,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4762,7 +4762,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4804,7 +4804,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4846,7 +4846,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4888,7 +4888,7 @@ runai submit\
     --gpu 0.4 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0 \
     --command -- /bin/bash -ic " \
@@ -4929,7 +4929,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -4971,7 +4971,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -5014,7 +5014,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -5055,7 +5055,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -5096,7 +5096,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -5137,7 +5137,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \
@@ -5178,7 +5178,7 @@ runai submit\
     --gpu 0.6 \
     --cpu 64 --memory 64Gi --cpu-limit 64 --memory-limit 64Gi\
     --existing-pvc claimname=upamathis-scratch,path=/users\
-    --environment WANDB_API_KEY=98ef4d616aed16f83a910072a0b36f39d6a720d5 \
+    --environment WANDB_API_KEY=$WANDB_API_KEY \
     --environment WANDB_ENTITY=albertochiappa\
     --backoff-limit 0\
     --command -- /bin/bash -ic " \

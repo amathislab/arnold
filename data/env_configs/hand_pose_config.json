@@ -1,0 +1,11 @@
+{
+    "env_name": "HandPoseRandom",
+    "seed": 12,
+    "weighted_reward_keys": {
+        "pose": 0,
+        "bonus": 0,
+        "act_reg": 0,
+        "penalty": 0,
+        "solved": 1
+    }
+}

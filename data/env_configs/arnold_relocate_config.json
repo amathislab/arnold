@@ -1,0 +1,9 @@
+{
+    "env_name": "MuscleRelocate",
+    "seed": 12,
+    "include_adapt_state": true,
+    "num_memory_steps": 5,
+    "weighted_reward_keys": {
+        "solved": 1.0
+    }
+}

@@ -135,6 +135,13 @@ parser.add_argument(
 parser.add_argument(
     "--csi_subspace", type=int, default=None, help="Number of components to keep in the CSI subspace"
 )
+parser.add_argument(
+    "--load_vecnormalize",
+    action="store_true",
+    help="Also load the VecNormalize statistics saved next to --load_path, instead "
+    "of starting from fresh observation normalization. Required to reproduce RL "
+    "fine-tuning of an existing checkpoint.",
+)
 
 args = parser.parse_args()
 
@@ -238,10 +245,25 @@ if __name__ == "__main__":
     with open(env_config_path, "r") as f:
         env_config = json.load(f)
 
+    # When fine-tuning an existing checkpoint, optionally restore the VecNormalize
+    # statistics saved alongside it so training continues with the same observation
+    # normalization instead of re-estimating it from scratch.
+    if args.load_vecnormalize:
+        if args.load_path is None:
+            raise ValueError("--load_vecnormalize requires --load_path")
+        load_env_path = os.path.join(
+            ROOT_DIR,
+            args.load_path.replace("rl_model_", "rl_model_vecnormalize_").replace(
+                ".zip", ".pkl"
+            ),
+        )
+    else:
+        load_env_path = None
+
     envs = create_vec_env(
         env_config_list=[env_config],
         num_envs_per_config=args.num_envs,
-        load_env_path=None,
+        load_env_path=load_env_path,
         multi_env=False,
         old_vocabulary=None,
         norm_reward=False,
