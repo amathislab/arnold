@@ -72,6 +72,8 @@ def main():
     policy.set_training_mode(False)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     curves, outcomes = [], []
+    shared_pca = PCA(n_components=39).fit(combined) if combined is not None and args.method == "pca" else None
+    shared_nmf = {}
     for task in tasks:
         prefix = "dense_arnold_" if training.get("dense_reward", False) else "arnold_"
         config = json.loads((Path(ENV_CONFIG_PATH) / (prefix + task + "_config.json")).read_text())
@@ -87,7 +89,7 @@ def main():
             extractor = policy.features_extractor
             task_index = extractor.task_names.index(task) if getattr(extractor, "position_embedding", None) == "task_specific" else None
             dataset = datasets[task] if combined is None else combined
-            pca = PCA(n_components=39).fit(dataset) if args.method == "pca" else None
+            pca = (shared_pca if shared_pca is not None else PCA(n_components=39).fit(dataset)) if args.method == "pca" else None
             horizon = get_episode_horizon(env)
             for dimension in dimensions:
                 episodes, reconstruction = [], []
@@ -100,7 +102,12 @@ def main():
                         reconstruction.append(np.trace(components @ covariance @ components.T) / np.trace(covariance))
                         np.savez_compressed(args.out_dir / f"{task}_{dimension}_{fit}.npz", components=components, mean=pca.mean_)
                     else:
-                        nmf = NMF(n_components=dimension, init="nndsvdar", random_state=fit, max_iter=2000).fit(dataset)
+                        if combined is not None and (dimension, fit) in shared_nmf:
+                            nmf = shared_nmf[dimension, fit]
+                        else:
+                            nmf = NMF(n_components=dimension, init="nndsvdar", random_state=fit, max_iter=2000).fit(dataset)
+                            if combined is not None:
+                                shared_nmf[dimension, fit] = nmf
                         reconstruction.append(r2_score(datasets[task], nmf.inverse_transform(nmf.transform(datasets[task])), multioutput="variance_weighted"))
                         projection = lambda action: action
                         context = nmf_controls(env, nmf)

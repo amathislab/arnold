@@ -27,12 +27,13 @@ def main():
         fig, axes = plt.subplots(1, 2, figsize=(10, 4))
         for (scope, basis), group in subset.groupby(["scope", "basis_policy"]):
             label = f"{scope}, {basis}"
+            color = "#8172B3" if basis == "expert" else "#4C72B0" if scope == "task" else "#C44E52"
             for task, curve in group.groupby("task"):
                 curve = curve.sort_values("dimension")
-                axes[0].plot(curve.dimension, curve.relative_performance, alpha=.12, linewidth=1)
+                axes[0].plot(curve.dimension, curve.relative_performance, color=color, alpha=.12, linewidth=1)
             summary = group.groupby("dimension").agg(performance=("relative_performance", "mean"), reconstruction=("reconstruction", "mean"))
-            axes[0].plot(summary.index, summary.performance, label=label)
-            axes[1].plot(summary.index, summary.reconstruction, label=label)
+            axes[0].plot(summary.index, summary.performance, label=label, color=color)
+            axes[1].plot(summary.index, summary.reconstruction, label=label, color=color)
         axes[0].set(ylabel="Relative performance (%)", xlabel="Components")
         axes[1].set(ylabel="Explained variance" if method == "pca" else "Reconstruction R²", xlabel="Components")
         axes[1].legend()
