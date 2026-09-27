@@ -126,11 +126,7 @@ def install_archive(path, artifact, root):
 
 def install_bundled_references(root):
     source_dir = REPO_ROOT / 'data/final_benchmarks/expert_policies'
-    provenance_file = source_dir / 'provenance.json'
-    provenance = json.loads(provenance_file.read_text())
-    files = [provenance_file] + [
-        REPO_ROOT / ref['file'] for ref in provenance['references'].values()
-    ]
+    files = sorted(source_dir.glob('expert_*_results.json'))
     pairs = [(source, checked_destination(root, source.relative_to(REPO_ROOT))) for source in files]
     for source, target in pairs:
         if target.exists() and (not target.is_file() or not same_file(source, target)):
