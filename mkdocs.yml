@@ -50,6 +50,7 @@ nav:
   - Usage:
       - Training: training.md
       - Evaluation: evaluation.md
+      - Analysis signals: signals.md
   - Reproducing the paper:
       - Replicate plots: replicate-plots.md
       - CSI analysis: csi-analysis.md
