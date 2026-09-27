@@ -556,3 +556,12 @@ The musculoskeletal models in `data/kinesis/xml/` are distributed by myo_sim and
 Kinesis under the Apache License 2.0.
 
 See the [LICENSE](LICENSE) file for the full terms and per-file attributions.
+
+Generate the manuscript tables and learning curves:
+
+```bash
+python plotting/ablation_table.py
+python plotting/plot_rl_finetuning_curves.py
+```
+
+See [plot commands](docs/replicate-plots.md) for the performance and learning-curve figures.

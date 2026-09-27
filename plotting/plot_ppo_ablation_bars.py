@@ -10,22 +10,7 @@ from _reproduction import benchmark_result_paths, task_display_names
 # Reuse the same mappings from plot_radar.py
 TASK_NAME_MAPPING = task_display_names(multiline=False)
 
-TASK_METRIC_MAP = {
-    "hand_little_reach": "solved_steps",
-    "hand_index_reach": "solved_steps",
-    "hand_middle_reach": "solved_steps",
-    "hand_ring_reach": "solved_steps",
-    "hand_thumb_reach": "solved_steps",
-    "reorient": "solved",
-    "pen": "solved_steps",
-    "baoding_p1_cw": "solved_steps",
-    "baoding_p1_ccw": "solved_steps",
-    "baoding_p2_overlap": "solved_steps",
-    "baoding_p2": "solved_steps",
-    "elbow_pose": "solved_steps",
-    "relocate": "solved",
-    "kinesis": "solved",
-}
+TASK_METRIC_MAP = {task: "solved_step_frac" for task in TASK_NAME_MAPPING}
 
 
 def load_results(filepath):
@@ -48,14 +33,14 @@ def aggregate_seed_results(method_dir):
     aggregated = {}
     for task in seed_results[0].keys():
         agg = {}
-        for metric in ("solved_steps", "solved"):
+        for metric in ("solved_step_frac",):
             avg_key, std_key = f"avg_{metric}", f"std_{metric}"
             seed_means = [
                 r[task][avg_key] for r in seed_results if avg_key in r[task]
             ]
             if seed_means:
                 agg[avg_key] = float(np.mean(seed_means))
-                agg[std_key] = float(np.std(seed_means))
+                agg[std_key] = float(np.std(seed_means, ddof=1))
         agg["n_episodes"] = len(seed_results)
         aggregated[task] = agg
     return aggregated
@@ -126,9 +111,11 @@ def create_bar_plots():
             performances.append(relative_performance)
 
             # Calculate SEM
-            std = results[task][f"std_{metric}"] / expert_score * 100
-            n = results[task].get("n_episodes", 50)  # default to 50 if not specified
-            sem = std / np.sqrt(n)
+            n = results[task].get("n_episodes", 1)
+            std = results[task].get(f"std_{metric}")
+            if std is None:
+                std = results[task]["std_solved_steps"] / results[task]["max_episode_steps"]
+            sem = std / expert_score * 100 / np.sqrt(n)
             sems.append(sem)
 
         offset = i * bar_width - (n_methods - 1) * bar_width / 2

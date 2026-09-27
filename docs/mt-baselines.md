@@ -71,8 +71,8 @@ python src/benchmark_multi_task_mlp.py \
 
 | Figure | Script | Output |
 | --- | --- | --- |
-| MT-SAC vs. MT-PPO learning curves | [`plotting/plot_mt_algos.py`](replicate-plots.md#multi-task-rl-baselines-mt-sac-vs-mt-ppo) | `data/figures/mt_algos_training_curves.png` / `.svg` |
-| MT-PPO bar of the PPO ablation plot | [`plotting/plot_ppo_ablation_bars.py`](replicate-plots.md#ppo-ablation-bar-plot) | `data/figures/bar_plot_ppo_ablation.png` / `.svg` |
+| MT-SAC vs. MT-PPO learning curves | [`plotting/plot_mt_algos.py`](replicate-plots.md) | `data/figures/mt_algos_training_curves.png` / `.svg` |
+| MT-PPO bar of the PPO ablation plot | [`plotting/plot_ppo_ablation_bars.py`](replicate-plots.md) | `data/figures/bar_plot_ppo_ablation.png` / `.svg` |
 
 Both scripts are documented on [Replicate plots](replicate-plots.md). The PPO ablation plot
 picks up this baseline by aggregating `data/final_benchmarks/mt_ppo/`, so run the

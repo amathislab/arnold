@@ -183,7 +183,9 @@ def create_bar_plots_internal(subtract_baseline=False):
 
         # Calculate average performance and SEM
         avg_performance = np.mean(performances)
-        avg_sem = np.std(performances) / np.sqrt(len(performances))
+        seed_averages = [np.mean([result[task]["avg_solved_step_frac"] / expert_results[task]["avg_solved_step_frac"] * 100
+                                 for task in tasks]) for result in results_list]
+        avg_sem = np.std(seed_averages, ddof=1) / np.sqrt(len(seed_averages))
 
         # Store average performance
         method_average_performances[method] = avg_performance

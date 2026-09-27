@@ -175,3 +175,6 @@ logs
 wandb
 
 data/analysis/signals/
+
+data/analysis/tables/
+data/analysis/curves/

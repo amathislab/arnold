@@ -1,125 +1,41 @@
-# Replicate plots
+# Reproduce tables and performance plots
 
-Scripts for the paper's performance plots and learning curves. All figures are written under
-`data/figures/`.
-
-Download the benchmark results first:
+Follow the [installation instructions](installation.md) and download benchmark results:
 
 ```bash
 python scripts/fetch_data.py --profile benchmarks
-```
-
-Each script lists its input directories below.
-
-## Performance plots
-
-These read the benchmark result JSONs in `data/final_benchmarks/` (and, for the PPO
-ablation, `data/final_benchmarks_extra/`).
-
-### Radar plot
-
-Radar chart comparing multi-task performance (PPO, BC, Arnold) against the single-task
-experts.
-
-- **Script**: `plotting/plot_radar.py`
-- **Requires**: `data/final_benchmarks/`
-- **Output**: `data/figures/radar_plot_ppo_bc_arnold.png` / `.svg`
-
-```bash
+python plotting/ablation_table.py
 python plotting/plot_radar.py
-```
-
-### PPO ablation bar plot
-
-Per-task bar plot comparing PPO variants (PPO, w/o reward norm, w/o observation norm,
-MT-PPO) against the experts.
-
-- **Script**: `plotting/plot_ppo_ablation_bars.py`
-- **Requires**: `data/final_benchmarks/`, `data/final_benchmarks_extra/`
-- **Output**: `data/figures/bar_plot_ppo_ablation.png` / `.svg`
-
-```bash
-python plotting/plot_ppo_ablation_bars.py
-```
-
-| Bar | Source directory | Seeds |
-| --- | --- | --- |
-| PPO | `data/final_benchmarks/ppo_t_sv/` | 3 |
-| PPO w/o rew norm | `data/final_benchmarks_extra/ppo_wo_rew_norm/` | 1 |
-| PPO w/o obs norm | `data/final_benchmarks_extra/ppo_wo_obs_norm/` | 1 |
-| MT-PPO | `data/final_benchmarks/mt_ppo/` | 3 |
-
-The PPO w/o reward norm arm is a single run rather than a 3-seed average, so it carries no
-error bar. See [Multi-task RL baselines](mt-baselines.md) for the MT-PPO bar.
-
-### Arnold ablation bar plot
-
-Per-task bar plot comparing agent variants (BC, OBC w/o obs norm, OBC, OBC-PPO, Arnold)
-against the experts, plus an improvement-over-baseline version.
-
-- **Script**: `plotting/plot_arnold_ablation_bars.py`
-- **Requires**: `data/final_benchmarks/`
-- **Output**:
-    - `data/figures/bar_plot_arnold_ablation.png` / `.svg`
-    - `data/figures/bar_plot_arnold_ablation_improvement.png` / `.svg`
-
-```bash
 python plotting/plot_arnold_ablation_bars.py
+python plotting/plot_ppo_ablation_bars.py
+python plotting/plot_relative_dotplot.py
+python plotting/plot_capacity_performance.py
+python plotting/plot_csi_analysis.py
+python plotting/plot_bilateral_reward.py
+python plotting/plot_mt_algos.py
 ```
+
+Tables use solved-step fractions relative to expert performance, with SEM across seeds and task-paired Wilcoxon tests with Holm correction. The table command saves CSV and LaTeX files under `data/analysis/tables/`. Plots are saved under `data/figures/`; CSI also writes per-run values and run counts.
 
 ## Learning curves
-
-These read raw TensorBoard logs shipped alongside the checkpoints, or cached CSVs.
-
-### RL fine-tuning curves
-
-Compares the base multi-task OBC policy against several single-task policies fine-tuned
-with PPO, plotting the solved fraction versus training steps from TensorBoard logs.
-Experiment paths are set near the top of the script.
-
-- **Script**: `plotting/plot_rl_finetuning_curves.py`
-- **Requires**: `data/expert_policies/`, `data/student_policies/` (TensorBoard logs)
-- **Output**: `data/figures/rl_finetuning_combined/rl_finetuning_combined_solved_curves.png` / `.svg`
 
 ```bash
 python plotting/plot_rl_finetuning_curves.py
 ```
 
-### Multi-task RL baselines (MT-SAC vs. MT-PPO)
-
-Plots multi-task RL baseline learning curves comparing MT-SAC and MT-PPO across all tasks.
-
-- **Script**: `plotting/plot_mt_algos.py`
-- **Requires**: `data/final_benchmarks_extra/mt-curves/` (cached CSVs)
-- **Output**: `data/figures/mt_algos_training_curves.png` / `.svg`
+The included CSV contains the OBC training curves and four specialist PPO curves, plotted as solved fractions with a 101-point Savitzky–Golay filter (order 2). Plot another CSV with:
 
 ```bash
-python plotting/plot_mt_algos.py
+python plotting/plot_learning_curves.py --curves path/to/curves.csv --panel transfer
 ```
 
-### Single-task student policy curves
+CSV columns are `panel,method,seed,task,stage,step,value,metric`. Use `metric=solved_fraction` or `metric=reward` for the recorded scalar. The general plot command scales solved fractions relative to experts; add `--raw` to plot their original values. It uses a five-point moving average; set `--window` to change it. Set stage offsets explicitly, for example `--offsets transfer=50000000`. Multiple seeds show mean ± standard deviation over shared recorded steps.
 
-Plots the learning curves of single-task student policies (PPO fine-tuning) after the
-multi-task OBC student curves. Relies on the raw TensorBoard frames.
-
-- **Script**: `plotting/plot_student_policy_curves.py`
-- **Requires**: `data/student_policies/` (TensorBoard logs)
-- **Output**: `data/figures/student_policies/` (`.png`)
+Export a scalar from TensorBoard logs, supplying event files in resume order:
 
 ```bash
-python plotting/plot_student_policy_curves.py
-```
-
-### Transfer vs. from-scratch
-
-Compares learning from a pretrained multi-task policy (Transfer) against training from
-scratch for four downstream tasks: `pen`, `reorient`, `hand_middle_reach` and
-`hand_little_reach`.
-
-- **Script**: `plotting/plot_transfer_vs_scratch.py`
-- **Requires**: `data/student_policies/` (TensorBoard logs)
-- **Output**: `data/figures/transfer_learning/transfer_vs_scratch_comparison.png` / `.svg`
-
-```bash
-python plotting/plot_transfer_vs_scratch.py
+python scripts/export_learning_curves.py \
+  --events path/to/events.out.tfevents.* --tag MuscleDieReorientP0-v0/solved \
+  --panel transfer --method Transfer --task reorient --stage transfer --seed 0 \
+  --output data/analysis/curves/transfer_reorient.csv
 ```

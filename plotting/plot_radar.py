@@ -31,22 +31,7 @@ def holm_bonferroni(pvalues):
 TASK_NAME_MAPPING = task_display_names(multiline=True)
 
 # Metric to use for each task
-TASK_METRIC_MAP = {
-    "hand_little_reach": "solved_steps",
-    "hand_index_reach": "solved_steps",
-    "hand_middle_reach": "solved_steps",
-    "hand_ring_reach": "solved_steps",
-    "hand_thumb_reach": "solved_steps",
-    "reorient": "solved",
-    "pen": "solved_steps",
-    "baoding_p1_cw": "solved_steps",
-    "baoding_p1_ccw": "solved_steps",
-    "baoding_p2_overlap": "solved_steps",
-    "baoding_p2": "solved_steps",
-    "elbow_pose": "solved_steps",
-    "relocate": "solved",
-    "kinesis": "solved_steps",
-}
+TASK_METRIC_MAP = {task: "solved_step_frac" for task in TASK_NAME_MAPPING}
 
 
 def load_results(filepath):
@@ -110,13 +95,8 @@ def create_radar_plot():
                 scores_sem_dict[key] = []
 
             # Collect scores from all files for this method and task
-            all_scores = []
-            for results in results_list:
-                task_score = results.get(task)
-                if task_score is not None:
-                    all_scores.append(
-                        (task_score[f"avg_{metric}"] / expert_score) * 100
-                    )
+            all_scores = [(results[task][f"avg_{metric}"] / expert_score) * 100
+                          for results in results_list]
 
             if all_scores:
                 # Calculate mean and SEM
@@ -129,9 +109,6 @@ def create_radar_plot():
 
                 scores_dict[key].append(mean_score)
                 scores_sem_dict[key].append(sem)
-            else:
-                scores_dict[key].append(0)
-                scores_sem_dict[key].append(0)
 
     # Set up the angles for the radar plot
     angles = [n / float(len(tasks)) * 2 * np.pi for n in range(len(tasks))]
@@ -205,7 +182,8 @@ def create_radar_plot():
         # Print mean ± SEM across all tasks
         task_scores = scores[:-1]  # Exclude the duplicated first element
         print(
-            f"{key}: {np.mean(task_scores):.2f} ± {(np.std(task_scores) / np.sqrt(len(task_scores))):.2f}"
+            f"{key}: {np.mean(task_scores):.2f} ± "
+            f"{np.std([np.mean([result[task]['avg_solved_step_frac'] / expert_results[task]['avg_solved_step_frac'] * 100 for task in tasks]) for result in results_dict[key]], ddof=1) / np.sqrt(len(results_dict[key])):.2f}"
         )
 
     # ------------------------------------------------------------------
@@ -300,7 +278,7 @@ def create_radar_plot():
                 )
         improvements = np.array(improvements)
         mean_imp = float(np.mean(improvements))
-        std_imp = float(np.std(improvements, ddof=1)) if len(improvements) > 1 else 0.0
+        std_imp = float(np.std(improvements, ddof=1) / np.sqrt(len(improvements))) if len(improvements) > 1 else 0.0
         if std_imp > 0:
             raw_p = float(
                 stats.ttest_1samp(improvements, 0.0, alternative="greater").pvalue  # type: ignore[attr-defined]
@@ -324,7 +302,7 @@ def create_radar_plot():
             f"raw p={raw_p:.4f}  Holm p={adj_p:.4f}{flag}"
         )
 
-    # LaTeX table: per-task mean improvement over the expert (± std across seeds)
+    # LaTeX table: per-task mean improvement over the expert (± SEM across seeds)
     # and the Holm-corrected one-sided p-value.
     task_to_stats = {s[0]: s for s in task_stats}
     task_to_adj = {s[0]: p for s, p in zip(task_stats, adj_p_all)}
@@ -352,7 +330,7 @@ def create_radar_plot():
     os.makedirs(os.path.dirname(tex_path), exist_ok=True)
     with open(tex_path, "w") as f:
         f.write(tex_table + "\n")
-    print("\nLaTeX table (Arnold vs Expert, improvement ± std and Holm p-values):")
+    print("\nLaTeX table (Arnold vs Expert, improvement ± SEM and Holm p-values):")
     print(tex_table)
     print(f"Saved to {tex_path}")
 
