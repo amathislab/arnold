@@ -1,0 +1,17 @@
+{
+  "relocate": {
+    "avg_cum_reward": 50.83,
+    "std_cum_reward": 32.67156408866891,
+    "avg_step_reward": 0.33886666666666665,
+    "std_step_reward": 0.21781042725779273,
+    "avg_solved": 0.735,
+    "std_solved": 0.4413332074521472,
+    "avg_solved_steps": 50.83,
+    "avg_solved_step_frac": 0.33886666666666665,
+    "std_solved_steps": 32.67156408866891,
+    "avg_steps": 150.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 150,
+    "num_episodes": 200
+  }
+}

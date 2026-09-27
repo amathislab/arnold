@@ -57,7 +57,7 @@ python src/main_bc_ppo_multi_task.py \
         reorient pen baoding_p1_cw baoding_p1_cw baoding_p2 baoding_p2_overlap elbow_pose relocate kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
-    --load_path data/student_policies/obc \
+    --load_path data/final_checkpoints/obc/seed_0 \
     --num_envs_per_task 2 \
     --ent_coef=0 \
     --vf_coef=0.5 \

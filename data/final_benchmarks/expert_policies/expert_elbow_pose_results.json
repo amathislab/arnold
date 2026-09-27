@@ -1,0 +1,17 @@
+{
+  "elbow_pose": {
+    "avg_cum_reward": 84.885,
+    "std_cum_reward": 28.69584943855121,
+    "avg_step_reward": 0.8488499999999999,
+    "std_step_reward": 0.28695849438551213,
+    "avg_solved": 0.94,
+    "std_solved": 0.23748684174075838,
+    "avg_solved_steps": 84.885,
+    "avg_solved_step_frac": 0.8488499999999999,
+    "std_solved_steps": 28.69584943855121,
+    "avg_steps": 100.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 100,
+    "num_episodes": 200
+  }
+}

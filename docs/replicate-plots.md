@@ -3,9 +3,13 @@
 Scripts for the paper's performance plots and learning curves. All figures are written under
 `data/figures/`.
 
-Every script here reads released artifacts rather than retraining, so unzip the required
-directories from Zenodo first — see [Data and checkpoints](data.md). The **Requires** line on
-each script tells you which one.
+Download the benchmark results first:
+
+```bash
+python scripts/fetch_data.py --profile benchmarks
+```
+
+Each script lists its input directories below.
 
 ## Performance plots
 
@@ -92,11 +96,6 @@ Plots multi-task RL baseline learning curves comparing MT-SAC and MT-PPO across 
 ```bash
 python plotting/plot_mt_algos.py
 ```
-
-!!! note
-    This script runs offline from the cached CSVs. Missing curves are re-fetched from
-    Weights & Biases and re-cached, which requires access to the original runs — see
-    [Data and checkpoints](data.md#weights-biases).
 
 ### Single-task student policy curves
 

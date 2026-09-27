@@ -8,7 +8,13 @@ data/myosuite
 data/student_policies
 data/videos/
 data/benchmarks
-data/final_benchmarks
+data/final_benchmarks/*
+!data/final_benchmarks/expert_policies/
+data/final_benchmarks/expert_policies/*
+!data/final_benchmarks/expert_policies/expert_*_results.json
+!data/final_benchmarks/expert_policies/provenance.json
+data/final_checkpoints/
+data/.artifact-staging*/
 data/final_benchmarks_extra
 data/figures
 

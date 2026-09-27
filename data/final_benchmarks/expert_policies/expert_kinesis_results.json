@@ -1,0 +1,17 @@
+{
+  "kinesis": {
+    "avg_cum_reward": 98.22385615233554,
+    "std_cum_reward": 27.32852890063207,
+    "avg_step_reward": 0.6599499382698693,
+    "std_step_reward": 0.1699146198072913,
+    "avg_solved": 0.97,
+    "std_solved": 0.1705872210923198,
+    "avg_solved_steps": 60.53,
+    "avg_solved_step_frac": 0.4035333333333334,
+    "std_solved_steps": 23.594047978250785,
+    "avg_steps": 146.31,
+    "std_steps": 17.851159626197955,
+    "max_episode_steps": 150,
+    "num_episodes": 200
+  }
+}

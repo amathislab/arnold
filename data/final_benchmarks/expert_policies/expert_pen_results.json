@@ -1,0 +1,17 @@
+{
+  "pen": {
+    "avg_cum_reward": 4048.5112090877565,
+    "std_cum_reward": 1214.0938032682825,
+    "avg_step_reward": 40.595225931896145,
+    "std_step_reward": 11.965700480564683,
+    "avg_solved": 0.975,
+    "std_solved": 0.15612494995995993,
+    "avg_solved_steps": 65.205,
+    "avg_solved_step_frac": 0.6520500000000001,
+    "std_solved_steps": 21.29279162064007,
+    "avg_steps": 99.435,
+    "std_steps": 3.071770662012384,
+    "max_episode_steps": 100,
+    "num_episodes": 200
+  }
+}

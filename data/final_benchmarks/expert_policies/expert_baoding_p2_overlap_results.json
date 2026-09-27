@@ -1,0 +1,17 @@
+{
+  "baoding_p2_overlap": {
+    "avg_cum_reward": 640.9,
+    "std_cum_reward": 305.5481795069315,
+    "avg_step_reward": 3.2297097255549136,
+    "std_step_reward": 1.5016008101201352,
+    "avg_solved": 0.99,
+    "std_solved": 0.09949874371066199,
+    "avg_solved_steps": 128.18,
+    "avg_solved_step_frac": 0.6409,
+    "std_solved_steps": 61.10963590138629,
+    "avg_steps": 196.11,
+    "std_steps": 21.16407096945198,
+    "max_episode_steps": 200,
+    "num_episodes": 200
+  }
+}

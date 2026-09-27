@@ -5,24 +5,10 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from definitions import ROOT_DIR
+from _reproduction import benchmark_result_paths, task_display_names
 
 # Reuse the same mappings from plot_radar.py
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little reach",
-    "hand_index_reach": "Index reach",
-    "hand_middle_reach": "Middle reach",
-    "hand_ring_reach": "Ring reach",
-    "hand_thumb_reach": "Thumb reach",
-    "reorient": "Die reorient",
-    "pen": "Pen reorient",
-    "baoding_p1_cw": "Baoding CW",
-    "baoding_p1_ccw": "Baoding CCW",
-    "baoding_p2_overlap": "Baoding hard",
-    "baoding_p2": "Baoding harder",
-    "elbow_pose": "Elbow pose",
-    "relocate": "Object relocation",
-    "kinesis": "Walk to point",
-}
+TASK_NAME_MAPPING = task_display_names(multiline=False)
 
 TASK_METRIC_MAP = {
     "hand_little_reach": "solved_steps",
@@ -47,8 +33,8 @@ def load_results(filepath):
         return json.load(f)
 
 
-def aggregate_seed_results(method_dir, base="data/final_benchmarks"):
-    """Aggregate a multi-seed method dir (``<base>/<method_dir>/*/*_results.json``).
+def aggregate_seed_results(method_dir):
+    """Aggregate the registered final benchmark results for a released method.
 
     Returns a single results dict (one entry per task) whose ``avg_*``/``std_*``
     fields are aggregated across seeds so it plugs into the shared plotting loop.
@@ -56,10 +42,7 @@ def aggregate_seed_results(method_dir, base="data/final_benchmarks"):
     ``n_episodes`` is the number of seeds, so the ``sem = std / sqrt(n_episodes)``
     formula below yields the SEM across seeds.
     """
-    pattern = os.path.join(ROOT_DIR, base, method_dir, "*", "*_results.json")
-    seed_files = sorted(glob.glob(pattern))
-    if not seed_files:
-        raise FileNotFoundError(f"No results files found: {pattern}")
+    seed_files = benchmark_result_paths(method_dir, root=ROOT_DIR)
     seed_results = [load_results(f) for f in seed_files]
 
     aggregated = {}

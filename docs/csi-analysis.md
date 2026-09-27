@@ -20,18 +20,8 @@ structure is task-specific.
     different experiment from [CSI-Finetuning](csi-finetuning.md), where a policy's action
     space is *constrained* to a fixed subspace and then trained inside it.
 
-## Why only MyoHand tasks
-
-The analysis runs over the **11 MyoHand tasks** — the five finger reaches, `pen`, `reorient`,
-and the four Baoding variants. Only these share the same embodiment, and therefore the same
-39-muscle action space, so principal components are comparable across them and can be pooled
-into a shared subspace.
-
-`elbow_pose` (MyoElbow, 6 muscles), `relocate` (MyoArm, 63) and `kinesis` (MyoLeg, 80) have
-different action dimensionalities and are excluded. See [Tasks](tasks.md).
-
-!!! warning "Run the steps in order"
-    Each step consumes the output of the previous one.
+This analysis uses the 11 MyoHand tasks with a shared 39-muscle action space.
+Run the steps in order.
 
 ## 1. Collecting activations and actions
 
@@ -104,7 +94,3 @@ python plotting/plot_action_pca_variance.py \
 | --- | --- | --- |
 | Performance vs. number of active principal components | [`plotting/plot_pca_inactivation.py`](#3-plotting-pca-inactivation-performance) | `data/figures/pca_inactivation/<policy_id>/` (`.png` / `.svg`) |
 | Cumulative explained variance of the actions | [`plotting/plot_action_pca_variance.py`](#4-plotting-cumulative-explained-variance-of-actions) | `data/figures/cumulative_variance/<policy_id>/` (`.png` / `.svg`) |
-
-Unlike the [CSI-Finetuning figures](csi-finetuning.md#related-figures), these have no
-released intermediate results — steps 1 and 2 must be run first to produce the activations
-and PCA pickles.
