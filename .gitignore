@@ -175,3 +175,10 @@ logs
 wandb
 
 data/analysis/signals/
+
+data/analysis/interventions/
+data/analysis/subspaces/*.svg
+data/analysis/subspaces/pairs.csv
+data/analysis/subspaces/summary.csv
+data/analysis/subspaces/figures/
+data/analysis/action_pca/

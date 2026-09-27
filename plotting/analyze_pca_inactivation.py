@@ -1,240 +1,130 @@
-import _srcpath  # noqa: F401  # adds ../src to sys.path (see _srcpath.py)
-import numpy as np
-import h5py
-import os
-import glob
-from sklearn.decomposition import PCA
-from envs.utilities import create_vec_env
-from envs.environment_factory import EnvironmentFactory
-from models.ppo.policies import MuscleTransformerPolicy
-import torch
+import _srcpath  # noqa: F401
+import argparse
+from contextlib import nullcontext
 import json
-import tqdm
-from algos.bc_ppo import BCPPO
-from definitions import ENV_CONFIG_PATH, ROOT_DIR
-import time
+from pathlib import Path
 
-def load_actions_from_h5(h5_path):
-    """Load actions from an H5 file"""
-    with h5py.File(h5_path, 'r') as f:
-        actions = np.array(f['action_means'])
-        solved = np.array(f['solved'])
-        
-    return actions.squeeze(axis=1), np.mean(solved)
+import numpy as np
+import pandas as pd
+import torch
+from sklearn.decomposition import NMF, PCA
+from sklearn.metrics import r2_score
+from stable_baselines3.common.utils import set_random_seed
 
-def load_all_episode_actions(base_dir, task):
-    """Load actions from all episodes for a given task"""
-    pattern = os.path.join(base_dir, f"{task}_episode_*.h5")
-    files = glob.glob(pattern)
-    all_actions = []
-    solved_ratios = []
-    for f in files:
-        actions, solved_ratio = load_actions_from_h5(f)
-        all_actions.append(actions)
-        solved_ratios.append(solved_ratio)
-    
-    avg_solved = np.mean(solved_ratios)
-    print(f"Task {task} average solved ratio: {avg_solved:.3f}")
-    return np.vstack(all_actions)
+from algos.bc_ppo import MultiTaskBCPPO
+from analysis.subspaces import load_signals, project_actions, nmf_controls, performance_summary
+from collect_activations import normalize_observation, policy_action
+from definitions import ENV_CONFIG_PATH
+from envs.environment_factory import EnvironmentFactory
+from envs.utilities import create_vec_env
+from evaluation import find_vecnormalize, get_episode_horizon
+from vocabulary import set_vocabulary_mode
 
-def evaluate_with_pca_inactivation(env, vecnormalize, policy, pca, num_episodes=10, device="cuda"):
-    """Evaluate policy performance while inactivating PCs one by one"""
-    n_comp = pca.n_components_
-    performance = []
-    
-    for k in range(n_comp):
-        print(f"Testing with {n_comp-k} components")
-        components = pca.components_[:n_comp-k]
-        
-        performance_ep = []
-        solved_steps_ep = []
-        step_count_ep = []
-        is_solved_ep = []
-        for n in range(num_episodes):
-            cum_reward = 0
-            solved_steps = 0
-            total_steps = 0
-            obs, _ = env.reset()
-            done = False
-            
-            while not done:
-                # Normalize observation if needed
-                if vecnormalize:
-                    if isinstance(obs, dict):
-                        obs_normalized = {key: obs[key][None, ...] for key in obs}
-                        obs_normalized = vecnormalize.normalize_single_obs_dict(obs_normalized, env_idx=0)
-                    else:
-                        obs_normalized = vecnormalize.normalize_obs(obs)[None, ...]
-                else:
-                    obs_normalized = obs
 
-                # Get action from policy
-                with torch.no_grad():
-                    action, _ = policy.predict(obs_normalized, deterministic=False)
+def evaluate(env, policy, normalizer, projection, num_episodes, seed, task_index, num_steps):
+    rows = []
+    for episode in range(num_episodes):
+        set_random_seed(seed + episode)
+        obs, _ = env.reset(seed=seed + episode)
+        states, done = None, False
+        reward_sum, solved, length = 0., 0., 0
+        while not done:
+            normalized = normalize_observation(obs, normalizer, True, task_index)
+            with torch.no_grad():
+                action, _, states, _ = policy_action(policy, normalized, states, length == 0, False)
+            obs, reward, terminated, truncated, info = env.step(projection(action))
+            reward_sum += reward
+            solved += float(info["rwd_dict"]["solved"])
+            length += 1
+            done = terminated or truncated or (num_steps is not None and length >= num_steps)
+        rows.append(dict(episode=episode, seed=seed + episode, reward=reward_sum, solved_steps=solved, steps=length))
+    return rows
 
-                # Project action through reduced PCA space
-                action_proj = np.dot(action.reshape(1,-1)-pca.mean_, components.T)
-                action_backproj = np.dot(action_proj, components)+pca.mean_
-                
-                # Step environment
-                next_obs, reward, term, trunc, info = env.step(action_backproj.squeeze())
-                done = term or trunc
-                obs = next_obs
-                cum_reward += reward
-                solved_steps += float(info["rwd_dict"]["solved"])
-                total_steps += 1
-                
-            performance_ep.append(cum_reward)
-            solved_steps_ep.append(solved_steps)
-            step_count_ep.append(total_steps)
-            is_solved_ep.append(solved_steps > 0)
-            print(f"Episode {n}, reward: {cum_reward:.3f}, solved count: {solved_steps}, total steps: {total_steps}, solved: {solved_steps > 0}")
-            
-        perf_array = np.array(performance_ep)
-        solved_array = np.array(solved_steps_ep)
-        
-        data_point = {
-            'components': components,
-            'reward_mean': float(np.mean(perf_array)),
-            'reward_sem': float(np.std(perf_array) / np.sqrt(len(perf_array))),
-            'solved_count_mean': float(np.mean(solved_array)),
-            'solved_count_sem': float(np.std(solved_array) / np.sqrt(len(solved_array))),
-            'solved_mean': float(np.mean(is_solved_ep)),
-            'solved_sem': float(np.std(is_solved_ep) / np.sqrt(len(is_solved_ep))),
-            'ep_len_mean': float(np.mean(step_count_ep)),
-            'ep_len_sem': float(np.std(step_count_ep) / np.sqrt(len(step_count_ep))),
-            'n_episodes': num_episodes,
-        }
-        performance.append(data_point)
-        
-        print(f"\nComponents: {n_comp-k}")
-        print(f"Mean reward: {data_point['reward_mean']:.3f} ± {data_point['reward_sem']:.3f}")
-        print(f"Mean solved: {data_point['solved_mean']:.3f} ± {data_point['solved_sem']:.3f}")
-        print(f"Mean solved count: {data_point['solved_count_mean']:.3f} ± {data_point['solved_count_sem']:.3f}")
-        print(f"Mean episode length: {data_point['ep_len_mean']:.3f} ± {data_point['ep_len_sem']:.3f}")
-        
-    return performance
 
 def main():
-    # Configuration
-    policy_dir = os.path.join(ROOT_DIR, "data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1")
-    model_path = os.path.join(policy_dir, "rl_model_64670238_steps.zip")
-    vecnorm_path = os.path.join(policy_dir, "rl_model_vecnormalize_64670238_steps.pkl")
-    activations_dir = os.path.join(ROOT_DIR, "data/activations/285_64670238")
-    out_dir = os.path.join(ROOT_DIR, "data/pca_analysis/285_64670238")
-    
-    # Define policy name from path
-    policy_name = os.path.basename(os.path.dirname(model_path))
-    print(f"\nTesting policy: {policy_name}")
-    
-    tasks = ["hand_thumb_reach", "hand_index_reach", "hand_middle_reach", 
-             "hand_ring_reach", "hand_little_reach", "reorient", "pen",
-             "baoding_p1_ccw", "baoding_p1_cw", "baoding_p2", "baoding_p2_overlap"]
-    num_episodes = 100
-    
-    os.makedirs(out_dir, exist_ok=True)
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    
-    # Load policy
-    try:
-        policy = MuscleTransformerPolicy.load(model_path, device=device)
-    except:
-        policy = BCPPO.load(model_path, device=device).policy
-    policy.to(device)
+    parser = argparse.ArgumentParser(description="Evaluate Arnold with PCA or NMF control projections")
+    parser.add_argument("--load", type=Path, required=True)
+    parser.add_argument("--method", choices=["pca", "nmf"], default="pca")
+    parser.add_argument("--scope", choices=["task", "global"], default="task")
+    parser.add_argument("--basis_policy", default="arnold")
+    parser.add_argument("--signals", type=Path, required=True, help="Directory containing one task.h5 per fitting task")
+    parser.add_argument("--tasks", nargs="+", default=None)
+    parser.add_argument("--dimensions", nargs="+", type=int)
+    parser.add_argument("--num_episodes", type=int, default=100)
+    parser.add_argument("--n_fits", type=int, default=10)
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--num_steps", type=int)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--out_dir", type=Path, default=Path("data/analysis/interventions"))
+    args = parser.parse_args()
+    tasks = args.tasks or json.loads(Path("data/reproduction/signals.json").read_text())["tasks"]
+    fits = args.n_fits if args.method == "nmf" else 1
+    if args.num_episodes % fits:
+        parser.error("--num_episodes must be divisible by --n_fits")
+    signal = "action_means" if args.method == "pca" else "muscle_controls"
+    datasets = {task: load_signals(args.signals / (task + ".h5"), signal)[0] for task in tasks}
+    combined = np.vstack(list(datasets.values())) if args.scope == "global" else None
+    dimensions = args.dimensions or list(range(39 if args.method == "pca" else 38, 0, -1))
+    training = json.loads((args.load.parent / "args.json").read_text())
+    vocabulary = json.loads((args.load.parent / "vocabulary.json").read_text())
+    set_vocabulary_mode("compositional", str(args.load.parent / "vocabulary.json"))
+    policy = MultiTaskBCPPO.load(str(args.load), device=args.device, custom_objects={"vocabulary": vocabulary}).policy
+    policy.set_training_mode(False)
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    curves, outcomes = [], []
+    for task in tasks:
+        prefix = "dense_arnold_" if training.get("dense_reward", False) else "arnold_"
+        config = json.loads((Path(ENV_CONFIG_PATH) / (prefix + task + "_config.json")).read_text())
+        if "num_memory_steps" in training:
+            config["num_memory_steps"] = training["num_memory_steps"]
+        env = EnvironmentFactory.create(**config)
+        normalizer = None
+        try:
+            normalizer = create_vec_env(env_config_list=[config], load_env_path=find_vecnormalize(str(args.load)),
+                                        multi_env=True, old_vocabulary=vocabulary, seed=args.seed)
+            normalizer.training, normalizer.norm_reward = False, False
+            policy.observation_space = env.observation_space
+            extractor = policy.features_extractor
+            task_index = extractor.task_names.index(task) if getattr(extractor, "position_embedding", None) == "task_specific" else None
+            dataset = datasets[task] if combined is None else combined
+            pca = PCA(n_components=39).fit(dataset) if args.method == "pca" else None
+            horizon = get_episode_horizon(env)
+            for dimension in dimensions:
+                episodes, reconstruction = [], []
+                for fit in range(fits):
+                    if pca is not None:
+                        components = pca.components_[:dimension]
+                        projection = lambda action: project_actions(action, pca.mean_, components)
+                        context = nullcontext()
+                        covariance = np.cov(datasets[task].T)
+                        reconstruction.append(np.trace(components @ covariance @ components.T) / np.trace(covariance))
+                        np.savez_compressed(args.out_dir / f"{task}_{dimension}_{fit}.npz", components=components, mean=pca.mean_)
+                    else:
+                        nmf = NMF(n_components=dimension, init="nndsvdar", random_state=fit, max_iter=2000).fit(dataset)
+                        reconstruction.append(r2_score(datasets[task], nmf.inverse_transform(nmf.transform(datasets[task])), multioutput="variance_weighted"))
+                        projection = lambda action: action
+                        context = nmf_controls(env, nmf)
+                        np.savez_compressed(args.out_dir / f"{task}_{dimension}_{fit}.npz", components=nmf.components_)
+                    with context:
+                        values = evaluate(env, policy, normalizer, projection, args.num_episodes // fits,
+                                          args.seed + fit * (args.num_episodes // fits), task_index, args.num_steps)
+                    for row in values:
+                        row.update(method=args.method, scope=args.scope, basis_policy=args.basis_policy,
+                                   task=task, dimension=dimension, fit=fit, horizon=horizon)
+                    episodes.extend(values)
+                summary = performance_summary(episodes, horizon)
+                curves.append(dict(method=args.method, scope=args.scope, basis_policy=args.basis_policy,
+                                   task=task, dimension=dimension, reconstruction=np.mean(reconstruction),
+                                   n_fits=fits, **summary))
+                outcomes.extend(episodes)
+                pd.DataFrame(curves).to_csv(args.out_dir / "curves.csv", index=False)
+                pd.DataFrame(outcomes).to_csv(args.out_dir / "episodes.csv", index=False)
+                print(task, dimension, summary, flush=True)
+        finally:
+            env.close()
+            if normalizer is not None:
+                normalizer.close()
 
-    # First analyze each task separately
-    for task in tasks:
-        print(f"\nAnalyzing task: {task}")
-        
-        # Load actions and compute PCA
-        actions = load_all_episode_actions(activations_dir, task)
-        pca = PCA(n_components=39)
-        pca.fit(actions)
-        
-        print(f"Task PCA computed. Explained variance ratio: {pca.explained_variance_ratio_[:5]}")
-        
-        # Create environment
-        prefix = "arnold_"
-        env_config_path = os.path.join(ENV_CONFIG_PATH, f"{prefix}{task}_config.json")
-        with open(env_config_path, "r") as f:
-            env_config = json.load(f)
-            
-        env = EnvironmentFactory.create(**env_config)
-        vecnormalize = create_vec_env(env_config_list=[env_config], load_env_path=vecnorm_path, multi_env=True)
-        vecnormalize.training = False
-        vecnormalize.norm_reward = False
-        
-        # Evaluate with PCA inactivation
-        print(f"Evaluating task {task} with task-specific PCA")
-        performance = evaluate_with_pca_inactivation(
-            env, vecnormalize, policy, pca, num_episodes=num_episodes, device=device
-        )
-        
-        # Save results
-        results = {
-            "pca": pca,
-            "performance": performance,
-            "policy": policy_name,
-            "task": task,
-            "timestamp": time.strftime("%Y%m%d-%H%M%S")
-        }
-        
-        out_path = os.path.join(out_dir, f"pca_inactivation_{task}_{policy_name}.pkl")
-        with open(out_path, "wb") as f:
-            np.save(f, results)
-            
-    # Now analyze all tasks together
-    print("\nAnalyzing all tasks together")
-    
-    # Combine actions from all tasks
-    all_actions = []
-    for task in tasks:
-        actions = load_all_episode_actions(activations_dir, task)
-        all_actions.append(actions)
-    all_actions = np.vstack(all_actions)
-    
-    # Compute PCA on combined actions
-    pca_all = PCA(n_components=39)
-    pca_all.fit(all_actions)
-    print(f"Combined PCA computed. Explained variance ratio: {pca_all.explained_variance_ratio_[:5]}")
-    
-    # Evaluate on each task using the combined PCA
-    for task in tasks:
-        print(f"\nEvaluating task {task} with combined PCA")
-        
-        # Create environment
-        prefix = "arnold_"
-        env_config_path = os.path.join(ENV_CONFIG_PATH, f"{prefix}{task}_config.json")
-        with open(env_config_path, "r") as f:
-            env_config = json.load(f)
-            
-        env = EnvironmentFactory.create(**env_config)
-        vecnormalize = create_vec_env([env_config], load_env_path=vecnorm_path, multi_env=True)
-        vecnormalize.training = False
-        vecnormalize.norm_reward = False
-        
-        # Evaluate with PCA inactivation
-        performance = evaluate_with_pca_inactivation(
-            env, vecnormalize, policy, pca_all, num_episodes=num_episodes, device=device
-        )
-        
-        # Save results
-        results = {
-            "pca": pca_all,
-            "performance": performance,
-            "policy": policy_name,
-            "task": task,
-            "pca_type": "combined",
-            "timestamp": time.strftime("%Y%m%d-%H%M%S")
-        }
-        
-        out_path = os.path.join(out_dir, f"combined_pca_inactivation_{task}_{policy_name}.pkl")
-        with open(out_path, "wb") as f:
-            np.save(f, results)
 
 if __name__ == "__main__":
     main()
-
-"""
-python src/analyze_pca_inactivation.py
-"""
