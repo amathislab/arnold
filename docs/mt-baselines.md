@@ -54,16 +54,17 @@ Both baselines are evaluated with `src/benchmark_multi_task_mlp.py`. The task or
 environment id and algorithm are recovered from the `args.json` saved next to each
 checkpoint, so only the checkpoint path is needed.
 
-Evaluate the latest checkpoint of each seed:
+Evaluate a released MT-PPO checkpoint:
 
 ```bash
 python src/benchmark_multi_task_mlp.py \
-    --load <run_dir>/rl_model_<steps>_steps.zip \
+    --load data/final_checkpoints/mt-ppo/seed_0/rl_model_60192776_steps.zip \
     --num_episodes 200 \
     --seed 0 \
     --device cpu \
     --save_results \
-    --out_dir data/final_benchmarks/mt_ppo/seed_0
+    --out_dir data/final_benchmarks/mt_ppo/seed_0 \
+    --out_file seed_771_rl_model_60192776_steps_results.json
 ```
 
 ## Related figures

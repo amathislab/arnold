@@ -178,16 +178,6 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         if new_vocabulary != self.vocabulary:
             assert all([key in new_vocabulary for key in self.vocabulary])
             self.num_tokens = len(new_vocabulary)
-            if isinstance(self.positional_encoder, TaskSpecificPositionalEncoding):
-                old_encoder = self.positional_encoder
-                old_vocabulary = self.vocabulary
-                self.vocabulary = new_vocabulary
-                self.positional_encoder = self.make_positional_encoder()
-                with torch.no_grad():
-                    for name, embedding in old_encoder.task_embeddings.items():
-                        for key, index in old_vocabulary.items():
-                            self.positional_encoder.task_embeddings[name].weight[new_vocabulary[key]].copy_(embedding.weight[index])
-                return
             old_embedding = self.positional_encoder.embedding
             self.positional_encoder = self.make_positional_encoder()
             new_idx_map = torch.zeros(self.num_tokens, dtype=torch.int32)

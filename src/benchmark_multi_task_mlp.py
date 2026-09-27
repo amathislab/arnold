@@ -65,6 +65,7 @@ def parse_args():
         default="data/benchmarks/student_policies",
         help="Directory to save benchmark results",
     )
+    parser.add_argument("--out_file", default=None, help="Result JSON filename")
     return parser.parse_args()
 
 
@@ -107,7 +108,7 @@ def save_results(scores, args):
     checkpoint_name = os.path.basename(args.load).replace(".zip", "")
     run_name = f"{policy_name}_{checkpoint_name}"
 
-    results_file = os.path.join(out_dir, f"{run_name}_results.json")
+    results_file = os.path.join(out_dir, args.out_file or f"{run_name}_results.json")
     with open(results_file, "w", encoding="utf-8") as f:
         json.dump(scores, f, indent=2)
     print(f"Saved results to {results_file}")

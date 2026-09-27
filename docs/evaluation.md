@@ -10,6 +10,9 @@ python src/benchmark.py \
     --save_results --out_dir data/final_benchmarks/arnold/seed_0
 ```
 
+Use `--out_file <filename>.json` to choose the result filename. For performance
+plots, use the filename listed in `data/reproduction/policies.json`.
+
 Tasks are read from the checkpoint's `args.json`. Use `--task <task_names>` to
 select tasks. Atomic and Task-SV checkpoints use their saved vocabulary and
 task embeddings automatically. Add `--deterministic` for deterministic actions.
@@ -22,7 +25,8 @@ For MT-SAC and MT-PPO, use the vectorized benchmark:
 python src/benchmark_multi_task_mlp.py \
     --load data/final_checkpoints/mt-ppo/seed_0/rl_model_60192776_steps.zip \
     --num_episodes 200 --seed 0 --device cpu \
-    --save_results --out_dir data/final_benchmarks/mt_ppo/seed_0
+    --save_results --out_dir data/final_benchmarks/mt_ppo/seed_0 \
+    --out_file seed_771_rl_model_60192776_steps_results.json
 ```
 
 Evaluate specialist teachers with deterministic actions:

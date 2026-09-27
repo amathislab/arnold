@@ -120,6 +120,7 @@ def parse_args():
         default="data/benchmarks/student_policies",
         help="Directory to save benchmark results",
     )
+    parser.add_argument("--out_file", default=None, help="Result JSON filename")
     parser.add_argument(
         "--custom_experts",
         type=str,
@@ -146,7 +147,7 @@ def save_results(scores, args):
     else:
         run_name = f"expert_{'_'.join(args.task)}"
 
-    results_file = os.path.join(out_dir, f"{run_name}_results.json")
+    results_file = os.path.join(out_dir, args.out_file or f"{run_name}_results.json")
     with open(results_file, "w", encoding="utf-8") as f:
         json.dump(scores, f, indent=2)
 
