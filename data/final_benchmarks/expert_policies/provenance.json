@@ -1,151 +1,62 @@
 {
-  "schema_version": 1,
   "source_repository": "amathislab/arnold-dev",
   "source_directory": "data/benchmarks/expert_policies",
-  "manuscript_sha256": "820b5cb9d0de7068b5d47b03279de0005bace6bb01221a8b717947acaa8d1b72",
-  "metric": "avg_solved_step_frac",
-  "denominator": "Fixed max_episode_steps, including early terminated episodes.",
-  "provenance_limits": "The summaries do not record evaluation seed, action selection, raw episodes or evaluated checkpoint hashes. Default teacher paths identify the published teacher configuration, not an independently verified hash of the historical evaluated checkpoint.",
   "references": {
     "hand_little_reach": {
       "file": "data/final_benchmarks/expert_policies/expert_hand_little_reach_results.json",
-      "sha256": "5337f81192a0d59ed0555ea6f3903d0d2972ed894f97c7cd7c7da12fbda6fbb2",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/little_reach_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "5337f81192a0d59ed0555ea6f3903d0d2972ed894f97c7cd7c7da12fbda6fbb2"
     },
     "hand_index_reach": {
       "file": "data/final_benchmarks/expert_policies/expert_hand_index_reach_results.json",
-      "sha256": "23c0ee040a1016920de0170883e21f2f0218e858f09354e186048bf4d1bb19a8",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/index_reach_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "23c0ee040a1016920de0170883e21f2f0218e858f09354e186048bf4d1bb19a8"
     },
     "hand_middle_reach": {
       "file": "data/final_benchmarks/expert_policies/expert_hand_middle_reach_results.json",
-      "sha256": "3f8643ed7164347be6281bd4cd55c2cb1ee5515902ccd748a42eb33d8e52eb84",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/middle_reach_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "3f8643ed7164347be6281bd4cd55c2cb1ee5515902ccd748a42eb33d8e52eb84"
     },
     "hand_ring_reach": {
       "file": "data/final_benchmarks/expert_policies/expert_hand_ring_reach_results.json",
-      "sha256": "8431fd276822455d1e5cd6eb0831be9c020e494127df12111fb5f69606dd2a9d",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/ring_reach_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "8431fd276822455d1e5cd6eb0831be9c020e494127df12111fb5f69606dd2a9d"
     },
     "hand_thumb_reach": {
       "file": "data/final_benchmarks/expert_policies/expert_hand_thumb_reach_results.json",
-      "sha256": "5555c4a2871869ca31839c26e7afaa9faa3bc50503ce8d0bd935394b1918ae6f",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/thumb_reach_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "5555c4a2871869ca31839c26e7afaa9faa3bc50503ce8d0bd935394b1918ae6f"
     },
     "reorient": {
       "file": "data/final_benchmarks/expert_policies/expert_reorient_results.json",
-      "sha256": "3e53b09ba8760241bdcf945cc83a7ef850c2b370af86fa324de3f2c33c79d14a",
-      "num_episodes": 200,
-      "horizon": 150,
-      "default_teacher_checkpoint": "data/expert_policies/reorient_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "3e53b09ba8760241bdcf945cc83a7ef850c2b370af86fa324de3f2c33c79d14a"
     },
     "pen": {
       "file": "data/final_benchmarks/expert_policies/expert_pen_results.json",
-      "sha256": "664dc9936716ef3d1a89a34e5661cdcde2d40ebaccbbcc7620069f5229969b02",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/pen_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "664dc9936716ef3d1a89a34e5661cdcde2d40ebaccbbcc7620069f5229969b02"
     },
     "baoding_p1_cw": {
       "file": "data/final_benchmarks/expert_policies/expert_baoding_p1_cw_results.json",
-      "sha256": "11828da96fae083f0350fe9e9597824f9f0dfc3f529f21b1c39525e7f734dd13",
-      "num_episodes": 200,
-      "horizon": 200,
-      "default_teacher_checkpoint": "data/expert_policies/baoding_phase_1/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "11828da96fae083f0350fe9e9597824f9f0dfc3f529f21b1c39525e7f734dd13"
     },
     "baoding_p1_ccw": {
       "file": "data/final_benchmarks/expert_policies/expert_baoding_p1_ccw_results.json",
-      "sha256": "b5954130f7430286615831caf2b9302af42a603c6a07ef1288678b123227a83f",
-      "num_episodes": 200,
-      "horizon": 200,
-      "default_teacher_checkpoint": "data/expert_policies/baoding_phase_1/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "b5954130f7430286615831caf2b9302af42a603c6a07ef1288678b123227a83f"
     },
     "baoding_p2_overlap": {
       "file": "data/final_benchmarks/expert_policies/expert_baoding_p2_overlap_results.json",
-      "sha256": "12824a7ed40b22dd093acad0a6fd567e78dfc805537e90046f67c4bfe73ab861",
-      "num_episodes": 200,
-      "horizon": 200,
-      "default_teacher_checkpoint": "data/expert_policies/baoding_phase_2/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "12824a7ed40b22dd093acad0a6fd567e78dfc805537e90046f67c4bfe73ab861"
     },
     "baoding_p2": {
       "file": "data/final_benchmarks/expert_policies/expert_baoding_p2_results.json",
-      "sha256": "6ec369d54e58ee66226cedb0eef54bbe4a28f3ee37a727e9dcac5b07e791521f",
-      "num_episodes": 200,
-      "horizon": 200,
-      "default_teacher_checkpoint": "data/expert_policies/baoding_phase_2/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "6ec369d54e58ee66226cedb0eef54bbe4a28f3ee37a727e9dcac5b07e791521f"
     },
     "elbow_pose": {
       "file": "data/final_benchmarks/expert_policies/expert_elbow_pose_results.json",
-      "sha256": "b0d51a6c5f961151e8c50ca913c2e69ba6cc52217378dbaaa8ac22e4cb97f3d2",
-      "num_episodes": 200,
-      "horizon": 100,
-      "default_teacher_checkpoint": "data/expert_policies/elbow_pose_lattice/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "b0d51a6c5f961151e8c50ca913c2e69ba6cc52217378dbaaa8ac22e4cb97f3d2"
     },
     "relocate": {
       "file": "data/final_benchmarks/expert_policies/expert_relocate_results.json",
-      "sha256": "ab74c533fec9d5f28d3d4817691270517983573e26852849ca84912473101d6b",
-      "num_episodes": 200,
-      "horizon": 150,
-      "default_teacher_checkpoint": "data/expert_policies/relocate/model.zip",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "ab74c533fec9d5f28d3d4817691270517983573e26852849ca84912473101d6b"
     },
     "kinesis": {
       "file": "data/final_benchmarks/expert_policies/expert_kinesis_results.json",
-      "sha256": "0e3947978b8b2319ebb4d6330250aec6b7ce48bef32141e6052b655e7fc7aaab",
-      "num_episodes": 200,
-      "horizon": 150,
-      "default_teacher_checkpoint": "data/expert_policies/kinesis/model.pth",
-      "evaluation_seed": null,
-      "action_selection": null,
-      "checkpoint_hash_at_reference_evaluation": null
+      "sha256": "0e3947978b8b2319ebb4d6330250aec6b7ce48bef32141e6052b655e7fc7aaab"
     }
   }
 }
