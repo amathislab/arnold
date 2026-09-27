@@ -22,7 +22,7 @@ For CPU use, omit `--gpus all` and pass `--device cpu` to experiment scripts.
 ```bash
 conda env create -f environment.yml
 conda activate arnold
-pip install imitation==1.0.0
+pip install imitation==1.0.0 cloudpickle==3.1.1
 ```
 
 Install `imitation` last. On Linux, install the rendering libraries:
@@ -90,7 +90,7 @@ python src/main_bc_ppo_multi_task.py \
 **2. OBC at reduced learning rate:**
 After the first 50M steps, OBC (as well as BC and OBC-PPO) is continued for 5M additional steps at a smaller learning rate, which boosts the performance in certain tasks. This is the same command as above with `--load_path` set to the 50M checkpoint, `--num_steps=5000000` and `--lr=1e-5`. The resulting 55M-step checkpoint (`rl_model_54974700_steps.zip`) is the starting point for the RL fine-tuning and for the final Arnold agent.
 
-**3. Final Arnold agent (BC imitating super-experts):**
+**3. Final Arnold agent (OBC with super-experts):**
 This command trains the final Arnold agent by imitating specified super-expert policies, resuming from the 55M-step OBC model.
 
 ```bash
@@ -129,113 +129,53 @@ Here's how to configure `src/main_bc_ppo_multi_task.py` for these and other trai
 
 - **PPO**: Set `--imitation_coef=0`, `--pg_coef=1`, `--ent_coef=1e-6`, and `--lr=2e-5`.
 - **OBC-PPO**: Similar to PPO, but set `--imitation_coef=1` and `--lr=1e-3` (reduced to `1e-5` for the additional 5M steps).
-- **BC**: This involves training with `imitation_coef > 0` and `pg_coef = 0`. The 'Final Arnold agent' command above is an example. If performing online imitation of an expert policy, the `--use_expert_actions` flag is typically used.
-- **Super-experts**: Same as PPO, but resume from the 55M-step OBC checkpoint. Use a low learning rate (`--lr=2e-6`) and 32 instances of the same task (e.g., `--num_envs_per_task=32 --tasks <single_task_name>`). The standard deviation of the action distribution approaches 0 during OBC pretraining and must be reset for the fine-tuning to improve over the expert: pass `--reset_std --log_std_init -3`.
+- **BC**: Add `--use_expert_actions` to the OBC command.
+- **Super-experts**: Resume PPO from the 55M-step OBC checkpoint with `--lr 2e-6 --num_envs_per_task 32 --tasks <task> --reset_std --log_std_init -3`.
 
-## Evaluation - pretrained Models (OBC, Arnold, Experts)
+See [Training](docs/training.md) for atomic vocabulary and Task-SV options.
 
-The `src/benchmark.py` script allows you to evaluate the performance of various pretrained models, including those trained with OBC, Arnold, and expert policies.
+## Evaluation
 
-### 1. Evaluating OBC and Arnold Models
-
-To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21807280).
-
-Here's an example command:
-
-```bash
-python src/benchmark.py \
-    --load path/to/your/model.zip \
-    --task <task_names> \
-    --arnold \
-    --normalize \
-    --num_episodes <number_of_episodes> \
-    --deterministic \
-    --device <cpu_or_cuda> \
-    --render
-```
-
-- Replace `path/to/your/model.zip` with the actual path to your trained model.
-- Set `<task_names>` to one or many of the available tasks.
-- Include the `--arnold` flag if the model was trained with Arnold.
-- Adjust `--num_episodes` to set how many episodes to run for evaluation. The results reported in the paper use 200 episodes per task.
-- Use `--deterministic` for deterministic actions from the policy.
-- Specify the `--device` (e.g., `cpu` or `cuda`).
-- Optionally render to video with `--render` (important: on Mac this requires running `mjpython` instead of `python`)
-
-**Example for an Arnold model:**
+Download the models with `python scripts/fetch_data.py --profile models`.
+Run 200 stochastic episodes per task with a fixed evaluation seed:
 
 ```bash
 python src/benchmark.py \
     --load data/final_checkpoints/arnold/seed_0/rl_model_64670238_steps.zip \
-    --task kinesis \
-    --arnold \
-    --normalize \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu
+    --arnold --normalize --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/arnold/seed_0
 ```
 
-**Example for a OBC model:**
+Tasks are read from the checkpoint's `args.json`. Use `--task <task_names>` to
+select tasks. Atomic and Task-SV checkpoints use their saved vocabulary and
+task embeddings automatically. Add `--deterministic` for deterministic actions.
+`--normalize` restores the saved observation-normalization settings and freezes
+the statistics, including for checkpoints trained with normalization disabled.
+
+For MT-SAC and MT-PPO, use the vectorized benchmark:
 
 ```bash
-python src/benchmark.py \
-    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
-    --task relocate \
-    --arnold \
-    --normalize \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu
+python src/benchmark_multi_task_mlp.py \
+    --load data/final_checkpoints/mt-ppo/seed_0/rl_model_60192776_steps.zip \
+    --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/mt_ppo/seed_0
 ```
 
-Usually to reproduce these evaluations, the runtime is less than 1 minute.
-
-### 2. Evaluating Expert Policies
-
-To evaluate an expert policy, you need to specify the task.
+Evaluate specialist teachers with deterministic actions:
 
 ```bash
-python src/benchmark.py \
-    --task <task_name> \
-    --expert \
-    --num_episodes <number_of_episodes> \
-    --deterministic \
-    --device <cpu_or_cuda>
+python src/benchmark.py --task relocate --expert \
+    --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/expert_policies
 ```
 
-- Set `<task_name>` to one of the available tasks.
-- Include the `--expert` flag to indicate you are testing an expert policy.
+Use `--expert_stochastic` to sample teacher actions, or
+`--custom_experts data/expert_configs/arnold_experts_seed_1.json` for super-experts.
+For rendering, add `--render`; on macOS use `mjpython`.
 
-**Example for an expert policy:**
-
-```bash
-python src/benchmark.py \
-    --task relocate \
-    --expert \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu \
-    --render
-```
-
-### 3. Available Tasks for Evaluation
-
-You can choose `<task_name>` from the following list:
-
-- `baoding_p1_ccw`
-- `baoding_p1_cw`
-- `baoding_p2`
-- `baoding_p2_overlap`
-- `hand_thumb_reach`
-- `hand_index_reach`
-- `hand_middle_reach`
-- `hand_ring_reach`
-- `hand_little_reach`
-- `pen`
-- `relocate`
-- `reorient`
-- `elbow_pose`
-- `kinesis`
+Results contain each episode's reward, length and solved-step count. The solved
+fraction divides that count by the fixed task horizon. Performance plots divide
+the mean fraction by the corresponding specialist teacher's mean fraction.
 
 ## Generating Performance Plots (used in the paper)
 
@@ -526,7 +466,6 @@ Both baselines are evaluated with `src/benchmark_multi_task_mlp.py`. The task or
 python src/benchmark_multi_task_mlp.py \
     --load <run_dir>/rl_model_<steps>_steps.zip \
     --num_episodes 200 \
-    --deterministic \
     --device cpu \
     --save_results \
     --out_dir data/final_benchmarks/mt_ppo/seed_0

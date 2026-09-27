@@ -60,7 +60,7 @@ Evaluate the latest checkpoint of each seed:
 python src/benchmark_multi_task_mlp.py \
     --load <run_dir>/rl_model_<steps>_steps.zip \
     --num_episodes 200 \
-    --deterministic \
+    --seed 0 \
     --device cpu \
     --save_results \
     --out_dir data/final_benchmarks/mt_ppo/seed_0

@@ -36,6 +36,7 @@ class ExpertWrapper(Wrapper):
                     self.env.unwrapped.id
                 )
             exp_norm.training = False
+            exp_norm.norm_reward = False
             self.task_name = task_name
             self.expert_policy = exp_policy
             self.expert_env = exp_env
@@ -88,6 +89,11 @@ class ExpertWrapper(Wrapper):
             )
 
         return action.flatten()
+
+    def close(self):
+        if not self.using_kinesis_default_expert:
+            self.expert_env.close()
+        self.env.close()
 
     def _load_kinesis_expert_policy(self):
         """Load the lattice policy expert"""

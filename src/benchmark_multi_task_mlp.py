@@ -1,30 +1,4 @@
-"""Benchmark multi-task MLP policies trained with src/main_sac_multi_task.py
-(MT-SAC and MT-PPO).
-
-Unlike src/benchmark.py, these policies were trained on the *merged* multi-task
-observation/action spaces, with an `env_id` injected into the observation and a
-per-signature FlexibleMultiVecNormalize. To evaluate them faithfully we have to
-reproduce that exact pipeline. The cleanest way to do so is to rebuild the same
-training environment stack with `create_vec_env` over the full task list (in the
-same order as the training command), loading the saved vecnormalize. That gives
-us, for free and identical to training time:
-  - the merged (padded) observation and action spaces,
-  - the correct `env_id` per task (determined by the order of tasks),
-  - the per-signature observation normalization.
-
-We then roll out the vectorised env (one sub-env per task) and aggregate
-per-task metrics using the same schema as src/benchmark.py, so the saved JSON is
-a drop-in match.
-
-Example:
-    python src/benchmark_multi_task_mlp.py \
-        --load output/training/ongoing/sac-run-arnold_..._sac_mlp_seed_771/rl_model_5000000_steps.zip \
-        --num_episodes 200 \
-        --deterministic \
-        --save_results \
-        --out_dir data/benchmarks/student_policies/mt_sac \
-        --device cpu
-"""
+"""Benchmark MT-SAC and MT-PPO using the saved training task order."""
 
 import os
 import json
@@ -37,6 +11,8 @@ from stable_baselines3 import SAC
 from models.ppo.ppo import MultiEnvPPO
 from definitions import ROOT_DIR, ENV_CONFIG_PATH
 from envs.utilities import create_vec_env
+from evaluation import find_vecnormalize, summarize_episodes
+from stable_baselines3.common.utils import set_random_seed
 
 
 def parse_args():
@@ -67,7 +43,8 @@ def parse_args():
         "always instantiated (to keep env_id / normalization correct); this flag "
         "only filters which tasks are evaluated and saved. Default: all tasks.",
     )
-    parser.add_argument("--num_episodes", type=int, default=20)
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--num_episodes", type=int, default=200)
     parser.add_argument(
         "--num_steps",
         type=int,
@@ -104,28 +81,6 @@ def get_train_args(load_path):
         return json.load(f)
 
 
-def find_vecnormalize(load_path):
-    """Locate the vecnormalize .pkl matching the given model checkpoint."""
-    # rl_model_<N>_steps.zip -> rl_model_vecnormalize_<N>_steps.pkl
-    candidate = load_path.replace("rl_model_", "rl_model_vecnormalize_").replace(
-        ".zip", ".pkl"
-    )
-    if os.path.exists(candidate):
-        return candidate
-    policy_dir = os.path.dirname(load_path)
-    for fallback in ("final_env.pkl", "env.pkl"):
-        path = os.path.join(policy_dir, fallback)
-        if os.path.exists(path):
-            print(
-                f"WARNING: vecnormalize for checkpoint not found, falling back to {path}"
-            )
-            return path
-    raise FileNotFoundError(
-        f"Could not find a vecnormalize .pkl for {load_path}. Tried {candidate} and "
-        f"{', '.join(['final_env.pkl', 'env.pkl'])} in {policy_dir}."
-    )
-
-
 def build_env_config_list(tasks, num_memory_steps, dense_reward):
     """Reproduce the env_config_list built in main_sac_multi_task.py."""
     env_config_list = []
@@ -141,49 +96,6 @@ def build_env_config_list(tasks, num_memory_steps, dense_reward):
     return env_config_list
 
 
-def get_max_episode_steps(venv):
-    """Best-effort per-sub-env max_episode_steps via the env spec."""
-    max_steps = [None] * venv.num_envs
-    try:
-        specs = venv.get_attr("spec")
-        for i, spec in enumerate(specs):
-            if spec is not None and getattr(spec, "max_episode_steps", None):
-                max_steps[i] = int(spec.max_episode_steps)
-    except Exception as exc:  # pragma: no cover - defensive, env-specific
-        print(f"WARNING: could not read env spec for max_episode_steps: {exc}")
-    return max_steps
-
-
-def summarize_episodes(ep, max_episode_steps):
-    """Build the per-task score dict, matching src/benchmark.py exactly."""
-    cum_rewards = ep["cum_rewards"]
-    steps = ep["steps"]
-    solved_counts = ep["solved_counts"]
-
-    step_rewards = [r / s if s else 0.0 for r, s in zip(cum_rewards, steps)]
-    solved = [1.0 if c > 0 else 0.0 for c in solved_counts]
-    # If we never learned a fixed horizon, fall back to the longest episode seen.
-    mes = max_episode_steps or (int(max(steps)) if steps else 0)
-    solved_fracs = [c / mes if mes else 0.0 for c in solved_counts]
-
-    return {
-        "avg_cum_reward": float(np.mean(cum_rewards)),
-        "std_cum_reward": float(np.std(cum_rewards)),
-        "avg_step_reward": float(np.mean(step_rewards)),
-        "std_step_reward": float(np.std(step_rewards)),
-        "avg_solved": float(np.mean(solved)),
-        "std_solved": float(np.std(solved)),
-        "avg_solved_steps": float(np.mean(solved_counts)),
-        "avg_solved_step_frac": float(np.mean(solved_fracs)),
-        "std_solved_steps": float(np.std(solved_counts)),
-        "avg_steps": float(np.mean(steps)),
-        "std_steps": float(np.std(steps)),
-        "max_episode_steps": int(mes),
-        "episode_cum_rewards": [float(r) for r in cum_rewards],
-        "episode_solve_step_fracs": [float(f) for f in solved_fracs],
-    }
-
-
 def save_results(scores, args):
     if not args.save_results:
         return
@@ -195,9 +107,6 @@ def save_results(scores, args):
     checkpoint_name = os.path.basename(args.load).replace(".zip", "")
     run_name = f"{policy_name}_{checkpoint_name}"
 
-    for task in scores:
-        scores[task]["num_episodes"] = args.num_episodes
-
     results_file = os.path.join(out_dir, f"{run_name}_results.json")
     with open(results_file, "w", encoding="utf-8") as f:
         json.dump(scores, f, indent=2)
@@ -206,6 +115,7 @@ def save_results(scores, args):
 
 def main():
     args = parse_args()
+    set_random_seed(args.seed)
 
     train_args = get_train_args(args.load)
     tasks = train_args.get("tasks")
@@ -233,7 +143,7 @@ def main():
 
     # ---- Load the policy ----
     if algo == "sac":
-        model = SAC.load(args.load, device=args.device)
+        model = SAC.load(args.load, device=args.device, buffer_size=1)
     else:
         model = MultiEnvPPO.load(args.load, device=args.device)
     model.policy.eval()
@@ -241,6 +151,8 @@ def main():
     # ---- Rebuild the exact training env stack ----
     env_config_list = build_env_config_list(tasks, num_memory_steps, dense_reward)
     vecnormalize_path = args.vecnormalize or find_vecnormalize(args.load)
+    if not os.path.isfile(vecnormalize_path):
+        raise FileNotFoundError(vecnormalize_path)
     print(f"Loading vecnormalize from {vecnormalize_path}")
 
     venv = create_vec_env(
@@ -249,15 +161,19 @@ def main():
         load_env_path=vecnormalize_path,
         multi_env=True,
         old_vocabulary=None,
+        seed=args.seed,
     )
     # Freeze normalization statistics for evaluation.
     venv.training = False
+    venv.norm_reward = False
 
     num_envs = venv.num_envs
     assert num_envs == len(tasks), (
         f"Expected one sub-env per task ({len(tasks)}), got {num_envs}."
     )
-    max_episode_steps = get_max_episode_steps(venv)
+    max_episode_steps = venv.env_method("get_episode_horizon")
+    set_random_seed(args.seed)
+    venv.seed(args.seed)
 
     # Per-env episode target: 0 for tasks we are not reporting (they still step
     # along with the rest of the batch, we just ignore their results).
@@ -328,6 +244,8 @@ def main():
 
     for task, ep in merged.items():
         scores[task] = summarize_episodes(ep, ep["mes"])
+        scores[task].update(seed=args.seed, deterministic=args.deterministic,
+                            normalize_obs=bool(venv.norm_obs), num_steps=args.num_steps)
 
     print(json.dumps(scores, indent=2))
     save_results(scores, args)

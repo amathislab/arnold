@@ -14,7 +14,7 @@ from train.trainer import Trainer
 from utilities import merge_task_names
 from models.ppo.policies import MuscleTransformerPolicy
 from stable_baselines3.common.type_aliases import Schedule
-from vocabulary import VOCABULARY
+from vocabulary import set_vocabulary_mode
 
 
 parser = argparse.ArgumentParser(description="Main script to train an agent")
@@ -182,8 +182,10 @@ parser.add_argument(
     type=str,
     default="learned",
     help="Type of positional encoding to use",
-    choices=["learned", "sin_cos"],
+    choices=["learned", "sin_cos", "task_specific"],
 )
+parser.add_argument("--vocabulary_mode", choices=["compositional", "atomic"], default="compositional")
+parser.add_argument("--atomic_vocabulary_path", default=None)
 args = parser.parse_args()
 
 if args.load_path is not None:
@@ -209,6 +211,9 @@ feature_extractor_config = {
     "position_embedding": args.positional_encoding,
     "norm_first": True,
 }
+
+if args.positional_encoding == "task_specific":
+    feature_extractor_config["task_names"] = args.tasks
 
 network_config = {
     "num_encoder_layers": args.num_layers,
@@ -262,6 +267,7 @@ if args.min_cosine_lr is not None:
 else:
     lr = args.lr
 model_config = dict(
+    seed=args.seed,
     policy=policy,
     device=args.device,
     batch_size=args.batch_size,
@@ -299,6 +305,17 @@ if __name__ == "__main__":
     # ensure tensorboard log directory exists and copy this file to track
     os.makedirs(log_path, exist_ok=True)
     shutil.copy(os.path.abspath(__file__), log_path)
+    model_path, env_path, saved_vocabulary_path = get_model_env_vocabulary_path(
+        log_path, args.load_path, args.checkpoint_num
+    )
+    vocabulary_path = args.atomic_vocabulary_path
+    if saved_vocabulary_path is not None:
+        vocabulary_path = saved_vocabulary_path
+        with open(vocabulary_path) as stream:
+            saved_vocabulary = json.load(stream)
+        args.vocabulary_mode = "atomic" if any("/" in key for key in saved_vocabulary) else "compositional"
+    active_vocabulary = set_vocabulary_mode(args.vocabulary_mode, vocabulary_path)
+    feature_extractor_config["vocabulary"] = active_vocabulary
     with open(os.path.join(log_path, "args.json"), "w") as file:
         json.dump(args.__dict__, file, indent=4, default=lambda _: "<not serializable>")
 
@@ -313,24 +330,9 @@ if __name__ == "__main__":
         env_config["num_memory_steps"] = args.num_memory_steps
         env_config_list.append(env_config)
 
-    model_path, env_path, vocabulary_path = get_model_env_vocabulary_path(
-        log_path, args.load_path, args.checkpoint_num
-    )
-
-    if vocabulary_path is not None:
-        with open(vocabulary_path, "r") as file:
-            old_vocabulary = json.load(file)
-        print("Vocabulary loaded from", vocabulary_path)
-        with open(os.path.join(log_path, "vocabulary.json"), "w") as file:
-            json.dump(
-                VOCABULARY, file, indent=4, default=lambda _: "<not serializable>"
-            )
-    else:
-        old_vocabulary = None
-        with open(os.path.join(log_path, "vocabulary.json"), "w") as file:
-            json.dump(
-                VOCABULARY, file, indent=4, default=lambda _: "<not serializable>"
-            )
+    old_vocabulary = saved_vocabulary if saved_vocabulary_path is not None else None
+    with open(os.path.join(log_path, "vocabulary.json"), "w") as file:
+        json.dump(active_vocabulary, file, indent=2)
 
     envs = create_vec_env(
         env_config_list=env_config_list,
@@ -338,6 +340,7 @@ if __name__ == "__main__":
         load_env_path=env_path,
         multi_env=True,
         old_vocabulary=old_vocabulary,
+        seed=args.seed,
         norm_reward=args.norm_reward,
         norm_obs=not args.ablate_obs_norm,  # Add this line
         expert_task_list=(

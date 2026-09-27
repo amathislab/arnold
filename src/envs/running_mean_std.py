@@ -1,7 +1,7 @@
 import numpy as np
 from stable_baselines3.common.running_mean_std import RunningMeanStd
 from typing import List, Tuple
-from vocabulary import VOCABULARY
+from vocabulary import get_active_vocabulary
 
 
 class RunningMeanStdFloat32(RunningMeanStd):
@@ -114,7 +114,7 @@ class SpecsRunningMeanStd:
 
         for signature, sig_id in other.sig_ids_dict.items():
             if old_vocabulary is not None:
-                sig_list = [VOCABULARY[reversed_vocabulary[obs_id]] for obs_id in signature]
+                sig_list = [get_active_vocabulary()[reversed_vocabulary[obs_id]] for obs_id in signature]
                 signature = tuple(sorted(sig_list))
             if signature not in self.sig_ids_dict:
                 # If a signature is unknown, create a new entry

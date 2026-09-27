@@ -2,7 +2,7 @@ import gym
 import numpy as np
 from collections import deque
 from definitions import OBS_KEY, OBS_ID_KEY, ACTION_ID_KEY, PADDING_KEY
-from vocabulary import VOCABULARY
+from vocabulary import specs_to_ids
 
 
 class SpecsObsMixin:
@@ -83,13 +83,7 @@ class SpecsObsMixin:
         for obs_key in self.obs_keys:
             key_specs = obs_specs_dict[obs_key]
 
-            # Set the initial value to that of the padding key
-            key_ids = VOCABULARY[PADDING_KEY] * np.ones((len(key_specs), max_specs_len))
-            for key_obs_idx, spec_list in enumerate(key_specs):
-                for spec_idx, spec in enumerate(spec_list):
-                    spec_id = VOCABULARY[spec]
-                    key_ids[key_obs_idx, spec_idx] = spec_id
-            obs_spec_per_key_list.append(key_ids.astype(np.float32))
+            obs_spec_per_key_list.append(specs_to_ids(key_specs, max_specs_len))
         obs_specs = np.concatenate(obs_spec_per_key_list, axis=0)
         return obs_specs
 

@@ -23,7 +23,7 @@ from stable_baselines3.common.base_class import SelfBaseAlgorithm
 from stable_baselines3.common.vec_env.patch_gym import _convert_space
 from stable_baselines3.common.save_util import load_from_zip_file, recursive_setattr, recursive_getattr
 from models.ppo.ppo import TensorDict
-from vocabulary import VOCABULARY
+from vocabulary import get_active_vocabulary
 from definitions import MASK_SUFFIX
 
 
@@ -612,6 +612,7 @@ class MultiTaskBCPPO(BCPPO):
             print("== CURRENT SYSTEM INFO ==")
             get_system_info()
 
+        custom_objects = custom_objects or {}
         data, params, pytorch_variables = load_from_zip_file(
             path,
             device=device,
@@ -685,9 +686,8 @@ class MultiTaskBCPPO(BCPPO):
             "policy_kwargs" in data
             and "features_extractor_kwargs" in data["policy_kwargs"]
         ):
-            data["policy_kwargs"]["features_extractor_kwargs"]["vocabulary"] = (
-                custom_objects.get("vocabulary")
-            )
+            if custom_objects.get("vocabulary") is not None:
+                data["policy_kwargs"]["features_extractor_kwargs"]["vocabulary"] = custom_objects["vocabulary"]
         model.__dict__.update(data)
         model.__dict__.update(kwargs)
         model._setup_model()
@@ -696,7 +696,8 @@ class MultiTaskBCPPO(BCPPO):
         try:
             # put state_dicts back in place
             model.set_parameters(params, exact_match=True, device=device)
-            model.policy.set_vocabulary(VOCABULARY)
+            if env is not None:
+                model.policy.set_vocabulary(get_active_vocabulary())
             if reset_std:
                 log_std_init = model.policy.log_std_init
                 model.policy.log_std.data.fill_(log_std_init)

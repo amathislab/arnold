@@ -18,7 +18,7 @@ For CPU use, omit `--gpus all` and pass `--device cpu` to experiment scripts.
 ```bash
 conda env create -f environment.yml
 conda activate arnold
-pip install imitation==1.0.0
+pip install imitation==1.0.0 cloudpickle==3.1.1
 ```
 
 Install `imitation` last. On Linux, install the rendering libraries:

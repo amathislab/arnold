@@ -40,7 +40,6 @@ class PolicyLattice(Policy):
         )
         super().__init__()
         self.type = "lattice"
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         state_dim = observation_space.shape[0]
         action_dim = action_space.shape[0]
         self.norm = RunningNorm(state_dim)
@@ -60,11 +59,15 @@ class PolicyLattice(Policy):
             torch.ones(1, action_dim + units[-1]) * log_std,
             requires_grad=not fix_std,
         )
-        self.actions_low = torch.tensor(action_space.low, device=self.device)
-        self.actions_high = torch.tensor(action_space.high, device=self.device)
+        self.register_buffer("actions_low", torch.tensor(action_space.low), persistent=False)
+        self.register_buffer("actions_high", torch.tensor(action_space.high), persistent=False)
         self.clip_actions = clip_actions
         self.action_dim = action_dim
         self.latent_dim = units[-1]
+
+    @property
+    def device(self):
+        return next(self.parameters()).device
 
     def forward(self, x):
         x = self.norm(x)

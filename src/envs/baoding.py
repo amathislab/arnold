@@ -4,7 +4,7 @@ from myosuite.envs.myo.base_v0 import BaseV0
 from myosuite.utils.quat_math import mat2euler
 from myosuite.envs.myo.myochallenge.baoding_v1 import BaodingEnvV1, Task
 from envs.env_mixins import SpecsObsMixin
-from vocabulary import VOCABULARY
+from vocabulary import specs_to_ids
 
 
 class CleanBaodingEnv(BaodingEnvV1):
@@ -474,12 +474,9 @@ class MuscleBaodingEnv(CleanBaodingEnv, SpecsObsMixin):
 
         return spec_dict
 
+    def get_action_specs(self):
+        return [[muscle_name, 'activation', 'muscle'] for muscle_name in self.muscle_names]
+
     def get_action_ids(self):
-        """Create a list of specifications per action component. E.g., for a muscle
-        activation, [muscle_id, activation, muscle]
-        """
-        action_specs = [
-            [VOCABULARY[muscle_name], VOCABULARY["activation"], VOCABULARY["muscle"]]
-            for muscle_name in self.muscle_names
-        ]
-        return np.array(action_specs, dtype=np.float32)
+        action_specs = self.get_action_specs()
+        return specs_to_ids(action_specs, max_specs_len=len(action_specs[0]))

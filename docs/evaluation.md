@@ -1,97 +1,42 @@
 # Evaluation
 
-`src/benchmark.py` evaluates the performance of pretrained models, including those trained
-with OBC and Arnold, as well as the expert policies.
-
-## Evaluating OBC and Arnold models
-
-Specify the path to the saved model (`.zip` file) and the task to evaluate:
-
-```bash
-python src/benchmark.py \
-    --load path/to/your/model.zip \
-    --task <task_names> \
-    --arnold \
-    --normalize \
-    --num_episodes <number_of_episodes> \
-    --deterministic \
-    --device <cpu_or_cuda> \
-    --render
-```
-
-| Flag | Meaning |
-| --- | --- |
-| `--load` | Path to your trained model checkpoint. |
-| `--task` | One or many of the [available tasks](tasks.md). |
-| `--arnold` | Include if the model was trained with Arnold. |
-| `--normalize` | Restore the checkpoint's observation normalization. |
-| `--num_episodes` | How many episodes to run for evaluation. |
-| `--deterministic` | Take deterministic actions from the policy. |
-| `--device` | `cpu` or `cuda`. |
-| `--render` | Optionally render to video. |
-
-!!! warning "Rendering on macOS"
-    `--render` requires running `mjpython` instead of `python`.
-
-### Example: an Arnold model
+Download the models with `python scripts/fetch_data.py --profile models`.
+Run 200 stochastic episodes per task with a fixed evaluation seed:
 
 ```bash
 python src/benchmark.py \
     --load data/final_checkpoints/arnold/seed_0/rl_model_64670238_steps.zip \
-    --task kinesis \
-    --arnold \
-    --normalize \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu
+    --arnold --normalize --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/arnold/seed_0
 ```
 
-### Example: an OBC model
+Tasks are read from the checkpoint's `args.json`. Use `--task <task_names>` to
+select tasks. Atomic and Task-SV checkpoints use their saved vocabulary and
+task embeddings automatically. Add `--deterministic` for deterministic actions.
+`--normalize` restores the saved observation-normalization settings and freezes
+the statistics, including for checkpoints trained with normalization disabled.
+
+For MT-SAC and MT-PPO, use the vectorized benchmark:
 
 ```bash
-python src/benchmark.py \
-    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
-    --task relocate \
-    --arnold \
-    --normalize \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu
+python src/benchmark_multi_task_mlp.py \
+    --load data/final_checkpoints/mt-ppo/seed_0/rl_model_60192776_steps.zip \
+    --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/mt_ppo/seed_0
 ```
 
-## Evaluating expert policies
-
-For an expert policy, only the task needs to be specified — the checkpoint is resolved from
-`data/expert_policies/`:
+Evaluate specialist teachers with deterministic actions:
 
 ```bash
-python src/benchmark.py \
-    --task <task_name> \
-    --expert \
-    --num_episodes <number_of_episodes> \
-    --deterministic \
-    --device <cpu_or_cuda>
+python src/benchmark.py --task relocate --expert \
+    --num_episodes 200 --seed 0 --device cpu \
+    --save_results --out_dir data/final_benchmarks/expert_policies
 ```
 
-Include the `--expert` flag to indicate you are testing an expert policy, and set
-`<task_name>` to one of the [available tasks](tasks.md).
+Use `--expert_stochastic` to sample teacher actions, or
+`--custom_experts data/expert_configs/arnold_experts_seed_1.json` for super-experts.
+For rendering, add `--render`; on macOS use `mjpython`.
 
-### Example
-
-```bash
-python src/benchmark.py \
-    --task relocate \
-    --expert \
-    --num_episodes 10 \
-    --deterministic \
-    --device cpu \
-    --render
-```
-
-## Saving results for the plotting scripts
-
-The plotting scripts read benchmark result JSONs from `data/final_benchmarks/` and
-`data/final_benchmarks_extra/`. To regenerate them rather than using the released ones, add
-`--save_results` and point `--out_dir` at the directory the relevant plot expects — see
-[CSI-Finetuning](csi-finetuning.md) and [Multi-task RL baselines](mt-baselines.md) for the per-arm
-destinations.
+Results contain each episode's reward, length and solved-step count. The solved
+fraction divides that count by the fixed task horizon. Performance plots divide
+the mean fraction by the corresponding specialist teacher's mean fraction.

@@ -46,7 +46,7 @@ RUN python -m pip install --no-cache-dir -r /tmp/requirements.txt
 # imitation must be installed in a second pass, because pip cannot resolve it together
 # with gym (see the note at the top of requirements.txt). This step upgrades cloudpickle
 # from 1.2.2 to 3.x, which is the version everything actually runs against.
-RUN python -m pip install --no-cache-dir imitation==1.0.0
+RUN python -m pip install --no-cache-dir imitation==1.0.0 cloudpickle==3.1.1
 
 # Fail the build early if the environment is not actually importable.
 RUN python -c "import gym, myosuite, torch, stable_baselines3, imitation, sb3_contrib; print('env ok')"

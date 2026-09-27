@@ -13,6 +13,7 @@ from stable_baselines3.common.vec_env.base_vec_env import CloudpickleWrapper
 from gymnasium import spaces
 from gymnasium.core import ActType, ObsType
 from envs.running_mean_std import RunningMeanStdFloat32, SpecsRunningMeanStd
+from evaluation import get_episode_horizon
 from envs.wrappers import PaddedActionWrapper, PaddedObservationWrapper
 from definitions import MASK_SUFFIX, OBS_KEY, OBS_ID_KEY
 from typing import Union, Dict, Any, Tuple
@@ -131,6 +132,9 @@ class EnvIDWrapper(gym.ObservationWrapper):
     #     else :
     #         raise NotImplementedError(f"Observation type {type(obs)} is not supported")
     #     return obs
+
+    def get_episode_horizon(self):
+        return get_episode_horizon(self.env)
 
     def observation(self, observation):
         if isinstance(observation, dict):

@@ -1,3 +1,7 @@
+import json
+import os
+import numpy as np
+
 KEYS_LIST = [
     "padding",  # 0
     "value",
@@ -260,3 +264,42 @@ GROUPS = {
 }
 
 VOCABULARY = {key: idx for idx, key in enumerate(KEYS_LIST)}
+
+_ACTIVE_MODE = "compositional"
+_ACTIVE_VOCABULARY = VOCABULARY
+
+
+def composite_key(spec):
+    return "/".join(spec)
+
+
+def set_vocabulary_mode(mode, atomic_vocabulary_path=None):
+    global _ACTIVE_MODE, _ACTIVE_VOCABULARY
+    _ACTIVE_MODE = mode
+    if mode == "atomic":
+        with open(atomic_vocabulary_path) as stream:
+            _ACTIVE_VOCABULARY = json.load(stream)
+        os.environ["ARNOLD_ATOMIC_VOCABULARY_PATH"] = os.path.abspath(atomic_vocabulary_path)
+    else:
+        _ACTIVE_VOCABULARY = VOCABULARY
+        os.environ.pop("ARNOLD_ATOMIC_VOCABULARY_PATH", None)
+    os.environ["ARNOLD_VOCABULARY_MODE"] = mode
+    return _ACTIVE_VOCABULARY
+
+
+def get_active_vocabulary():
+    return _ACTIVE_VOCABULARY
+
+
+def specs_to_ids(specs, max_specs_len):
+    if _ACTIVE_MODE == "atomic":
+        return np.array([[_ACTIVE_VOCABULARY[composite_key(spec)]] for spec in specs], dtype=np.float32)
+    ids = np.zeros((len(specs), max_specs_len), dtype=np.float32)
+    for row, spec in enumerate(specs):
+        for column, word in enumerate(spec):
+            ids[row, column] = _ACTIVE_VOCABULARY[word]
+    return ids
+
+
+if os.environ.get("ARNOLD_VOCABULARY_MODE") == "atomic":
+    set_vocabulary_mode("atomic", os.environ["ARNOLD_ATOMIC_VOCABULARY_PATH"])

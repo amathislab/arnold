@@ -14,7 +14,9 @@ gymnasium==0.29.1
 h5py==3.7.0
 wandb
 tqdm
-numpy
+numpy==1.24.4
+torch==2.4.1
+mujoco==2.3.7
 ipdb
 stable-baselines3==2.2.1
 MyoSuite==2.2.0

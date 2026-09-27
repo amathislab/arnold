@@ -1,7 +1,6 @@
 import numpy as np
 import tqdm
 from sb3_contrib.common.recurrent.policies import RecurrentActorCriticPolicy
-from train.algo_factory import AlgoFactory
 from models.ppo.helpers import call_muscle_transformer_policy
 from algos.bc_ppo import MultiTaskBCPPO
 from models.ppo.policies import (
@@ -10,7 +9,7 @@ from models.ppo.policies import (
     BilateralMuscleTransformerPolicy,
 )
 from definitions import ROOT_DIR, ENV_CONFIG_PATH
-from stable_baselines3 import SAC, TD3, PPO
+from stable_baselines3 import SAC, PPO
 from models.ppo.helpers import call_sb3_policy
 from algos.dagger_bilateral import bilateral_policy_to_callable, add_timestep_to_obs
 from stable_baselines3.common.policies import ActorCriticPolicy
@@ -19,27 +18,20 @@ import torch
 import argparse
 import os
 from envs.environment_factory import EnvironmentFactory
-import time
 import json
-import torch
-from definitions import (
-    ENV_CONFIG_PATH,
-)
 from envs.expert_wrapper import ExpertWrapper
 from envs.loaders import load_expert_policy_and_env
 from models.csi_model import CSIActionNet
+from evaluation import find_vecnormalize, get_episode_horizon, summarize_episodes
+from stable_baselines3.common.utils import set_random_seed
+from vocabulary import set_vocabulary_mode
 
-def get_tasks_from_args_json(policy_path):
-    """Get list of tasks from args.json in the policy directory"""
-    policy_dir = os.path.dirname(policy_path)
-    args_path = os.path.join(policy_dir, "args.json")
-
-    if not os.path.exists(args_path):
-        return None, None
-
-    with open(args_path, "r") as f:
-        args = json.load(f)
-        return list(set(args.get("tasks", None))), args.get("num_memory_steps", None)
+def get_training_args(policy_path):
+    args_path = os.path.join(os.path.dirname(policy_path), "args.json")
+    if not os.path.isfile(args_path):
+        return {}
+    with open(args_path) as stream:
+        return json.load(stream)
 
 
 def parse_args():
@@ -90,7 +82,7 @@ def parse_args():
             "kinesis",
         ],
     )
-    parser.add_argument("--num_episodes", type=int, default=20)
+    parser.add_argument("--num_episodes", type=int, default=200)
     parser.add_argument(
         "--num_steps", type=int, default=None, help="Number of steps per episode"
     )
@@ -111,6 +103,7 @@ def parse_args():
     parser.add_argument("--save_failed_video", action="store_true")
     parser.add_argument("--deterministic", action="store_true")
     parser.add_argument("--expert", action="store_true")
+    parser.add_argument("--expert_stochastic", action="store_true")
     parser.add_argument("--normalize", action="store_true")
     parser.add_argument("--arnold", action="store_true")
     parser.add_argument("--csi_components", type=str, default=None)
@@ -153,10 +146,6 @@ def save_results(scores, args):
     else:
         run_name = f"expert_{'_'.join(args.task)}"
 
-    # Add num_episodes to scores dict
-    for task in scores:
-        scores[task]["num_episodes"] = args.num_episodes
-
     results_file = os.path.join(out_dir, f"{run_name}_results.json")
     with open(results_file, "w", encoding="utf-8") as f:
         json.dump(scores, f, indent=2)
@@ -184,22 +173,28 @@ def save_video(frames, out_dir, task_name):
 if __name__ == "__main__":
     args = parse_args()
 
-    # For multi-task policies, get tasks from args.json if not specified
-    if args.task is None and args.load is not None:
-        args.task, num_memory_steps = get_tasks_from_args_json(args.load)
-        if args.task is None:
-            raise ValueError(
-                "No tasks specified and couldn't find args.json with tasks"
-            )
-    elif args.task is None:
-        raise ValueError("Must specify --task when not loading a policy")
-    else:
-        num_memory_steps = None
+    training_args = get_training_args(args.load) if args.load is not None else {}
+    num_memory_steps = training_args.get("num_memory_steps")
+    if args.task is None:
+        args.task = list(dict.fromkeys(training_args.get("tasks", [])))
+    if not args.task:
+        raise ValueError("Specify --task or load a checkpoint with tasks in args.json")
+
+    vocabulary = None
+    if args.arnold and args.load is not None:
+        vocabulary_path = os.path.join(os.path.dirname(args.load), "vocabulary.json")
+        if os.path.isfile(vocabulary_path):
+            with open(vocabulary_path) as stream:
+                vocabulary = json.load(stream)
+            mode = "atomic" if any("/" in key for key in vocabulary) else "compositional"
+            set_vocabulary_mode(mode, vocabulary_path)
 
     scores = {}
     arnold_envs = args.arnold
 
     for task_name in args.task:
+        vecnormalize = None
+        set_random_seed(args.seed)
         if args.expert:
             if "kinesis" in task_name:
                 eval_env_config_path = os.path.join(
@@ -220,7 +215,8 @@ if __name__ == "__main__":
                 policy, env, vecnormalize, _ = load_expert_policy_and_env(
                     task_name, device=args.device, custom_expert_config_dict=custom_expert_config
                 )
-            env = ExpertWrapper(env, task_name, custom_expert_config_path=args.custom_experts)
+            env = ExpertWrapper(env, task_name, device=args.device, custom_expert_config_path=args.custom_experts)
+            vecnormalize = None
         else:
             # Load student policy
             if args.policy == "transformer":
@@ -240,26 +236,15 @@ if __name__ == "__main__":
             else:
                 raise NotImplementedError(f"Policy type {args.policy} is not supported")
 
-            if args.arnold:
-                experiment_path = os.path.dirname(args.load)
-                vocabulary_path = os.path.join(experiment_path, "vocabulary.json")
-                if os.path.exists(vocabulary_path):
-                    with open(vocabulary_path, "r") as f:
-                        vocabulary = json.load(f)
-                else:
-                    vocabulary = None
-                custom_objects = {"vocabulary": vocabulary}
-            else:
-                custom_objects = {}
-                vocabulary = None
+            custom_objects = {"vocabulary": vocabulary}
 
             if args.policy == "sac":
-                policy = SAC.load(args.load, device=args.device).policy
+                policy = SAC.load(args.load, device=args.device, buffer_size=1).policy
                 policy.eval()
             else:
                 try:
                     policy = policy_class.load(args.load, device=args.device)
-                except:
+                except Exception:
                     if args.policy == "csi":
                         algo_class = PPO
                     else:
@@ -285,6 +270,8 @@ if __name__ == "__main__":
 
             # Load environment for student policy
             prefix = "arnold_" if arnold_envs else "dense_"
+            if arnold_envs and training_args.get("dense_reward", False):
+                prefix = "dense_" + prefix
             eval_env_config_path = os.path.join(
                 ENV_CONFIG_PATH, f"{prefix}{task_name}_config.json"
             )
@@ -296,20 +283,17 @@ if __name__ == "__main__":
                 eval_env_config["headless"] = not args.render
 
             if args.normalize:
-                vecnormalize_path = args.load.replace(
-                    "model", "model_vecnormalize"
-                ).replace(".zip", ".pkl")
-                if not os.path.exists(vecnormalize_path):
-                    vecnormalize_path = args.load.replace(
-                        "model", "env"
-                    ).replace(".zip", ".pkl")
+                vecnormalize_path = find_vecnormalize(args.load)
                 print("Loading vecnormalize from", vecnormalize_path)
                 vecnormalize = create_vec_env(
                     env_config_list=[eval_env_config],
                     load_env_path=vecnormalize_path,
                     multi_env=args.arnold,
                     old_vocabulary=vocabulary,
+                    seed=args.seed,
                 )
+                vecnormalize.training = False
+                vecnormalize.norm_reward = False
             else:
                 vecnormalize = None
 
@@ -326,21 +310,21 @@ if __name__ == "__main__":
             env.mujoco_render_frames = False
             frames = []
 
-        total_steps = 0
-        total_solved = 0
-        total_solved_steps = 0
-        total_cum_reward = 0
+        task_index = None
+        if not args.expert:
+            extractor = getattr(policy, "features_extractor", None)
+            if getattr(extractor, "position_embedding", None) == "task_specific":
+                task_index = extractor.task_names.index(task_name)
+        set_random_seed(args.seed)
+        env.action_space.seed(args.seed)
 
         # Lists to store per-episode metrics for std calculation
         episode_cum_rewards = []
-        episode_step_rewards = []
-        episode_solved = []
         episode_solved_steps = []  # Will store raw count of solved steps per episode
-        episode_solved_fracs = []  # Will store solved fraction per episode
         episode_steps = []
         frames = []
 
-        max_episode_steps = env.unwrapped.env.spec.max_episode_steps
+        max_episode_steps = get_episode_horizon(env)
 
 
         with tqdm.tqdm(total=args.num_episodes, desc=f"Evaluating {task_name}") as pbar:
@@ -348,7 +332,7 @@ if __name__ == "__main__":
                 lstm_states = None
                 cum_rew = 0
                 step = 0
-                obs = env.reset()
+                obs = env.reset(seed=args.seed) if i == 0 else env.reset()
                 if isinstance(obs, tuple):
                     obs = obs[0]
                 episode_starts = np.ones((1,), dtype=bool)
@@ -362,7 +346,6 @@ if __name__ == "__main__":
                             env.sim.renderer.render_to_window()
                         else:
                             env.render()
-                        # time.sleep(0.001)
                     if args.save_video:
                         if task_name != "kinesis":
                             curr_frame = env.sim.renderer.render_offscreen(width=640, height=480, camera_id=1, device_id=0)
@@ -372,7 +355,7 @@ if __name__ == "__main__":
 
                     # Get action based on policy type
                     if args.expert:
-                        action = env.get_expert_action()
+                        action = env.get_expert_action(deterministic=not args.expert_stochastic)
                     else:
                         if arnold_envs:
                             obs_i = {key: obs[key][None, ...] for key in obs}
@@ -390,6 +373,9 @@ if __name__ == "__main__":
                             else:
                                 obs_i_normalized = obs
 
+                        if task_index is not None:
+                            obs_i_normalized["env_id"] = np.array([[[task_index]]], dtype=np.int32)
+
                         # Get action based on policy type
                         if isinstance(policy, BilateralMuscleTransformerPolicy):
                             obs_i_normalized = add_timestep_to_obs(
@@ -400,7 +386,7 @@ if __name__ == "__main__":
                                 env,
                                 masking_ratio=args.mask_rate,
                                 time_skip=args.time_skip,
-                                deterministic_policy=True,
+                                deterministic_policy=args.deterministic,
                             )(obs_i_normalized, lstm_states, episode_starts)
                         elif isinstance(
                             policy,
@@ -454,10 +440,7 @@ if __name__ == "__main__":
                     action = np.squeeze(action)
                     next_obs, rewards, term, trunc, info = env.step(action)
 
-                    if args.num_steps is not None:
-                        done = step >= args.num_steps - 1
-                    else:
-                        done = term or trunc
+                    done = term or trunc or (args.num_steps is not None and step + 1 >= args.num_steps)
 
                     obs = next_obs
                     episode_starts = np.array([done])
@@ -467,19 +450,10 @@ if __name__ == "__main__":
                     solved_count += solved
 
                 pbar.update(1)
-                total_steps += step
-                total_solved += solved_count > 0
-                total_solved_steps += solved_count
-                total_cum_reward += cum_rew
 
                 # Store per-episode metrics
                 episode_cum_rewards.append(cum_rew)
-                episode_step_rewards.append(cum_rew / step)
-                episode_solved.append(1.0 if solved_count > 0 else 0.0)
                 episode_solved_steps.append(solved_count)  # Store raw count
-                episode_solved_fracs.append(
-                    solved_count / max_episode_steps if max_episode_steps else 0
-                )  # Store fraction
                 episode_steps.append(step)
 
                 if args.save_failed_video :
@@ -488,26 +462,22 @@ if __name__ == "__main__":
                 else :
                     frames += episode_frames
 
-        scores[task_name] = {
-            "avg_cum_reward": float(np.mean(episode_cum_rewards)),
-            "std_cum_reward": float(np.std(episode_cum_rewards)),
-            "avg_step_reward": float(np.mean(episode_step_rewards)),
-            "std_step_reward": float(np.std(episode_step_rewards)),
-            "avg_solved": float(np.mean(episode_solved)),
-            "std_solved": float(np.std(episode_solved)),
-            "avg_solved_steps": float(
-                np.mean(episode_solved_steps)
-            ),  # Average of raw counts
-            "avg_solved_step_frac": float(
-                np.mean(episode_solved_fracs)
-            ),  # Average of fractions
-            "std_solved_steps": float(np.std(episode_solved_steps)),
-            "avg_steps": float(np.mean(episode_steps)),
-            "std_steps": float(np.std(episode_steps)),
-            "max_episode_steps": int(max_episode_steps),
-            "episode_cum_rewards": [float(reward) for reward in episode_cum_rewards],
-            "episode_solve_step_fracs": [float(solved_frac) for solved_frac in episode_solved_fracs]
-        }
+        scores[task_name] = summarize_episodes({
+            "cum_rewards": episode_cum_rewards,
+            "steps": episode_steps,
+            "solved_counts": episode_solved_steps,
+        }, max_episode_steps)
+        scores[task_name].update(
+            seed=args.seed,
+            deterministic=not args.expert_stochastic if args.expert else args.deterministic,
+            normalize_obs=bool(getattr(env.expert_vecnormalize, "norm_obs", False))
+                if args.expert and not env.using_kinesis_default_expert
+                else (True if args.expert else bool(getattr(vecnormalize, "norm_obs", False))),
+            num_steps=args.num_steps,
+        )
+        env.close()
+        if vecnormalize is not None:
+            vecnormalize.close()
         if args.save_video:
             if args.save_failed_video :
                 for i, episode_frames in enumerate(frames) :
@@ -518,204 +488,3 @@ if __name__ == "__main__":
 
     # Save results if requested
     save_results(scores, args)
-
-
-"""
-mjpython src/benchmark.py --task elbow_pose --num_episodes 10 --render --expert
-
-mjpython src/benchmark.py --task hand_thumb_reach --num_episodes 10 --render --expert --device cpu
-
-mjpython src/benchmark.py \
-    --task pen \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/105_arnold_pen_bc_ppo_seed_0/rl_model_6400000_steps.zip \
-    --device cpu \
-    --num_episodes 200 \
-    --normalize \
-    --render
-    
-python src/benchmark.py\
-    --task elbow_pose\
-    --policy mlp\
-    --load saves/server/new_single_task_mlp/elbow_pose/rl_model_500000_steps.zip\
-    --device cpu\
-    --num_episodes 200\
-    --normalize
-    
-mjpython src/benchmark.py --task hand_index_reach --num_episodes 10 --render --expert --device cpu
-
-
-mjpython src/benchmark.py \
-    --task hand_middle_reach \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_single_task/hand_middle_reach/rl_model_5100000_steps.zip \
-    --device cpu \
-    --num_episodes 3 \
-    --normalize \
-    --render
-    
-mjpython src/benchmark.py \
-    --task hand_ring_reach \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/119_arnold_htr_hir_hmr_hrr_hlr_bc_ppo_seed_0/rl_model_2199780_steps.zip \
-    --device cpu \
-    --num_episodes 100 \
-    --normalize \
-    --render
-    
-mjpython src/benchmark.py \
-    --task baoding_p2 \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/120_arnold_bpc_bpc_bpo_bp_bc_ppo_seed_0/rl_model_20900000_steps.zip \
-    --device cpu \
-    --num_episodes 3 \
-    --normalize \
-    --render
-
-mjpython src/benchmark.py \
-    --task pen \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/122_arnold_hand_index_reach_pen_bc_ppo_seed_0/rl_model_15400000_steps.zip \
-    --device cpu \
-    --num_episodes 3 \
-    --normalize \
-    --render
-
-mjpython src/benchmark.py \
-    --task elbow_pose \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/127_arnold_hand_index_reach_elbow_pose_bc_ppo_seed_0/rl_model_3700000_steps.zip \
-    --device cpu \
-    --num_episodes 100 \
-    --normalize \
-    --render
-    
-mjpython src/benchmark.py \
-    --task baoding_p1_cw \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/138_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_bc_ppo_seed_0/rl_model_20593408_steps.zip \
-    --device cpu \
-    --num_episodes 10 \
-    --normalize \
-    --deterministic \
-    --render
-
-mjpython src/benchmark.py \
-    --task pen \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/138_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_bc_ppo_seed_0/rl_model_26691456_steps.zip \
-    --device cpu \
-    --num_episodes 20 \
-    --normalize \
-    --deterministic \
-    --render
-
-mjpython src/benchmark.py \
-    --task reorient \
-    --arnold \
-    --policy transformer \
-    --load data/student_policies/arnold_multi_task/139_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_bc_ppo_seed_0/rl_model_25898964_steps.zip \
-    --device cpu \
-    --num_episodes 500 \
-    --normalize \
-    --render
-
-python src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/138_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_bc_ppo_seed_0/rl_model_20693376_steps.zip \
-    --task relocate \
-    --arnold \
-    --normalize \
-    --num_episodes 200 \
-    --deterministic \
-    --out_dir data/benchmarks/student_policies/arnold_multi_task \
-    --device cpu 
-
-python src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/138_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_bc_ppo_seed_0/rl_model_26591488_steps.zip \
-    --arnold \
-    --normalize \
-    --num_episodes 200\
-    --deterministic \
-    --save_results \
-    --out_dir data/benchmarks/student_policies/arnold_multi_task \
-    --device cpu
-
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/148_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_bc_ppo_seed_2/rl_model_49898004_steps.zip \
-    --task relocate \
-    --arnold \
-    --normalize \
-    --num_episodes 10\
-    --deterministic \
-    --device cpu \
-    --render
-    
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/162_arnold_kinesis_bc_ppo_seed_0/rl_model_8000000_steps.zip \
-    --task kinesis \
-    --arnold \
-    --normalize \
-    --num_episodes 10\
-    --deterministic \
-    --device cpu \
-    --render
-
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/170_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_0/rl_model_45279162_steps.zip \
-    --arnold \
-    --normalize \
-    --num_episodes 200 \
-    --deterministic \
-    --save_results \
-    --out_dir data/benchmarks/student_policies/arnold_multi_task \
-    --device cpu
-
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/170_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_0/rl_model_45279162_steps.zip \
-    --task elbow_pose \
-    --arnold \
-    --normalize \
-    --num_episodes 200 \
-    --deterministic \
-    --device cpu \
-    --render
-
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
-    --task kinesis \
-    --arnold \
-    --normalize \
-    --num_episodes 200 \
-    --deterministic \
-    --device cpu \
-    --render
-
-mjpython src/benchmark.py \
-    --load data/student_policies/arnold_single_task/baoding_p1_ccw/rl_model_100000_steps.zip \
-    --task relocate \
-    --arnold \
-    --normalize \
-    --num_episodes 200 \
-    --deterministic \
-    --device cpu \
-    --render
-    
-mjpython src/benchmark.py \
-    --task elbow_pose \
-    --expert \
-    --num_episodes 200\
-    --deterministic \
-    --device cpu \
-    --render
-    
-mjpython src/benchmark.py --task relocate --num_episodes 10 --render --expert
-
-"""

@@ -11,7 +11,7 @@ from pathlib import Path
 from collections import OrderedDict
 from scipy.spatial.transform import Rotation as sRot
 from myosuite.utils.quat_math import mat2euler
-from vocabulary import VOCABULARY
+from vocabulary import specs_to_ids
 from envs.myolegs_base_env import BaseEnv
 
 
@@ -989,28 +989,22 @@ class MuscleKinesisEnv(KinesisEnv, SpecsObsMixin):
 
         return spec_dict
 
-    def get_action_ids(self):
-        """Create a list of specifications per action component. E.g., for a muscle
-        activation, [muscle_id, activation, muscle]
-        """
+    def get_action_specs(self):
         action_specs = []
         for muscle_name in self.muscle_names:
-            muscle, side = muscle_name.split("_")
-            if side == "l":
-                side_name = "left"
-            elif side == "r":
-                side_name = "right"
+            muscle, side = muscle_name.split('_')
+            if side == 'l':
+                side_name = 'left'
+            elif side == 'r':
+                side_name = 'right'
             else:
-                raise ValueError(f"Unknown side {side}")
-            action_specs.append(
-                [
-                    VOCABULARY[muscle],
-                    VOCABULARY[side_name],
-                    VOCABULARY["activation"],
-                    VOCABULARY["muscle"],
-                ]
-            )
-        return np.array(action_specs, dtype=np.float32)
+                raise ValueError(f'Unknown side {side}')
+            action_specs.append([muscle, side_name, 'activation', 'muscle'])
+        return action_specs
+
+    def get_action_ids(self):
+        action_specs = self.get_action_specs()
+        return specs_to_ids(action_specs, max_specs_len=len(action_specs[0]))
 
     def get_obs(self):
         """

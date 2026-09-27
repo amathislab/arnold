@@ -4,6 +4,7 @@ import json
 from sys import prefix
 from envs.environment_factory import EnvironmentFactory
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from envs.loaders import load_expert_policy, load_vocabulary
 from envs.multi_env import (
@@ -118,8 +119,11 @@ def make_parallel_envs(
 
     def make_env(env_id, config_id, env_config, reward_normalizer, expert_task):
         def _thunk():
-            env_config["seed"] = seed + env_id
+            worker_seed = seed + config_id * num_envs_per_config + env_id
+            set_random_seed(worker_seed)
+            env_config["seed"] = worker_seed
             env = EnvironmentFactory.create(**env_config)
+            env.action_space.seed(worker_seed)
             if expert_task is not None:
                 # if expert_task == "kinesis":
                 #     env = KinesisExpertWrapper(env)
