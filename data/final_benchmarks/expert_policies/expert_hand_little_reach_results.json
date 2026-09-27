@@ -1,0 +1,17 @@
+{
+  "hand_little_reach": {
+    "avg_cum_reward": 90.59054227233185,
+    "std_cum_reward": 1.6125237419343692,
+    "avg_step_reward": 0.9059054227233184,
+    "std_step_reward": 0.016125237419343692,
+    "avg_solved": 1.0,
+    "std_solved": 0.0,
+    "avg_solved_steps": 92.09,
+    "avg_solved_step_frac": 0.9209,
+    "std_solved_steps": 1.460102736111401,
+    "avg_steps": 100.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 100,
+    "num_episodes": 200
+  }
+}

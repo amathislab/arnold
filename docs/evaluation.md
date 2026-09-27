@@ -12,6 +12,7 @@ python src/benchmark.py \
     --load path/to/your/model.zip \
     --task <task_names> \
     --arnold \
+    --normalize \
     --num_episodes <number_of_episodes> \
     --deterministic \
     --device <cpu_or_cuda> \
@@ -23,6 +24,7 @@ python src/benchmark.py \
 | `--load` | Path to your trained model checkpoint. |
 | `--task` | One or many of the [available tasks](tasks.md). |
 | `--arnold` | Include if the model was trained with Arnold. |
+| `--normalize` | Restore the checkpoint's observation normalization. |
 | `--num_episodes` | How many episodes to run for evaluation. |
 | `--deterministic` | Take deterministic actions from the policy. |
 | `--device` | `cpu` or `cuda`. |
@@ -35,9 +37,10 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/arnold/rl_model_64670238_steps.zip \
+    --load data/final_checkpoints/arnold/seed_0/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
+    --normalize \
     --num_episodes 10 \
     --deterministic \
     --device cpu
@@ -47,9 +50,10 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/obc/rl_model_54974700_steps.zip \
+    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
     --task relocate \
     --arnold \
+    --normalize \
     --num_episodes 10 \
     --deterministic \
     --device cpu

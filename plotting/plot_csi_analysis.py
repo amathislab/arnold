@@ -15,6 +15,7 @@ import seaborn as sns
 from matplotlib.ticker import PercentFormatter
 
 from definitions import ROOT_DIR
+from _reproduction import task_display_names
 
 
 @lru_cache(maxsize=1)
@@ -110,22 +111,7 @@ def _add_vertical_episode_distributions(axis, params):
                     color='#C44E52', alpha=0.6, s=20, edgecolors='#C44E52', linewidth=0.5)
 
 # Mapping for better task display names
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little reach",
-    "hand_index_reach": "Index reach",
-    "hand_middle_reach": "Middle reach",
-    "hand_ring_reach": "Ring reach",
-    "hand_thumb_reach": "Thumb reach",
-    "reorient": "Die reorient",
-    "pen": "Pen reorient",
-    "baoding_p1_cw": "Baoding CW",
-    "baoding_p1_ccw": "Baoding CCW",
-    "baoding_p2_overlap": "Baoding hard",
-    "baoding_p2": "Baoding harder",
-    "elbow_pose": "Elbow pose",
-    "relocate": "Object relocation",
-    "kinesis": "Walk to point",
-}
+TASK_NAME_MAPPING = task_display_names(multiline=False)
 
 # Metric to use for each task
 TASK_METRIC_MAP = {

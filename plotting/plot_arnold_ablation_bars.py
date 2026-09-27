@@ -1,29 +1,14 @@
 import _srcpath  # noqa: F401  # adds ../src to sys.path (see _srcpath.py)
-import glob
 import json
 import os
 from typing import Any
 import numpy as np
 import matplotlib.pyplot as plt
 from definitions import ROOT_DIR
+from _reproduction import benchmark_result_paths, task_display_names
 
 # Reuse the same mappings from plot_radar.py
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little\n reach",
-    "hand_index_reach": "Index\n reach",
-    "hand_middle_reach": "Middle\n reach",
-    "hand_ring_reach": "Ring\n reach",
-    "hand_thumb_reach": "Thumb\n reach",
-    "reorient": "Die\n reorient",
-    "pen": "Pen\n reorient",
-    "baoding_p1_cw": "Baoding\n CW",
-    "baoding_p1_ccw": "Baoding\n CCW",
-    "baoding_p2_overlap": "Baoding\n hard",
-    "baoding_p2": "Baoding\n harder",
-    "elbow_pose": "Elbow\n pose",
-    "relocate": "Object\n relocation",
-    "kinesis": "Walk to\n point",
-}
+TASK_NAME_MAPPING = task_display_names(multiline=True)
 
 TASK_METRIC_MAP = {
     "hand_little_reach": "solved_step_frac",
@@ -49,14 +34,8 @@ def load_results(filepath):
 
 
 def _collect_seed_results(method_dir):
-    """Return the sorted per-seed *_results.json files under a final_benchmarks method dir."""
-    pattern = os.path.join(
-        ROOT_DIR, "data/final_benchmarks", method_dir, "*", "*_results.json"
-    )
-    files = sorted(glob.glob(pattern))
-    if not files:
-        raise FileNotFoundError(f"No results files found for method dir: {method_dir}")
-    return files
+    """Select exactly the registered final result for each seed."""
+    return benchmark_result_paths(method_dir, root=ROOT_DIR)
 
 
 def generate_latex_table(tasks, method_performances, task_name_mapping):

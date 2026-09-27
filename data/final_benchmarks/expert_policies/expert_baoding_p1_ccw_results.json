@@ -1,0 +1,17 @@
+{
+  "baoding_p1_ccw": {
+    "avg_cum_reward": 915.425,
+    "std_cum_reward": 5.9953627913580005,
+    "avg_step_reward": 4.5771250000000006,
+    "std_step_reward": 0.029976813956789996,
+    "avg_solved": 1.0,
+    "std_solved": 0.0,
+    "avg_solved_steps": 183.085,
+    "avg_solved_step_frac": 0.9154249999999997,
+    "std_solved_steps": 1.1990725582716002,
+    "avg_steps": 200.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 200,
+    "num_episodes": 200
+  }
+}

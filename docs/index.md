@@ -11,11 +11,11 @@ released ones, and reproduce figures in the paper.
 
 -   :material-download: **[Installation](installation.md)**
 
-    Docker image or conda environment. Under 30 minutes on a modern machine.
+    Set up Docker or a conda environment.
 
 -   :material-database: **[Data and checkpoints](data.md)**
 
-    What ships in the repository, and what you need to fetch from Zenodo.
+    Download checkpoints and benchmark results.
 
 -   :material-dumbbell: **[Training](training.md)**
 
@@ -27,22 +27,15 @@ released ones, and reproduce figures in the paper.
 
 </div>
 
-## What is included
+## Download data
 
-1. The code and scripts to train policies with **BC, PPO, OBC, OBC-PPO, RL fine-tuning and
-   self-distillation** — including the expert policies used for imitation learning.
-2. **Pretrained checkpoints** for every method in the paper, including the ablations, so the
-   results and videos can be reproduced directly.
+Download the [Zenodo v3 release](https://zenodo.org/records/21807280) from the repository root:
 
-## Model checkpoints and benchmark results
+```bash
+python scripts/fetch_data.py --profile all
+```
 
-All checkpoints, benchmark result files and cached learning curves are hosted on Zenodo:
-
-[:material-database: Zenodo record 21493316](https://zenodo.org/records/21493316){ .md-button .md-button--primary }
-
-The git repository contains only the code plus small configuration files. Everything else
-must be unzipped into `data/` before running the training, evaluation or plotting scripts —
-see [Data and checkpoints](data.md) for the exact directory layout.
+See [Data and checkpoints](data.md) for individual download profiles and paths.
 
 ## Reproducing the paper
 

@@ -1,0 +1,17 @@
+{
+  "baoding_p2": {
+    "avg_cum_reward": 540.525,
+    "std_cum_reward": 274.4824208851999,
+    "avg_step_reward": 2.724492153847399,
+    "std_step_reward": 1.3563129959179285,
+    "avg_solved": 0.94,
+    "std_solved": 0.2374868417407584,
+    "avg_solved_steps": 108.105,
+    "avg_solved_step_frac": 0.5405249999999999,
+    "std_solved_steps": 54.896484177039966,
+    "avg_steps": 193.995,
+    "std_steps": 28.070535709173775,
+    "max_episode_steps": 200,
+    "num_episodes": 200
+  }
+}

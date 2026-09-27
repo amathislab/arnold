@@ -1,63 +1,23 @@
 # Arnold: a multi-task, multi-embodiment muscle transformer policy
 
-## Model checkpoints and benchmark results
-Available on [Zenodo](https://zenodo.org/records/21493316)
-
-What is contained?
-
-1) We provide the code and the scripts to train policies with BC, PPO, OBC, OBC-PPO, RL fine-tuning and self-distillation. We thus also provide expert policies for imitation learning.
-2) We also include pretrained checkpoints for OBC and OBC-PPO, to reproduce results and videos.
+Code for training and evaluating Arnold, OBC, PPO and BC policies.
 
 ## Installation
 
-To reproduce the training experiments, we are providing you two ways to set up a feasible environment.
+Run these commands from the repository root.
 
-The installation should usually take less than 30 minutes on a modern computer with fast internet connection.
-
-Both methods install the same package set, defined once in [`environment.yml`](environment.yml) (conda) and [`docker-cuda/requirements.txt`](docker-cuda/requirements.txt) (Docker).
-
-### Method 1: Docker
-
-Use the provided Dockerfile, you can create a docker container that can be then used to run all the arnold experiments (note: this assume that Docker is installed in your system).
-
-To build the Docker image, navigate to the `docker-cuda` directory containing the `Dockerfile` and run:
+### Docker
 
 ```bash
-docker build -t arnold_image .
-```
-
-The image contains only the Python environment. The repository itself is mounted into
-the container at run time, so that `data/` (which you download separately from Zenodo)
-and everything the runs write to `output/` live on the host and survive the container.
-From the **repository root**:
-
-```bash
+docker build -t arnold_image docker-cuda
 docker run -it --rm --gpus all \
     -v "$PWD":/arnold -w /arnold \
     arnold_image /bin/bash
 ```
 
-This will start an interactive session within the container, where you can then execute
-the training or evaluation scripts exactly as written in the sections below, for example:
+For CPU use, omit `--gpus all` and pass `--device cpu` to experiment scripts.
 
-```bash
-python src/main_bc_ppo.py --task elbow_pose --num_envs 16 --num_steps 5000000 --local
-```
-
-Notes:
-
-- Drop `--gpus all` if the host has no NVIDIA GPU (this also requires the
-  [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/)). The
-  image still runs CPU-only, in which case pass `--device cpu` to the scripts. On Apple
-  Silicon the image builds and runs natively, but CPU-only.
-- The image renders headlessly through OSMesa (`MUJOCO_GL=osmesa`), so `--render` works
-  without a display. With a GPU attached, `-e MUJOCO_GL=egl` is faster.
-- On Linux, files the container writes into the mounted repository are owned by `root`.
-  Add `-u "$(id -u):$(id -g)"` to the `docker run` command to keep them owned by you.
-
-### Method 2: Conda environment
-
-The quickest way is to create the environment from the provided file:
+### Conda
 
 ```bash
 conda env create -f environment.yml
@@ -65,79 +25,31 @@ conda activate arnold
 pip install imitation==1.0.0
 ```
 
-The trailing `pip install imitation` is required and must come last. MyoSuite 2.2.0 pins
-`gym==0.13`, whose metadata demands `cloudpickle~=1.2.0`, while `imitation==1.0.0` pulls
-in `huggingface-sb3`, which demands `cloudpickle>=1.6`. pip cannot satisfy both in a
-single resolution, so `imitation` is installed in a second pass; this upgrades
-`cloudpickle` to 3.x, which is the version every package actually runs against. Only
-gym's stale pin — for a code path this project never uses — is left unsatisfied, and
-`pip check` will report it.
-
-Equivalently, you can create the environment and install the dependencies manually:
+Install `imitation` last. On Linux, install the rendering libraries:
 
 ```bash
-conda create -n arnold python=3.8
-conda activate arnold
-pip install \
-    cloudpickle==1.2.2\
-    gym==0.13.0\
-    gymnasium==0.29.1\
-    h5py==3.7.0\
-    wandb\
-    tqdm\
-    numpy\
-    ipdb
-
-pip install stable-baselines3==2.2.1
-pip install MyoSuite==2.2.0
-pip install sb3-contrib==2.2.1
-pip install Shimmy==1.3.0
-pip install imageio
-
-# Needed by the analysis and plotting scripts
-pip install \
-    matplotlib\
-    seaborn\
-    scikit-learn\
-    scipy\
-    pandas\
-    tensorboard\
-    joblib
-
-# Must come last, for the reason explained above
-pip install imitation==1.0.0
+sudo apt-get update
+sudo apt-get install -y libgl1-mesa-glx libosmesa6
 ```
 
-You may need to install some opengl-related system packages:
+## Download data and pretrained models
+
+Download the [Zenodo v3 release](https://zenodo.org/records/21807280) from the
+repository root using Python 3.8 or newer:
 
 ```bash
-apt-get update && apt-get install -y libgl1-mesa-glx libosmesa6
+# Benchmark results (3.2 MB).
+python scripts/fetch_data.py --profile benchmarks
+
+# Model checkpoints, expert policies and Kinesis assets (3.4 GB).
+python scripts/fetch_data.py --profile models
+
+# Download both profiles.
+python scripts/fetch_data.py --profile all
 ```
 
-## Downloading Pretrained Models and Expert Policies
-
-The git repository contains only the code plus the small configuration files. Everything else lives on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the `data/` directory before running the training, evaluation, or plotting scripts. Your `data/` directory should end up with the sub-directories listed below.
-
-**Included in the repository (no download needed):**
-
-| Directory | Contents |
-| --- | --- |
-| `data/env_configs/` | Per-task environment configuration JSONs (`ENV_CONFIG_PATH`). |
-| `data/expert_configs/` | Expert-policy configuration JSONs (`EXPERT_CONFIG_PATH`). |
-
-**Need to be downloaded to run some scripts** — find and download these from the Zenodo record at [https://zenodo.org/records/21493316](https://zenodo.org/records/21493316), then unzip them into `data/`:
-
-| Directory | Contents | Needed for |
-| --- | --- | --- |
-| `data/student_policies/` | Trained OBC / Arnold / single- and multi-task student policy checkpoints (`.zip` + `vecnormalize.pkl`) and their TensorBoard training logs. | Evaluation (`src/benchmark.py`), activation collection (`plotting/collect_activations.py`), and the student / transfer learning-curve plots. |
-| `data/expert_policies/` | (Super-)expert policy checkpoints and their TensorBoard logs (`EXPERT_POLICIES_PATH`). | Expert evaluation (`src/benchmark.py --expert`) and `plotting/plot_rl_finetuning_curves.py`. |
-| `data/final_benchmarks/` | Per-method, per-seed benchmark result JSONs, plus `expert_policies/` result JSONs used as the baseline. | The paper's radar and ablation bar plots, and the expert baseline in every performance plot. |
-| `data/final_benchmarks_extra/` | CSI (`csi_*`), bilateral, and the PPO w/o-rew-norm benchmark result JSONs, plus the cached MT-SAC / MT-PPO learning curves in `mt-curves/`. | `plotting/plot_csi_analysis.py`, `plotting/plot_csi_curves.py`, the PPO ablation plot, and `plotting/plot_mt_algos.py`. |
-| `data/kinesis/` | MuJoCo model assets for the `kinesis` locomotion task. | Any run that instantiates the `kinesis` environment. |
-
-> Note: `plotting/plot_mt_algos.py` reads its MT-SAC / MT-PPO learning curves from the cached CSVs in `data/final_benchmarks_extra/mt-curves/` (included in the `final_benchmarks_extra` download), so it runs without wandb access. Any missing curve is re-fetched from Weights & Biases automatically and re-cached (requires a logged-in `wandb` account with access to the runs referenced in the script); External users may not have the access to the original wandb runs and they may be eventually deleted by the Arnold team.
-
-For the reviewers of the paper, we are sharing a zipped folder that contains both the code and the weights. If you are reading this README then you already have access to the weights and code! 
+Files are installed under `data/`. See [Data and checkpoints](docs/data.md) for
+paths and download options.
 
 ## Arnold Training
 
@@ -187,7 +99,7 @@ python src/main_bc_ppo_multi_task.py \
         reorient pen baoding_p1_cw baoding_p1_ccw baoding_p2 baoding_p2_overlap elbow_pose relocate kinesis kinesis \
         relocate baoding_p1_cw baoding_p2 baoding_p2_overlap kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
-    --load_path data/student_policies/obc \
+    --load_path data/final_checkpoints/obc/seed_0 \
     --num_envs_per_task 2 \
     --ent_coef=0 \
     --vf_coef=0.5 \
@@ -226,7 +138,7 @@ The `src/benchmark.py` script allows you to evaluate the performance of various 
 
 ### 1. Evaluating OBC and Arnold Models
 
-To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21493316).
+To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21807280).
 
 Here's an example command:
 
@@ -235,6 +147,7 @@ python src/benchmark.py \
     --load path/to/your/model.zip \
     --task <task_names> \
     --arnold \
+    --normalize \
     --num_episodes <number_of_episodes> \
     --deterministic \
     --device <cpu_or_cuda> \
@@ -253,9 +166,10 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+    --load data/final_checkpoints/arnold/seed_0/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
+    --normalize \
     --num_episodes 10 \
     --deterministic \
     --device cpu
@@ -265,9 +179,10 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/obc/rl_model_54974700_steps.zip \
+    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
     --task relocate \
     --arnold \
+    --normalize \
     --num_episodes 10 \
     --deterministic \
     --device cpu
@@ -678,8 +593,7 @@ It also includes code derived from Stable-Baselines3, imitation, PyTorch-RL,
 Lattice, Kinesis, PHC and IsaacGymEnvs, which remains under its own licenses
 (MIT, BSD 3-Clause and BSD 3-Clause Clear).
 
-The musculoskeletal models loaded from `data/kinesis/xml/` are not included in
-this repository and must be obtained separately from myo_sim and Kinesis under
-the Apache License 2.0.
+The musculoskeletal models in `data/kinesis/xml/` are distributed by myo_sim and
+Kinesis under the Apache License 2.0.
 
 See the [LICENSE](LICENSE) file for the full terms and per-file attributions.

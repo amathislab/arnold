@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "release": {
+    "record": "21807280",
+    "version": "v3",
+    "doi": "10.5281/zenodo.21807280",
+    "url": "https://zenodo.org/records/21807280"
+  },
+  "profiles": {
+    "benchmarks": [
+      "benchmarks",
+      "extra_results"
+    ],
+    "models": [
+      "checkpoints",
+      "experts",
+      "kinesis"
+    ],
+    "all": [
+      "benchmarks",
+      "extra_results",
+      "checkpoints",
+      "experts",
+      "kinesis"
+    ]
+  },
+  "artifacts": {
+    "kinesis": {
+      "filename": "kinesis.tar.gz",
+      "url": "https://zenodo.org/records/21807280/files/kinesis.tar.gz?download=1",
+      "bytes": 13129926,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "2479581598dabeb78894213f0e721c61"
+      },
+      "archive_root": "kinesis",
+      "destination": "data/kinesis"
+    },
+    "benchmarks": {
+      "filename": "arnold-benchmark-results.tar.gz",
+      "url": "https://zenodo.org/records/21807280/files/arnold-benchmark-results.tar.gz?download=1",
+      "bytes": 381952,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "63fd5efaaa40500408d5821aecd6e1c8"
+      },
+      "archive_root": "final_checkpoints",
+      "destination": "data/final_benchmarks"
+    },
+    "checkpoints": {
+      "filename": "arnold-final-checkpoints.tar.gz",
+      "url": "https://zenodo.org/records/21807280/files/arnold-final-checkpoints.tar.gz?download=1",
+      "bytes": 2808003156,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "6c5fa8da01f47ad0d5a17ce21a8b5bdb"
+      },
+      "archive_root": "final_checkpoints",
+      "destination": "data/final_checkpoints"
+    },
+    "extra_results": {
+      "filename": "arnold-benchmark-results-extra.tar.gz",
+      "url": "https://zenodo.org/records/21807280/files/arnold-benchmark-results-extra.tar.gz?download=1",
+      "bytes": 2853958,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "2e6d489d1c4a2905647b118806fe4202"
+      },
+      "archive_root": "final_benchmarks_extra",
+      "destination": "data/final_benchmarks_extra"
+    },
+    "experts": {
+      "filename": "expert-policies.tar.gz",
+      "url": "https://zenodo.org/records/21807280/files/expert-policies.tar.gz?download=1",
+      "bytes": 605108600,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "ab0ea70690c28fef64b1646135858492"
+      },
+      "archive_root": "expert_policies",
+      "destination": "data/expert_policies"
+    }
+  }
+}

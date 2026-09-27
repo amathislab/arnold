@@ -1,0 +1,17 @@
+{
+  "hand_thumb_reach": {
+    "avg_cum_reward": 45.793978157934674,
+    "std_cum_reward": 48.22063563461992,
+    "avg_step_reward": 0.4579397815793466,
+    "std_step_reward": 0.4822063563461991,
+    "avg_solved": 0.525,
+    "std_solved": 0.4993746088859544,
+    "avg_solved_steps": 48.345,
+    "avg_solved_step_frac": 0.48345,
+    "std_solved_steps": 47.57968027425152,
+    "avg_steps": 100.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 100,
+    "num_episodes": 200
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "reorient": {
+    "avg_cum_reward": 352.1851891723153,
+    "std_cum_reward": 95.97703314930556,
+    "avg_step_reward": 2.3479350680234625,
+    "std_step_reward": 0.6397405080304106,
+    "avg_solved": 0.89,
+    "std_solved": 0.3128897569432403,
+    "avg_solved_steps": 105.13,
+    "avg_solved_step_frac": 0.7008666666666667,
+    "std_solved_steps": 45.37899403909258,
+    "avg_steps": 149.985,
+    "std_steps": 0.21160103969498836,
+    "max_episode_steps": 150,
+    "num_episodes": 200
+  }
+}

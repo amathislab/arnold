@@ -1,0 +1,16 @@
+{
+  "hand_little_reach": "Little reach",
+  "hand_index_reach": "Index reach",
+  "hand_middle_reach": "Middle reach",
+  "hand_ring_reach": "Ring reach",
+  "hand_thumb_reach": "Thumb reach",
+  "reorient": "Die reorient",
+  "pen": "Pen reorient",
+  "baoding_p1_cw": "Baoding CW",
+  "baoding_p1_ccw": "Baoding CCW",
+  "baoding_p2_overlap": "Baoding hard",
+  "baoding_p2": "Baoding harder",
+  "elbow_pose": "Elbow pose",
+  "relocate": "Object relocation",
+  "kinesis": "Walk to point"
+}

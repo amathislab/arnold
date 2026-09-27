@@ -1,0 +1,89 @@
+{
+  "arnold": [
+    "data/final_benchmarks/arnold/seed_0/seed_0_rl_model_64670238_steps_results.json",
+    "data/final_benchmarks/arnold/seed_1/seed_1_rl_model_62671158_steps_results.json",
+    "data/final_benchmarks/arnold/seed_2/seed_2_rl_model_63970560_steps_results.json",
+    "data/final_benchmarks/arnold/seed_3/seed_3_rl_model_79187328_steps_results.json",
+    "data/final_benchmarks/arnold/seed_4/seed_4_rl_model_80787072_steps_results.json"
+  ],
+  "bc": [
+    "data/final_benchmarks/bc/seed_0/seed_0_rl_model_54991200_steps_results.json",
+    "data/final_benchmarks/bc/seed_1/seed_1_rl_model_54991200_steps_results.json",
+    "data/final_benchmarks/bc/seed_2/seed_2_rl_model_54991200_steps_results.json",
+    "data/final_benchmarks/bc/seed_3/seed_3_rl_model_54991200_steps_results.json",
+    "data/final_benchmarks/bc/seed_4/seed_4_rl_model_54991200_steps_results.json"
+  ],
+  "mt_ppo": [
+    "data/final_benchmarks/mt_ppo/seed_0/seed_771_rl_model_60192776_steps_results.json",
+    "data/final_benchmarks/mt_ppo/seed_1/seed_772_rl_model_49994000_steps_results.json",
+    "data/final_benchmarks/mt_ppo/seed_2/seed_773_rl_model_51493820_steps_results.json"
+  ],
+  "mt_sac": [
+    "data/final_benchmarks/mt_sac/seed_0/seed_771_rl_model_20097588_steps_results.json",
+    "data/final_benchmarks/mt_sac/seed_1/seed_772_rl_model_18997720_steps_results.json",
+    "data/final_benchmarks/mt_sac/seed_2/seed_773_rl_model_17497900_steps_results.json"
+  ],
+  "obc": [
+    "data/final_benchmarks/obc/seed_0/obc_rl_model_54974700_steps_results.json",
+    "data/final_benchmarks/obc/seed_1/seed_1_rl_model_65989440_steps_results.json",
+    "data/final_benchmarks/obc/seed_2/seed_2_rl_model_69388896_steps_results.json",
+    "data/final_benchmarks/obc/seed_3/seed_3_rl_model_60590304_steps_results.json",
+    "data/final_benchmarks/obc/seed_4/seed_4_rl_model_61690128_steps_results.json"
+  ],
+  "obc_10_tasks": [
+    "data/final_benchmarks/obc_10_tasks/seed_0/seed_0_rl_model_49979000_steps_results.json"
+  ],
+  "obc_m": [
+    "data/final_benchmarks/obc_m/seed_0/seed_0_rl_model_55074654_steps_results.json"
+  ],
+  "obc_ppo": [
+    "data/final_benchmarks/obc_ppo/seed_0/seed_0_rl_model_77387616_steps_results.json",
+    "data/final_benchmarks/obc_ppo/seed_1/seed_1_rl_model_79187328_steps_results.json",
+    "data/final_benchmarks/obc_ppo/seed_2/seed_2_rl_model_77887536_steps_results.json",
+    "data/final_benchmarks/obc_ppo/seed_3/seed_3_rl_model_69988800_steps_results.json",
+    "data/final_benchmarks/obc_ppo/seed_4/seed_4_rl_model_69688848_steps_results.json"
+  ],
+  "obc_s": [
+    "data/final_benchmarks/obc_s/seed_0/seed_0_rl_model_55074654_steps_results.json"
+  ],
+  "obc_st": [
+    "data/final_benchmarks/obc_st/obc_arnold_baoding_p1_ccw_bc_ppo_seed_1/obc_arnold_baoding_p1_ccw_bc_ppo_seed_1_rl_model_9799608_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_baoding_p1_cw_bc_ppo_seed_1/obc_arnold_baoding_p1_cw_bc_ppo_seed_1_rl_model_8399664_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_baoding_p2_bc_ppo_seed_1/obc_arnold_baoding_p2_bc_ppo_seed_1_rl_model_9499620_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_baoding_p2_overlap_bc_ppo_seed_1/obc_arnold_baoding_p2_overlap_bc_ppo_seed_1_rl_model_8999640_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_hand_index_reach_bc_ppo_seed_1/obc_arnold_hand_index_reach_bc_ppo_seed_1_rl_model_8299668_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_hand_little_reach_bc_ppo_seed_1/obc_arnold_hand_little_reach_bc_ppo_seed_1_rl_model_7499700_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_hand_middle_reach_bc_ppo_seed_1/obc_arnold_hand_middle_reach_bc_ppo_seed_1_rl_model_7699692_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_hand_ring_reach_bc_ppo_seed_1/obc_arnold_hand_ring_reach_bc_ppo_seed_1_rl_model_7899684_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_hand_thumb_reach_bc_ppo_seed_1/obc_arnold_hand_thumb_reach_bc_ppo_seed_1_rl_model_8499660_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_pen_bc_ppo_seed_1/obc_arnold_pen_bc_ppo_seed_1_rl_model_3099876_steps_results.json",
+    "data/final_benchmarks/obc_st/obc_arnold_reorient_bc_ppo_seed_1/obc_arnold_reorient_bc_ppo_seed_1_rl_model_3199872_steps_results.json"
+  ],
+  "obc_task_sv": [
+    "data/final_benchmarks/obc_task_sv/seed_0/seed_0_results.json",
+    "data/final_benchmarks/obc_task_sv/seed_1/seed_1_results.json",
+    "data/final_benchmarks/obc_task_sv/seed_2/seed_2_results.json"
+  ],
+  "obc_wo_obs_norm": [
+    "data/final_benchmarks/obc_wo_obs_norm/seed_0/seed_0_rl_model_49992000_steps_results.json",
+    "data/final_benchmarks/obc_wo_obs_norm/seed_1/seed_1_rl_model_49992000_steps_results.json",
+    "data/final_benchmarks/obc_wo_obs_norm/seed_2/seed_2_rl_model_49992000_steps_results.json",
+    "data/final_benchmarks/obc_wo_obs_norm/seed_3/seed_3_rl_model_49992000_steps_results.json",
+    "data/final_benchmarks/obc_wo_obs_norm/seed_4/seed_4_rl_model_49992000_steps_results.json"
+  ],
+  "obc_xs": [
+    "data/final_benchmarks/obc_xs/seed_0/seed_0_rl_model_55074654_steps_results.json"
+  ],
+  "ppo_t": [
+    "data/final_benchmarks/ppo_t/seed_0/seed_0_rl_model_50076954_steps_results.json",
+    "data/final_benchmarks/ppo_t/seed_1/seed_1_rl_model_49977000_steps_results.json",
+    "data/final_benchmarks/ppo_t/seed_2/seed_2_rl_model_50076954_steps_results.json"
+  ],
+  "ppo_t_sv": [
+    "data/final_benchmarks/ppo_t_sv/seed_0/seed_0_rl_model_49977000_steps_results.json",
+    "data/final_benchmarks/ppo_t_sv/seed_1/seed_1_rl_model_49977000_steps_results.json",
+    "data/final_benchmarks/ppo_t_sv/seed_2/seed_2_rl_model_49977000_steps_results.json",
+    "data/final_benchmarks/ppo_t_sv/seed_3/seed_3_rl_model_56790912_steps_results.json",
+    "data/final_benchmarks/ppo_t_sv/seed_4/seed_4_rl_model_56590944_steps_results.json"
+  ]
+}

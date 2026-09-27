@@ -1,11 +1,11 @@
 import _srcpath  # noqa: F401  # adds ../src to sys.path (see _srcpath.py)
-import glob
 import json
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 from definitions import ROOT_DIR
+from _reproduction import benchmark_result_paths, task_display_names
 
 
 def holm_bonferroni(pvalues):
@@ -28,22 +28,7 @@ def holm_bonferroni(pvalues):
     return adjusted
 
 # Mapping for better task display names
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little\n reach",
-    "hand_index_reach": "Index\n reach",
-    "hand_middle_reach": "Middle\n reach",
-    "hand_ring_reach": "Ring\n reach",
-    "hand_thumb_reach": "Thumb\n reach",
-    "reorient": "Die\n reorient",
-    "pen": "Pen\n reorient",
-    "baoding_p1_cw": "Baoding\n CW",
-    "baoding_p1_ccw": "Baoding\n CCW",
-    "baoding_p2_overlap": "Baoding\n hard",
-    "baoding_p2": "Baoding\n harder",
-    "elbow_pose": "Elbow\n pose",
-    "relocate": "Object\n relocation",
-    "kinesis": "Walk to\n point",
-}
+TASK_NAME_MAPPING = task_display_names(multiline=True)
 
 # Metric to use for each task
 TASK_METRIC_MAP = {
@@ -70,14 +55,8 @@ def load_results(filepath):
 
 
 def _collect_seed_results(method_dir):
-    """Return the sorted per-seed *_results.json files under a final_benchmarks method dir."""
-    pattern = os.path.join(
-        ROOT_DIR, "data/final_benchmarks", method_dir, "*", "*_results.json"
-    )
-    files = sorted(glob.glob(pattern))
-    if not files:
-        raise FileNotFoundError(f"No results files found for method dir: {method_dir}")
-    return files
+    """Select exactly the registered final result for each seed."""
+    return benchmark_result_paths(method_dir, root=ROOT_DIR)
 
 
 def create_radar_plot():
@@ -370,6 +349,7 @@ def create_radar_plot():
     tex_lines += ["\\bottomrule", "\\end{tabular}"]
     tex_table = "\n".join(tex_lines)
     tex_path = os.path.join(ROOT_DIR, "data/figures/arnold_vs_expert_improvement.tex")
+    os.makedirs(os.path.dirname(tex_path), exist_ok=True)
     with open(tex_path, "w") as f:
         f.write(tex_table + "\n")
     print("\nLaTeX table (Arnold vs Expert, improvement ± std and Holm p-values):")

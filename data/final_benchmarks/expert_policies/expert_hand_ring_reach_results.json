@@ -1,0 +1,17 @@
+{
+  "hand_ring_reach": {
+    "avg_cum_reward": 94.06804870612243,
+    "std_cum_reward": 0.7641165872150621,
+    "avg_step_reward": 0.9406804870612242,
+    "std_step_reward": 0.007641165872150625,
+    "avg_solved": 1.0,
+    "std_solved": 0.0,
+    "avg_solved_steps": 95.605,
+    "avg_solved_step_frac": 0.9560499999999998,
+    "std_solved_steps": 0.7063816249025734,
+    "avg_steps": 100.0,
+    "std_steps": 0.0,
+    "max_episode_steps": 100,
+    "num_episodes": 200
+  }
+}
