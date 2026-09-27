@@ -196,6 +196,12 @@ For specialist teachers, replace `--load ... --arnold --normalize` with
 to collect actuator controls and muscle activation state. See
 [signal collection and export](https://amathislab.github.io/arnold/signals/).
 
+## Hand smoothness and Baoding PCA
+
+Run `python plotting/analyze_smoothness.py` and
+`python plotting/analyze_baoding_kinematics.py` with the compact hand recordings.
+See [Hand analysis](docs/hand-analysis.md) for data extraction and output paths.
+
 ## Generating Performance Plots (used in the paper)
 
 Scripts for the paper's performance plots. Figures are written under `data/figures/`.

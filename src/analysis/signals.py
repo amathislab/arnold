@@ -72,4 +72,5 @@ def iter_episodes(path, signals):
                        key=lambda key: int(key.split("_")[-1]))
         for name in names:
             group = file[name]
-            yield int(name.split("_")[-1]), {key: group[key][()] for key in signals}
+            length = int(group.attrs["episode_length"])
+            yield int(name.split("_")[-1]), {key: group[key][:length] for key in signals}
