@@ -1,22 +1,5 @@
 {
   "schema_version": 1,
-  "provenance": {
-    "data_record": "21807280",
-    "audited_public_code_commit": "a617bc8141838531aa63e92e46ee4a92579b5ee1",
-    "training_source_commit_note": "Original training commits are not recorded in the released archive; null is intentional. Saved args and any source snapshots remain in each checkpoint directory.",
-    "original_seed_source": "seed field of the archived args.json, independent of the release directory slot.",
-    "selection": "Select the checkpoint matched by the published benchmark; Task-SV selects one merged 14-task result per release slot, excluding per-task duplicates.",
-    "known_issues": [
-      {
-        "methods": [
-          "mt_ppo",
-          "mt_sac"
-        ],
-        "field": "max_episode_steps",
-        "issue": "Some archived MT results use the longest observed episode as the fraction denominator (benchmark_multi_task_mlp.py fallback), not the configured task horizon. The registered overrides preserve the published results and are not task specifications. Fixing the protocol requires re-evaluation/revised results."
-      }
-    ]
-  },
   "methods": {
     "arnold": {
       "display_name": "Arnold",
@@ -159,8 +142,7 @@
       ],
       "benchmark": "data/final_benchmarks/arnold/seed_0/seed_0_rl_model_64670238_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "arnold/seed_1",
@@ -207,8 +189,7 @@
       ],
       "benchmark": "data/final_benchmarks/arnold/seed_1/seed_1_rl_model_62671158_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "arnold/seed_2",
@@ -255,8 +236,7 @@
       ],
       "benchmark": "data/final_benchmarks/arnold/seed_2/seed_2_rl_model_63970560_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "arnold/seed_3",
@@ -288,8 +268,7 @@
       ],
       "benchmark": "data/final_benchmarks/arnold/seed_3/seed_3_rl_model_79187328_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "arnold/seed_4",
@@ -321,8 +300,7 @@
       ],
       "benchmark": "data/final_benchmarks/arnold/seed_4/seed_4_rl_model_80787072_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "bc/seed_0",
@@ -354,8 +332,7 @@
       ],
       "benchmark": "data/final_benchmarks/bc/seed_0/seed_0_rl_model_54991200_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "bc/seed_1",
@@ -387,8 +364,7 @@
       ],
       "benchmark": "data/final_benchmarks/bc/seed_1/seed_1_rl_model_54991200_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "bc/seed_2",
@@ -420,8 +396,7 @@
       ],
       "benchmark": "data/final_benchmarks/bc/seed_2/seed_2_rl_model_54991200_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "bc/seed_3",
@@ -453,8 +428,7 @@
       ],
       "benchmark": "data/final_benchmarks/bc/seed_3/seed_3_rl_model_54991200_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "bc/seed_4",
@@ -486,8 +460,7 @@
       ],
       "benchmark": "data/final_benchmarks/bc/seed_4/seed_4_rl_model_54991200_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "mt_ppo/seed_0",
@@ -520,7 +493,6 @@
       "benchmark": "data/final_benchmarks/mt_ppo/seed_0/seed_771_rl_model_60192776_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "baoding_p1_ccw": 57,
         "baoding_p1_cw": 59,
@@ -560,7 +532,6 @@
       "benchmark": "data/final_benchmarks/mt_ppo/seed_1/seed_772_rl_model_49994000_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "baoding_p1_ccw": 82,
         "baoding_p1_cw": 69,
@@ -598,7 +569,6 @@
       "benchmark": "data/final_benchmarks/mt_ppo/seed_2/seed_773_rl_model_51493820_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "baoding_p1_ccw": 67,
         "baoding_p1_cw": 67,
@@ -636,7 +606,6 @@
       "benchmark": "data/final_benchmarks/mt_sac/seed_0/seed_771_rl_model_20097588_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "reorient": 34,
         "pen": 75,
@@ -678,7 +647,6 @@
       "benchmark": "data/final_benchmarks/mt_sac/seed_1/seed_772_rl_model_18997720_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "reorient": 31,
         "pen": 19,
@@ -720,7 +688,6 @@
       "benchmark": "data/final_benchmarks/mt_sac/seed_2/seed_773_rl_model_17497900_steps_results.json",
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [],
-      "training_source_commit": null,
       "benchmark_horizon_overrides": {
         "reorient": 55,
         "pen": 27,
@@ -776,8 +743,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc/seed_0/obc_rl_model_54974700_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc/seed_1",
@@ -809,8 +775,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc/seed_1/seed_1_rl_model_65989440_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc/seed_2",
@@ -842,8 +807,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc/seed_2/seed_2_rl_model_69388896_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc/seed_3",
@@ -875,8 +839,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc/seed_3/seed_3_rl_model_60590304_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc/seed_4",
@@ -908,8 +871,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc/seed_4/seed_4_rl_model_61690128_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_10_tasks/seed_0",
@@ -944,8 +906,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_10_tasks/seed_0/seed_0_rl_model_49979000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_m/seed_0",
@@ -994,8 +955,7 @@
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [
         "data/final_checkpoints/obc_m/seed_0/rl_model_50076954_steps.zip"
-      ],
-      "training_source_commit": null
+      ]
     },
     {
       "id": "obc_ppo/seed_0",
@@ -1027,8 +987,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_ppo/seed_0/seed_0_rl_model_77387616_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_ppo/seed_1",
@@ -1060,8 +1019,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_ppo/seed_1/seed_1_rl_model_79187328_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_ppo/seed_2",
@@ -1093,8 +1051,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_ppo/seed_2/seed_2_rl_model_77887536_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_ppo/seed_3",
@@ -1126,8 +1083,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_ppo/seed_3/seed_3_rl_model_69988800_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_ppo/seed_4",
@@ -1159,8 +1115,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_ppo/seed_4/seed_4_rl_model_69688848_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_s/seed_0",
@@ -1209,8 +1164,7 @@
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [
         "data/final_checkpoints/obc_s/seed_0/rl_model_50076954_steps.zip"
-      ],
-      "training_source_commit": null
+      ]
     },
     {
       "id": "obc_st/obc_arnold_baoding_p1_ccw_bc_ppo_seed_1",
@@ -1232,8 +1186,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_baoding_p1_ccw_bc_ppo_seed_1/obc_arnold_baoding_p1_ccw_bc_ppo_seed_1_rl_model_9799608_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_baoding_p1_cw_bc_ppo_seed_1",
@@ -1255,8 +1208,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_baoding_p1_cw_bc_ppo_seed_1/obc_arnold_baoding_p1_cw_bc_ppo_seed_1_rl_model_8399664_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_baoding_p2_bc_ppo_seed_1",
@@ -1278,8 +1230,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_baoding_p2_bc_ppo_seed_1/obc_arnold_baoding_p2_bc_ppo_seed_1_rl_model_9499620_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_baoding_p2_overlap_bc_ppo_seed_1",
@@ -1301,8 +1252,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_baoding_p2_overlap_bc_ppo_seed_1/obc_arnold_baoding_p2_overlap_bc_ppo_seed_1_rl_model_8999640_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_hand_index_reach_bc_ppo_seed_1",
@@ -1324,8 +1274,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_hand_index_reach_bc_ppo_seed_1/obc_arnold_hand_index_reach_bc_ppo_seed_1_rl_model_8299668_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_hand_little_reach_bc_ppo_seed_1",
@@ -1347,8 +1296,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_hand_little_reach_bc_ppo_seed_1/obc_arnold_hand_little_reach_bc_ppo_seed_1_rl_model_7499700_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_hand_middle_reach_bc_ppo_seed_1",
@@ -1370,8 +1318,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_hand_middle_reach_bc_ppo_seed_1/obc_arnold_hand_middle_reach_bc_ppo_seed_1_rl_model_7699692_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_hand_ring_reach_bc_ppo_seed_1",
@@ -1393,8 +1340,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_hand_ring_reach_bc_ppo_seed_1/obc_arnold_hand_ring_reach_bc_ppo_seed_1_rl_model_7899684_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_hand_thumb_reach_bc_ppo_seed_1",
@@ -1416,8 +1362,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_hand_thumb_reach_bc_ppo_seed_1/obc_arnold_hand_thumb_reach_bc_ppo_seed_1_rl_model_8499660_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_pen_bc_ppo_seed_1",
@@ -1439,8 +1384,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_pen_bc_ppo_seed_1/obc_arnold_pen_bc_ppo_seed_1_rl_model_3099876_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_st/obc_arnold_reorient_bc_ppo_seed_1",
@@ -1462,8 +1406,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_st/obc_arnold_reorient_bc_ppo_seed_1/obc_arnold_reorient_bc_ppo_seed_1_rl_model_3199872_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_task_sv/seed_0",
@@ -1495,8 +1438,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_task_sv/seed_0/seed_0_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_task_sv/seed_1",
@@ -1528,8 +1470,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_task_sv/seed_1/seed_1_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_task_sv/seed_2",
@@ -1561,8 +1502,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_task_sv/seed_2/seed_2_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_wo_obs_norm/seed_0",
@@ -1594,8 +1534,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_wo_obs_norm/seed_0/seed_0_rl_model_49992000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_wo_obs_norm/seed_1",
@@ -1627,8 +1566,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_wo_obs_norm/seed_1/seed_1_rl_model_49992000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_wo_obs_norm/seed_2",
@@ -1660,8 +1598,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_wo_obs_norm/seed_2/seed_2_rl_model_49992000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_wo_obs_norm/seed_3",
@@ -1693,8 +1630,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_wo_obs_norm/seed_3/seed_3_rl_model_49992000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_wo_obs_norm/seed_4",
@@ -1726,8 +1662,7 @@
       ],
       "benchmark": "data/final_benchmarks/obc_wo_obs_norm/seed_4/seed_4_rl_model_49992000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "obc_xs/seed_0",
@@ -1776,8 +1711,7 @@
       "benchmark_episodes_per_task": 200,
       "additional_checkpoints": [
         "data/final_checkpoints/obc_xs/seed_0/rl_model_50076954_steps.zip"
-      ],
-      "training_source_commit": null
+      ]
     },
     {
       "id": "ppo_t/seed_0",
@@ -1824,8 +1758,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t/seed_0/seed_0_rl_model_50076954_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t/seed_1",
@@ -1872,8 +1805,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t/seed_1/seed_1_rl_model_49977000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t/seed_2",
@@ -1920,8 +1852,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t/seed_2/seed_2_rl_model_50076954_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t_sv/seed_0",
@@ -1968,8 +1899,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t_sv/seed_0/seed_0_rl_model_49977000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t_sv/seed_1",
@@ -2016,8 +1946,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t_sv/seed_1/seed_1_rl_model_49977000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t_sv/seed_2",
@@ -2064,8 +1993,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t_sv/seed_2/seed_2_rl_model_49977000_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t_sv/seed_3",
@@ -2097,8 +2025,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t_sv/seed_3/seed_3_rl_model_56790912_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     },
     {
       "id": "ppo_t_sv/seed_4",
@@ -2130,8 +2057,7 @@
       ],
       "benchmark": "data/final_benchmarks/ppo_t_sv/seed_4/seed_4_rl_model_56590944_steps_results.json",
       "benchmark_episodes_per_task": 200,
-      "additional_checkpoints": [],
-      "training_source_commit": null
+      "additional_checkpoints": []
     }
   ]
 }

@@ -200,14 +200,7 @@
         "pm5_flexion",
         "md5_flexion"
       ],
-      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root.",
-      "provenance": {
-        "policy_checkpoint_steps": 64670238,
-        "collection": "data/activations_pipeline/arnold_pen_64670238/pen_episode_0.h5",
-        "method": "Decode the first recorded observation action_ids and position-only obs_ids with the archived vocabulary.",
-        "action_ids_sha256": "88e857c5907e5ff8f641d3832ea8e540289219b1490b75c1c1032fb6d6f67ef8",
-        "position_ids_vocabulary": "data/final_checkpoints/arnold/seed_0/vocabulary.json"
-      }
+      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root."
     },
     "elbow": {
       "actuators": [
@@ -221,14 +214,7 @@
       "joints": [
         "r_elbow_flex"
       ],
-      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root.",
-      "provenance": {
-        "policy_checkpoint_steps": 64670238,
-        "collection": "data/activations_pipeline/arnold_elbow_pose_64670238/elbow_pose_episode_0.h5",
-        "method": "Decode the first recorded observation action_ids and position-only obs_ids with the archived vocabulary.",
-        "action_ids_sha256": "e5fd95af690facb20c95c18ba8786d1e349f7f70b3456ce71428619216a1610c",
-        "position_ids_vocabulary": "data/final_checkpoints/arnold/seed_0/vocabulary.json"
-      }
+      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root."
     },
     "arm": {
       "actuators": [
@@ -336,14 +322,7 @@
         "pm5_flexion",
         "md5_flexion"
       ],
-      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root.",
-      "provenance": {
-        "policy_checkpoint_steps": 64670238,
-        "collection": "data/activations_pipeline/arnold_relocate_64670238/relocate_episode_0.h5",
-        "method": "Decode the first recorded observation action_ids and position-only obs_ids with the archived vocabulary.",
-        "action_ids_sha256": "2917a6bee7ca7b5f877dae334889f2498ae5de18ab8635c30f911b4629f7d678",
-        "position_ids_vocabulary": "data/final_checkpoints/arnold/seed_0/vocabulary.json"
-      }
+      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root."
     },
     "legs": {
       "actuators": [
@@ -458,14 +437,7 @@
         "knee_angle_beta_translation1_l",
         "knee_angle_beta_rotation1_l"
       ],
-      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root.",
-      "provenance": {
-        "policy_checkpoint_steps": 64670238,
-        "collection": "data/activations_pipeline/arnold_kinesis_64670238/kinesis_episode_0.h5",
-        "method": "Decode the first recorded observation action_ids and position-only obs_ids with the archived vocabulary.",
-        "action_ids_sha256": "78b846b4056eee8f9253796d5b05ccef64d7e6e048b0a5b3a89fde1095d3ea36",
-        "position_ids_vocabulary": "data/final_checkpoints/arnold/seed_0/vocabulary.json"
-      }
+      "ordering": "Native actuator order and observed joint-position order; legs exclude the free root."
     }
   }
 }
