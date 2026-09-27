@@ -175,3 +175,5 @@ logs
 wandb
 
 data/analysis/signals/
+
+data/analysis/emg/rollouts/

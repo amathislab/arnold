@@ -1,0 +1,61 @@
+{
+  "emg": {
+    "Soleus": "soleus_l",
+    "Medial Gastrocnemius": "gasmed_l",
+    "Lateral Gastrocnemius": "gaslat_l",
+    "Tibialis Anterior": "tibant_l",
+    "Semimembranosus": "semimem_l",
+    "Biceps Femoris": "bflh_l",
+    "Vastus Lateral": "vaslat_l",
+    "Rectus Femoris": "recfem_l",
+    "Vastus Medial": "vasmed_l"
+  },
+  "factors": {
+    "TA": [
+      "tibant_r"
+    ],
+    "LG": [
+      "gaslat_r"
+    ],
+    "PERL": [
+      "perlong_r"
+    ],
+    "VL": [
+      "vaslat_r"
+    ],
+    "RF": [
+      "recfem_r"
+    ],
+    "SART": [
+      "sart_r"
+    ],
+    "BF": [
+      "bflh_r"
+    ],
+    "ST": [
+      "semiten_r"
+    ],
+    "TFL": [
+      "tfl_r"
+    ],
+    "ADD": [
+      "addlong_r"
+    ],
+    "GM": [
+      "glmax1_r",
+      "glmax2_r",
+      "glmax3_r"
+    ],
+    "Sol": [
+      "soleus_r"
+    ],
+    "MG": [
+      "gasmed_r"
+    ],
+    "Gmed": [
+      "glmed1_r",
+      "glmed2_r",
+      "glmed3_r"
+    ]
+  }
+}

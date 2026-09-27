@@ -53,6 +53,7 @@ nav:
       - Analysis signals: signals.md
   - Reproducing the paper:
       - Replicate plots: replicate-plots.md
+      - EMG and gait factors: emg-analysis.md
       - CSI analysis: csi-analysis.md
       - CSI-Finetuning: csi-finetuning.md
       - Multi-task RL baselines: mt-baselines.md

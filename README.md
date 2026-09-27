@@ -196,6 +196,11 @@ For specialist teachers, replace `--load ... --arnold --normalize` with
 to collect actuator controls and muscle activation state. See
 [signal collection and export](https://amathislab.github.io/arnold/signals/).
 
+## Human EMG and gait factors
+
+Run `python plotting/analyze_emg.py` and `python plotting/analyze_gait_factors.py`.
+See [EMG analysis](docs/emg-analysis.md) for data and collection commands.
+
 ## Generating Performance Plots (used in the paper)
 
 Scripts for the paper's performance plots. Figures are written under `data/figures/`.
