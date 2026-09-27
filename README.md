@@ -181,6 +181,21 @@ Results contain each episode's reward, length and solved-step count. The solved
 fraction divides that count by the fixed task horizon. Performance plots divide
 the mean fraction by the corresponding specialist teacher's mean fraction.
 
+## Collecting analysis signals
+
+```bash
+python plotting/collect_activations.py \
+    --load data/final_checkpoints/arnold/seed_0/rl_model_64670238_steps.zip \
+    --task baoding_p1_ccw --arnold --normalize --signals_only \
+    --num_episodes 100 --seed 0 --device cpu \
+    --policy_id arnold/seed_0 --out_dir data/analysis/signals
+```
+
+For specialist teachers, replace `--load ... --arnold --normalize` with
+`--expert --deterministic` and use `--policy_id expert`. Add `--physical_signals`
+to collect actuator controls and muscle activation state. See
+[signal collection and export](https://amathislab.github.io/arnold/signals/).
+
 ## Generating Performance Plots (used in the paper)
 
 Scripts for the paper's performance plots. Figures are written under `data/figures/`.

@@ -173,3 +173,5 @@ figs
 docker
 logs
 wandb
+
+data/analysis/signals/

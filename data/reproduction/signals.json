@@ -1,0 +1,10 @@
+{
+  "tasks": ["hand_thumb_reach", "hand_index_reach", "hand_middle_reach", "hand_ring_reach", "hand_little_reach", "pen", "reorient", "baoding_p1_ccw", "baoding_p1_cw", "baoding_p2", "baoding_p2_overlap"],
+  "episodes": 100,
+  "smoothness": {"policies": ["expert", "obc_st/seed_1", "obc/seed_0"], "signals": ["actions", "joint_positions"]},
+  "baoding_pca": {"policies": ["expert", "obc_subspaces/seed_0", "arnold/seed_0"], "tasks": ["baoding_p1_ccw"], "signals": ["joint_positions"]},
+  "subspaces": {"policies": ["arnold/seed_0", "expert", "obc_subspaces/seed_0", "obc_st_subspaces/seed_1"], "signals": ["actions"], "overrides": {"expert": {"baoding_p2": "expert_subspaces", "baoding_p2_overlap": "expert_subspaces"}}},
+  "capacity_recordings": {"policies": ["obc_subspaces/seed_0", "obc_m/seed_0", "obc_s/seed_0", "obc_xs/seed_0"], "signals": ["actions"]},
+  "action_pca": {"policies": ["arnold_pca/seed_0", "expert_pca"], "signals": ["action_means"]},
+  "nmf": {"policies": ["arnold_nmf/seed_0"], "signals": ["muscle_controls"]}
+}

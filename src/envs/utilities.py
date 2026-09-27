@@ -27,6 +27,7 @@ from definitions import (
     VOCABULARY_FILE_NAME,
 )
 from envs.expert_wrapper import ExpertWrapper
+from vocabulary import set_vocabulary_mode
 
 
 def get_last_checkpoint(path):
@@ -117,8 +118,12 @@ def make_parallel_envs(
     if reward_normalizer_list is None:
         reward_normalizer_list = [None] * len(env_config_list)
 
+    vocabulary_mode = os.environ.get("ARNOLD_VOCABULARY_MODE", "compositional")
+    vocabulary_path = os.environ.get("ARNOLD_ATOMIC_VOCABULARY_PATH")
+
     def make_env(env_id, config_id, env_config, reward_normalizer, expert_task):
         def _thunk():
+            set_vocabulary_mode(vocabulary_mode, vocabulary_path)
             worker_seed = seed + config_id * num_envs_per_config + env_id
             set_random_seed(worker_seed)
             env_config["seed"] = worker_seed
