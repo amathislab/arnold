@@ -51,6 +51,7 @@ nav:
       - Training: training.md
       - Evaluation: evaluation.md
       - Analysis signals: signals.md
+      - Vocabulary ablation: vocabulary-ablation.md
   - Plots and analyses:
       - Replicate plots: replicate-plots.md
       - Hand smoothness and PCA: hand-analysis.md

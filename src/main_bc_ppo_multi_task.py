@@ -57,7 +57,7 @@ parser.add_argument(
     help="Batch size",
 )
 parser.add_argument(
-    "--ent_coef", type=float, default=0, help="Entropy coefficient for PPO"
+    "--ent_coef", type=float, default=0.0, help="Entropy coefficient for PPO"
 )
 parser.add_argument(
     "--vf_coef", type=float, default=0.5, help="Value function coefficient for PPO"
@@ -182,9 +182,25 @@ parser.add_argument(
     type=str,
     default="learned",
     help="Type of positional encoding to use",
-    choices=["learned", "sin_cos"],
+    choices=["learned", "sin_cos", "task_specific"],
+)
+task_embedding_group = parser.add_mutually_exclusive_group()
+task_embedding_group.add_argument(
+    "--task_specific_learnable",
+    action="store_true",
+    help="Use learnable task-specific token embeddings (the default for task_specific)",
+)
+task_embedding_group.add_argument(
+    "--task_specific_non_learnable",
+    action="store_true",
+    help="Freeze task-specific token embeddings after random initialization",
 )
 args = parser.parse_args()
+if (
+    args.positional_encoding != "task_specific"
+    and (args.task_specific_learnable or args.task_specific_non_learnable)
+):
+    parser.error("Task-specific embedding flags require --positional_encoding task_specific")
 
 if args.load_path is not None:
     experiment_name = args.load_path.split("/")[-1]
@@ -193,9 +209,16 @@ else:
 
 prefix = f"{args.out_prefix}arnold_"
 tasks_string = merge_task_names(args.tasks)
-run_name = (
-    f"{args.out_prefix}arnold_{tasks_string}_bc_ppo_seed_{args.seed}{args.out_suffix}"
-)
+if args.positional_encoding == "task_specific":
+    embedding_label = "nonlearn" if args.task_specific_non_learnable else "learn"
+    run_name = (
+        f"{args.out_prefix}arnold_{tasks_string}_task_emb_{embedding_label}"
+        f"_seed_{args.seed}{args.out_suffix}"
+    )
+else:
+    run_name = (
+        f"{args.out_prefix}arnold_{tasks_string}_bc_ppo_seed_{args.seed}{args.out_suffix}"
+    )
 log_path = os.path.join(args.log_root, "training", "ongoing", run_name)
 
 policy = MuscleTransformerPolicy
@@ -209,6 +232,11 @@ feature_extractor_config = {
     "position_embedding": args.positional_encoding,
     "norm_first": True,
 }
+if args.positional_encoding == "task_specific":
+    feature_extractor_config["task_names"] = args.tasks
+    feature_extractor_config["task_specific_learnable"] = (
+        not args.task_specific_non_learnable
+    )
 
 network_config = {
     "num_encoder_layers": args.num_layers,
@@ -264,6 +292,7 @@ else:
 model_config = dict(
     policy=policy,
     device=args.device,
+    seed=args.seed,
     batch_size=args.batch_size,
     n_steps=args.rollout_steps,
     learning_rate=lr,
@@ -335,6 +364,7 @@ if __name__ == "__main__":
     envs = create_vec_env(
         env_config_list=env_config_list,
         num_envs_per_config=args.num_envs_per_task,
+        seed=args.seed,
         load_env_path=env_path,
         multi_env=True,
         old_vocabulary=old_vocabulary,
