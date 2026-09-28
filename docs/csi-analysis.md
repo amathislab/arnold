@@ -40,13 +40,13 @@ Rolls out a trained policy and saves per-episode observations, action means, rew
 
 - **Script**: `plotting/collect_activations.py`
 - **Output**: HDF5 (`.h5`) files under `data/activations/<policy_id>/`, e.g.
-  `data/activations/285_64670238/`
+  `data/activations/example_64670238/`
 
 ```bash
 # Collect activations for multiple tasks
 for task in hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach reorient pen baoding_p1_ccw baoding_p1_cw baoding_p2 baoding_p2_overlap; do
     python plotting/collect_activations.py \
-        --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+        --load data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip \
         --task $task \
         --num_episodes 100 \
         --arnold \
@@ -64,14 +64,14 @@ and the directory containing either legacy per-episode recordings or compact sig
 ```bash
 python plotting/analyze_pca_inactivation.py \
     --load path/to/rl_model_64670238_steps.zip \
-    --signals data/activations/285_64670238 \
+    --signals data/activations/example_64670238 \
     --method pca --scope task --num_episodes 100 \
-    --out_dir data/pca_analysis/285_64670238/task
+    --out_dir data/pca_analysis/example_64670238/task
 python plotting/analyze_pca_inactivation.py \
     --load path/to/rl_model_64670238_steps.zip \
-    --signals data/activations/285_64670238 \
+    --signals data/activations/example_64670238 \
     --method pca --scope global --num_episodes 100 \
-    --out_dir data/pca_analysis/285_64670238/global
+    --out_dir data/pca_analysis/example_64670238/global
 ```
 
 Each run writes `curves.csv`, episode outcomes and fitted components. PCA centers the
@@ -88,8 +88,8 @@ NMF uses ranks 1–38 and ten seeded fits; PCA uses ranks 1–39. `--dimensions`
 
 ```bash
 python plotting/plot_pca_inactivation.py \
-    --curves data/pca_analysis/285_64670238/task/curves.csv \
-             data/pca_analysis/285_64670238/global/curves.csv
+    --curves data/pca_analysis/example_64670238/task/curves.csv \
+             data/pca_analysis/example_64670238/global/curves.csv
 ```
 
 Without `--curves`, the command plots the included historical summary at
@@ -110,14 +110,14 @@ number of principal components.
 
 ```bash
 python plotting/plot_action_pca_variance.py \
-    --activations_dir data/activations/285_64670238 \
-    --out_dir data/figures/cumulative_variance/285_64670238
+    --activations_dir data/activations/example_64670238 \
+    --out_dir data/figures/cumulative_variance/example_64670238
 ```
 
 ## Comparing subspaces
 
 ```bash
-python plotting/analyze_subspaces.py --data_dir data/activations
+python plotting/analyze_subspaces.py --data_dir data/analysis/signals
 python plotting/analyze_subspaces.py --selection capacity_recordings --successful 100
 ```
 

@@ -3,7 +3,9 @@
 The existing `plotting/collect_activations.py` continues to produce intermediate transformer
 activations and per-episode HDF5 files under `data/activations/`. New analyses can read
 those files directly when their configured policy directory matches the recording folder.
-The same directory can also hold compact files under `data/activations/<policy_id>/<task>.h5`.
+The analysis scripts default to the supplied compact files under
+`data/analysis/signals/<policy_id>/<task>.h5`. To analyze legacy recordings, pass
+`--data_dir data/activations` and use matching policy selections.
 
 ## Collect compact hand recordings
 
@@ -40,7 +42,7 @@ or Task-SV changes from the rolled-back training branch.
 
 ```bash
 python src/analysis/export_signals.py \
-    --input_dir data/activations/285_64670238 \
+    --input_dir data/activations/example_64670238 \
     --output data/activations/arnold/seed_0/baoding_p1_ccw.h5 \
     --task baoding_p1_ccw --policy_id arnold/seed_0 --horizon 200 \
     --num_episodes 100 --signals actions action_means joint_positions
@@ -53,8 +55,8 @@ when the original file actually contains them (or the legacy physical `activatio
 dataset); they cannot be reconstructed from policy actions alone. Legacy physical controls
 are marked `before_step`, following their original recording convention.
 
-No signal archive is assumed to be available. Collect recordings or import existing files
-before running the hand/subspace analyses.
+The supplied compact recordings can be analyzed directly. Collect or import recordings
+when adding policies or tasks beyond the supplied selections.
 
 Export obtains joint and muscle column names from recording metadata, or from the
 current task model when older recordings omit them. For recordings from a different

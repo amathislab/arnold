@@ -51,7 +51,7 @@ def plot_results(summary, curves, reference, policies, tasks, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data_dir", type=Path, default=Path("data/activations"))
+    parser.add_argument("--data_dir", type=Path, default=Path("data/analysis/signals"))
     parser.add_argument("--out_dir", type=Path, default=Path("data/figures/baoding_pca"))
     parser.add_argument("--selections", type=Path, default=Path("data/analysis/reproduction/signals.json"))
     parser.add_argument("--human_reference", type=Path, default=Path("data/analysis/reproduction/baoding_human.csv"))

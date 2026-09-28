@@ -100,7 +100,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/amathislab/arnold
     - icon: fontawesome/solid/database
-      link: https://zenodo.org/records/21493316
+      link: https://zenodo.org/records/21807280
 
 extra_css:
   - stylesheets/extra.css

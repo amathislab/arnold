@@ -36,13 +36,13 @@ released ones, and reproduce figures in the paper.
 
 ## Model checkpoints and benchmark results
 
-All checkpoints, benchmark result files and cached learning curves are hosted on Zenodo:
+The existing model and benchmark release is available on Zenodo:
 
-[:material-database: Zenodo record 21493316](https://zenodo.org/records/21493316){ .md-button .md-button--primary }
+[:material-database: Zenodo record 21807280](https://zenodo.org/records/21807280){ .md-button .md-button--primary }
 
-The git repository contains only the code plus small configuration files. Everything else
-must be unzipped into `data/` before running the training, evaluation or plotting scripts —
-see [Data and checkpoints](data.md) for the exact directory layout.
+The git repository contains only the code plus small configuration files. External inputs
+must be extracted into `data/` before running the corresponding scripts. Newly prepared
+packages use an updated layout; see [Data and checkpoints](data.md) for the exact directory layout.
 
 ## Reproducing the paper
 

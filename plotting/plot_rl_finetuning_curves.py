@@ -16,8 +16,7 @@ BASE_EXPERIMENT_PATH = os.path.join(
     ROOT_DIR,
     "data",
     "final_benchmarks",
-    "arnold_multi_task",
-    "249_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1",
+    "example_training_curve",
 )
 
 # List of fine-tuning experiment names

@@ -12,7 +12,7 @@ from analysis.subspaces import load_signals, principal_components
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=Path, default=Path("data/activations"))
+    parser.add_argument("--data_dir", type=Path, default=Path("data/analysis/signals"))
     parser.add_argument("--activations_dir", type=Path,
                         help="Existing per-episode recordings for one policy")
     parser.add_argument("--selections", default="data/analysis/reproduction/signals.json")

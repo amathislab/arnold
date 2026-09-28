@@ -1,8 +1,8 @@
 # Hand smoothness and Baoding PCA
 
-Use the [Arnold environment](installation.md) and collect or export recordings using
-[Analysis signals](signals.md). No precomputed signal archive is included or downloaded
-automatically. The default selections require 100 episodes for each listed policy/task.
+Use the [Arnold environment](installation.md). The analyses default to compact recordings
+in `data/analysis/signals/`. To generate additional recordings, use
+[Analysis signals](signals.md). The default selections require 100 episodes for each listed policy/task.
 Both compact `task.h5` and existing `task_episode_N.h5` recordings are supported.
 
 Run both analyses from the repository root:

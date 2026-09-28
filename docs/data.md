@@ -1,48 +1,72 @@
 # Data and checkpoints
 
-The git repository contains code, small configuration files, expert reference summaries
-and compact curve caches. Model weights and full benchmark downloads live on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the
-`data/` directory before running the training, evaluation or plotting scripts.
+The git repository contains code and environment/expert configuration files. Benchmark
+results, model weights, training logs and analysis data are external inputs. The release
+record is [Zenodo v3](https://zenodo.org/records/21807280).
 
-## Included in the repository
+The current local layout below is the target layout for `final_benchmarks.tar.gz`,
+`final_benchmarks_extra.tar.gz` and `analysis.tar.gz`. Rebuild packages after directory
+changes and use archives matching this checkout; the updated packages are not assumed
+to be uploaded yet. The existing v3
+release uses different archive names and does not necessarily contain the newly migrated logs.
+Expert policies, Kinesis assets and the full checkpoint collection remain separate downloads.
 
-No download needed for these:
-
-| Directory | Contents |
-| --- | --- |
-| `data/env_configs/` | Per-task environment configuration JSONs (`ENV_CONFIG_PATH`). |
-| `data/expert_configs/` | Expert-policy configuration JSONs (`EXPERT_CONFIG_PATH`). |
-
-## Downloaded from Zenodo
-
-Find and download these from the Zenodo record at
-[https://zenodo.org/records/21493316](https://zenodo.org/records/21493316), then unzip them
-into `data/`:
+## External inputs
 
 | Directory | Contents | Needed for |
 | --- | --- | --- |
-| `data/student_policies/` | Trained OBC / Arnold / single- and multi-task student policy checkpoints (`.zip` + `vecnormalize.pkl`) and their TensorBoard training logs. | Evaluation (`src/benchmark.py`), activation collection (`plotting/collect_activations.py`), and the student / transfer learning-curve plots. |
-| `data/expert_policies/` | (Super-)expert policy checkpoints and their TensorBoard logs (`EXPERT_POLICIES_PATH`). | Expert evaluation (`src/benchmark.py --expert`) and `plotting/plot_rl_finetuning_curves.py`. |
-| `data/final_benchmarks/` | Per-method, per-seed benchmark result JSONs, plus `expert_policies/` result JSONs used as the baseline. | The paper's radar and ablation bar plots, and the expert baseline in every performance plot. |
-| `data/final_benchmarks_extra/` | CSI (`csi_*`), bilateral, and the PPO w/o-rew-norm benchmark result JSONs, plus the cached MT-SAC / MT-PPO learning curves in `mt-curves/`. | `plotting/plot_csi_analysis.py`, `plotting/plot_csi_curves.py`, the PPO ablation plot, and `plotting/plot_mt_algos.py`. |
-| `data/kinesis/` | MuJoCo model assets for the `kinesis` locomotion task. | Any run that instantiates the `kinesis` environment. |
+| `data/final_benchmarks/` | Per-method/per-seed result JSONs and expert references; `arnold_single_task/` and `transfer_learning/` logs; `example_training_curve/` base OBC logs; `example_checkpoint/` with one checkpoint and matching normalization file. | Performance, ablation, student, transfer and fine-tuning plots; checkpoint-loading examples. |
+| `data/final_benchmarks_extra/` | CSI evaluation results and `csi*/training/` logs; bilateral and normalization ablations; `mt-curves/` caches; `rl_finetuning/` logs. | CSI, baseline and RL fine-tuning plots. |
+| `data/analysis/` | Curve caches, `reproduction/` metadata, compact hand signals, human/simulation EMG inputs, gait recordings and exported tables. | Portable learning curves, PCA/NMF summaries and additional analyses. |
+| `data/final_checkpoints/` | Separately released model checkpoints and associated normalization/configuration files. | Evaluation, fresh recordings and resumed training beyond the bundled example. |
+| `data/expert_policies/` | Expert policy checkpoints (`EXPERT_POLICIES_PATH`). | Expert evaluation and rollout collection. |
+| `data/kinesis/` | Locomotion model assets. | Instantiating the Kinesis environment. |
+
+Extract the updated packages from the repository root:
+
+```bash
+mkdir -p data
+tar -xzf final_benchmarks.tar.gz -C data
+tar -xzf final_benchmarks_extra.tar.gz -C data
+tar -xzf analysis.tar.gz -C data
+```
+
+The single-task and transfer folders contain training logs and configurations, not model
+checkpoints. The retained example checkpoint is
+`data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip`, accompanied by
+`rl_model_vecnormalize_64670238_steps.pkl`. Other checkpoint paths require the separate
+model release. Training logs alone cannot generate new rollout recordings.
 
 ## Resulting layout
 
 ```text
 data/
-├── env_configs/              # in repo
-├── expert_configs/           # in repo
-├── student_policies/         # Zenodo
-├── expert_policies/          # Zenodo
-├── final_benchmarks/         # Zenodo
-├── final_benchmarks_extra/   # Zenodo
-│   └── mt-curves/
-└── kinesis/                  # Zenodo
+├── env_configs/                    # in Git
+├── expert_configs/                 # in Git
+├── final_benchmarks/
+│   ├── arnold_single_task/          # per-task training logs
+│   ├── transfer_learning/           # eight transfer/scratch runs
+│   ├── example_training_curve/      # base OBC logs
+│   ├── example_checkpoint/          # one model + normalization/configs
+│   ├── expert_policies/             # reference JSONs, not expert weights
+│   └── <method>/seed_<n>/           # benchmark results
+├── final_benchmarks_extra/
+│   ├── csi*/training/               # CSI logs beside evaluation data
+│   ├── rl_finetuning/               # Arnold fine-tuning logs
+│   └── mt-curves/                   # cached MLP baseline curves
+├── analysis/
+│   ├── reproduction/               # selections and references
+│   ├── signals/                    # supplied compact hand recordings
+│   ├── emg/                        # human/simulation profiles and gait rollouts
+│   ├── historical_curves.csv
+│   └── learning_curves.csv.gz
+├── final_checkpoints/              # separate download
+├── expert_policies/                # separate download: weights
+└── kinesis/                        # separate download: model assets
 ```
 
-Scripts also write into `data/` as they run — `data/activations/`, `data/pca_analysis/` and
-`data/figures/` are created on demand.
+Recordings, fresh intervention results and figures are generated under `data/activations/`,
+`data/pca_analysis/` and `data/figures/`, respectively.
 
 ## Weights & Biases
 
@@ -60,11 +84,12 @@ Scripts also write into `data/` as they run — `data/activations/`, `data/pca_a
 
 `data/analysis/reproduction/` contains selected benchmark filenames, analysis cohorts,
 EMG muscle mappings and human reference values. Shared task labels live in
-`src/analysis/metadata.py`. Recording axes come from file metadata or the task model. Bundled expert summaries under
+`src/analysis/metadata.py`. Recording axes come from file metadata or the task model. Expert summaries under
 `data/final_benchmarks/expert_policies/` provide the reference for relative performance.
-Recordings use the existing `data/activations/` directory; intervention results use
+Offline hand analyses default to supplied compact recordings in `data/analysis/signals/`.
+Legacy collection still writes to `data/activations/`; intervention results use
 `data/pca_analysis/`. `data/analysis/` holds EMG inputs, exported tables and portable
-learning curves. The small `data/analysis/learning_curves.csv.gz` and
+learning curves. The packaged `data/analysis/learning_curves.csv.gz` and
 `data/analysis/historical_curves.csv`
 files are historical plot caches from the reproduction branches, not raw recordings.
 

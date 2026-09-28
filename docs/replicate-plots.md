@@ -3,8 +3,8 @@
 Scripts for the paper's performance plots and learning curves. All figures are written under
 `data/figures/`.
 
-Every script here reads released artifacts rather than retraining, so unzip the required
-directories from Zenodo first — see [Data and checkpoints](data.md). The **Requires** line on
+The plotting commands read evaluation results, TensorBoard logs or curve caches.
+Install the inputs matching the current layout first — see [Data and checkpoints](data.md). The **Requires** line on
 each script tells you which one.
 
 ## Performance plots
@@ -74,7 +74,7 @@ with PPO, plotting the solved fraction versus training steps from TensorBoard lo
 Experiment paths are set near the top of the script.
 
 - **Script**: `plotting/plot_rl_finetuning_curves.py`
-- **Requires**: `data/final_benchmarks_extra/rl_finetuning/` and `data/final_benchmarks/arnold_multi_task/` (TensorBoard logs)
+- **Requires**: `data/final_benchmarks_extra/rl_finetuning/` and `data/final_benchmarks/example_training_curve/` (TensorBoard logs)
 - **Output**: `data/figures/rl_finetuning_combined/rl_finetuning_combined_solved_curves.png` / `.svg`
 
 ```bash
@@ -100,8 +100,7 @@ python plotting/plot_mt_algos.py
 
 ### Single-task student policy curves
 
-Plots the learning curves of single-task student policies (PPO fine-tuning) after the
-multi-task OBC student curves. Relies on the raw TensorBoard frames.
+Plots single-task imitation-learning histories from per-task TensorBoard logs.
 
 - **Script**: `plotting/plot_student_policy_curves.py`
 - **Requires**: `data/final_benchmarks/arnold_single_task/` (TensorBoard logs)
@@ -118,7 +117,7 @@ scratch for four downstream tasks: `pen`, `reorient`, `hand_middle_reach` and
 `hand_little_reach`.
 
 - **Script**: `plotting/plot_transfer_vs_scratch.py`
-- **Requires**: `data/final_benchmarks/arnold_multi_task/` (TensorBoard logs)
+- **Requires**: `data/final_benchmarks/transfer_learning/` (TensorBoard logs)
 - **Output**: `data/figures/transfer_learning/transfer_vs_scratch_comparison.png` / `.svg`
 
 ```bash
@@ -169,8 +168,10 @@ points and their output paths are retained.
 
 ## Migrated training logs
 
-The local single-task and multi-task folders were copied from the legacy repository,
-including checkpoints, configuration and TensorBoard logs. The legacy copies are retained.
+The retained learning-curve inputs are `arnold_single_task/`, `transfer_learning/`
+and `example_training_curve/` under `data/final_benchmarks/`. Unused experiment folders
+and their checkpoints/pickle files have been removed. Only `example_checkpoint/` retains
+the model and matching normalization file used by the examples.
 CSI event files and run arguments are stored under `training/` in `csi`,
 `csi_server`, `csi_bc_server` and `csi_notrain_server`, within
 `data/final_benchmarks_extra/`. The CSI curve plot keeps its selected runs: baseline 111,

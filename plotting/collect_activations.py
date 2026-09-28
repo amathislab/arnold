@@ -232,7 +232,7 @@ if __name__ == "__main__":
 """
 for task in hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach reorient pen baoding_p1_ccw baoding_p1_cw baoding_p2 baoding_p2_overlap; do
     python src/collect_activations.py \
-        --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+        --load data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip \
         --task $task \
         --num_episodes 100 \
         --arnold \

@@ -2,7 +2,7 @@
 
 How well a policy performs when its action space is **constrained** to a low-dimensional
 subspace, with and without further training inside that subspace. Corresponds to Figures
-S11 and S14 of the paper.
+S10 and S11 of the supplied manuscript.
 
 !!! note "CSI-Finetuning vs. CSI analysis"
     This page *constrains* a policy's action space to a fixed subspace and then trains
@@ -162,8 +162,8 @@ python src/benchmark.py \
 
 | Figure | Paper | Script | Output |
 | --- | --- | --- | --- |
-| Final performance vs. action-space size, frozen and fine-tuned | S11 | `plotting/plot_csi_analysis.py` | `data/figures/csi_analysis/` (`.png` / `.svg`) |
-| Fine-tuning learning curves for each arm | S14 | `plotting/plot_csi_curves.py` | `data/figures/csi_analysis/` (`.png` / `.svg`) |
+| Final performance vs. action-space size, frozen and fine-tuned | S10 | `plotting/plot_csi_analysis.py` | `data/figures/csi_analysis/` (`.png` / `.svg`) |
+| Fine-tuning learning curves for each arm | S11 | `plotting/plot_csi_curves.py` | `data/figures/csi_analysis/` (`.png` / `.svg`) |
 
 !!! note "Script and output names"
     Both scripts and their output directory are named `csi_analysis`, but they belong to

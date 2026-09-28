@@ -11,6 +11,9 @@ Inputs are `data/analysis/emg/human.npz` and `simulation.npz`. Use `--data_dir`
 and `--out_dir` to change input and output paths. CSVs and SVGs are written to
 `data/figures/emg/` and `data/figures/gait_factors/`.
 
+The supplied `simulation.npz` can be analyzed directly. The recordings under
+`data/analysis/emg/rollouts/` can also be processed with `segment_gait.py` to regenerate it.
+
 To collect new deterministic gait recordings, obtain the models using [Data](data.md),
 then supply the actual checkpoint paths:
 

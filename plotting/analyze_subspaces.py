@@ -13,7 +13,7 @@ from analysis.subspaces import load_signals, principal_components, compare_subsp
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=Path, default=Path("data/activations"))
+    parser.add_argument("--data_dir", type=Path, default=Path("data/analysis/signals"))
     parser.add_argument("--selection", choices=["subspaces", "capacity_recordings"], default="subspaces")
     parser.add_argument("--selections", default="data/analysis/reproduction/signals.json")
     parser.add_argument("--successful", type=int)

@@ -56,7 +56,7 @@ def plot_smoothness(per_task, comparisons, policies, tasks, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data_dir", type=Path, default=Path("data/activations"))
+    parser.add_argument("--data_dir", type=Path, default=Path("data/analysis/signals"))
     parser.add_argument("--out_dir", type=Path, default=Path("data/figures/smoothness"))
     parser.add_argument("--selections", type=Path, default=Path("data/analysis/reproduction/signals.json"))
     args = parser.parse_args()

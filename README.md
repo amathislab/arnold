@@ -1,7 +1,7 @@
 # Arnold: a multi-task, multi-embodiment muscle transformer policy
 
 ## Model checkpoints and benchmark results
-Available on [Zenodo](https://zenodo.org/records/21493316)
+Available on [Zenodo](https://zenodo.org/records/21807280)
 
 What is contained?
 
@@ -116,28 +116,45 @@ apt-get update && apt-get install -y libgl1-mesa-glx libosmesa6
 
 ## Downloading Pretrained Models and Expert Policies
 
-The git repository contains code, small configuration files, expert reference summaries and compact analysis caches. Model weights and full benchmark datasets live on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the `data/` directory before running the training, evaluation, or plotting scripts. Your `data/` directory should end up with the sub-directories listed below.
+The git repository contains code and environment/expert configuration files. Benchmark
+results, model weights, training logs and analysis data are external inputs. The release
+record is [Zenodo v3](https://zenodo.org/records/21807280).
 
-**Included in the repository (no download needed):**
+The current local layout below is the target layout for `final_benchmarks.tar.gz`,
+`final_benchmarks_extra.tar.gz` and `analysis.tar.gz`. Rebuild packages after directory
+changes and use archives matching this checkout; the updated packages are not assumed
+to be uploaded yet. The existing v3
+release uses different archive names and does not necessarily contain the newly migrated logs.
+Expert policies, Kinesis assets and the full checkpoint collection remain separate downloads.
 
-| Directory | Contents |
-| --- | --- |
-| `data/env_configs/` | Per-task environment configuration JSONs (`ENV_CONFIG_PATH`). |
-| `data/expert_configs/` | Expert-policy configuration JSONs (`EXPERT_CONFIG_PATH`). |
-
-**Need to be downloaded to run some scripts** — find and download these from the Zenodo record at [https://zenodo.org/records/21493316](https://zenodo.org/records/21493316), then unzip them into `data/`:
+Environment and expert configurations are included under `data/env_configs/` and
+`data/expert_configs/`. External inputs use this layout:
 
 | Directory | Contents | Needed for |
 | --- | --- | --- |
-| `data/student_policies/` | Trained OBC / Arnold / single- and multi-task student policy checkpoints (`.zip` + `vecnormalize.pkl`) and their TensorBoard training logs. | Evaluation (`src/benchmark.py`), activation collection (`plotting/collect_activations.py`), and the student / transfer learning-curve plots. |
-| `data/expert_policies/` | (Super-)expert policy checkpoints and their TensorBoard logs (`EXPERT_POLICIES_PATH`). | Expert evaluation (`src/benchmark.py --expert`) using the expert checkpoints. |
-| `data/final_benchmarks/` | Per-method, per-seed benchmark result JSONs, plus `expert_policies/` result JSONs used as the baseline. | The paper's radar and ablation bar plots, and the expert baseline in every performance plot. |
-| `data/final_benchmarks_extra/` | CSI (`csi_*`), bilateral, and the PPO w/o-rew-norm benchmark result JSONs, plus the cached MT-SAC / MT-PPO learning curves in `mt-curves/`. | `plotting/plot_csi_analysis.py`, `plotting/plot_csi_curves.py`, the PPO ablation plot, and `plotting/plot_mt_algos.py`. |
-| `data/kinesis/` | MuJoCo model assets for the `kinesis` locomotion task. | Any run that instantiates the `kinesis` environment. |
+| `data/final_benchmarks/` | Per-method/per-seed result JSONs and expert references; `arnold_single_task/` and `transfer_learning/` logs; `example_training_curve/` base OBC logs; `example_checkpoint/` with one checkpoint and matching normalization file. | Performance, ablation, student, transfer and fine-tuning plots; checkpoint-loading examples. |
+| `data/final_benchmarks_extra/` | CSI evaluation results and `csi*/training/` logs; bilateral and normalization ablations; `mt-curves/` caches; `rl_finetuning/` logs. | CSI, baseline and RL fine-tuning plots. |
+| `data/analysis/` | Curve caches, `reproduction/` metadata, compact hand signals, human/simulation EMG inputs, gait recordings and exported tables. | Portable learning curves, PCA/NMF summaries and additional analyses. |
+| `data/final_checkpoints/` | Separately released model checkpoints and associated normalization/configuration files. | Evaluation, fresh recordings and resumed training beyond the bundled example. |
+| `data/expert_policies/` | Expert policy checkpoints (`EXPERT_POLICIES_PATH`). | Expert evaluation and rollout collection. |
+| `data/kinesis/` | Locomotion model assets. | Instantiating the Kinesis environment. |
 
-> Note: `plotting/plot_mt_algos.py` reads its MT-SAC / MT-PPO learning curves from the cached CSVs in `data/final_benchmarks_extra/mt-curves/` (included in the `final_benchmarks_extra` download), so it runs without wandb access. Any missing curve is re-fetched from Weights & Biases automatically and re-cached (requires a logged-in `wandb` account with access to the runs referenced in the script); External users may not have the access to the original wandb runs and they may be eventually deleted by the Arnold team.
+Extract the updated packages from the repository root:
 
-For the reviewers of the paper, we are sharing a zipped folder that contains both the code and the weights. If you are reading this README then you already have access to the weights and code! 
+```bash
+mkdir -p data
+tar -xzf final_benchmarks.tar.gz -C data
+tar -xzf final_benchmarks_extra.tar.gz -C data
+tar -xzf analysis.tar.gz -C data
+```
+
+The single-task and transfer folders contain training logs and configurations, not model
+checkpoints. The retained example checkpoint is
+`data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip`, accompanied by
+`rl_model_vecnormalize_64670238_steps.pkl`. Other checkpoint paths require the separate
+model release. Training logs alone cannot generate new rollout recordings.
+
+See [Data and checkpoints](docs/data.md) for input requirements and cache behavior.
 
 ## Arnold Training
 
@@ -187,7 +204,7 @@ python src/main_bc_ppo_multi_task.py \
         reorient pen baoding_p1_cw baoding_p1_ccw baoding_p2 baoding_p2_overlap elbow_pose relocate kinesis kinesis \
         relocate baoding_p1_cw baoding_p2 baoding_p2_overlap kinesis kinesis \
         relocate baoding_p1_ccw baoding_p2 baoding_p2_overlap kinesis kinesis \
-    --load_path data/student_policies/obc \
+    --load_path data/final_checkpoints/obc/seed_0 \
     --num_envs_per_task 2 \
     --ent_coef=0 \
     --vf_coef=0.5 \
@@ -226,7 +243,7 @@ The `src/benchmark.py` script allows you to evaluate the performance of various 
 
 ### 1. Evaluating OBC and Arnold Models
 
-To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21493316).
+To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21807280).
 
 Here's an example command:
 
@@ -253,7 +270,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+    --load data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
     --num_episodes 10 \
@@ -265,7 +282,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/obc/rl_model_54974700_steps.zip \
+    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
     --task relocate \
     --arnold \
     --num_episodes 10 \
@@ -367,14 +384,14 @@ Principal Component Analysis (PCA) of the action space of trained policies, to s
 
 - **Script**: `plotting/collect_activations.py`
 - **Description**: Rolls out a trained policy and saves per-episode observations, action means, rewards, and (for Arnold) intermediate activations. The action means feed the PCA steps below.
-- **Output**: HDF5 (`.h5`) files under `data/activations/<policy_id>/` (e.g., `data/activations/285_64670238/`).
+- **Output**: HDF5 (`.h5`) files under `data/activations/<policy_id>/` (e.g., `data/activations/example_64670238/`).
 - **Example Usage**:
 
   ```bash
   # Collect activations for multiple tasks
   for task in hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach reorient pen baoding_p1_ccw baoding_p1_cw baoding_p2 baoding_p2_overlap; do
       python plotting/collect_activations.py \
-          --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+          --load data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip \
           --task $task \
           --num_episodes 100 \
           --arnold \
@@ -391,8 +408,8 @@ Use the existing per-episode recordings or compact signals with explicit paths:
 ```bash
 python plotting/analyze_pca_inactivation.py \
     --load path/to/rl_model_64670238_steps.zip \
-    --signals data/activations/285_64670238 --method pca --scope global \
-    --out_dir data/pca_analysis/285_64670238/global
+    --signals data/activations/example_64670238 --method pca --scope global \
+    --out_dir data/pca_analysis/example_64670238/global
 ```
 
 The command writes `curves.csv`, episode results and fitted components. Use `--scope task`
@@ -403,7 +420,7 @@ See [CSI analysis](docs/csi-analysis.md) for the methods and cached-result prove
 
 ```bash
 python plotting/plot_pca_inactivation.py \
-    --curves data/pca_analysis/285_64670238/global/curves.csv
+    --curves data/pca_analysis/example_64670238/global/curves.csv
 ```
 
 Figures are saved to `data/figures/pca_inactivation/`. Without `--curves`, the included
@@ -417,7 +434,7 @@ historical PCA/NMF summary is plotted.
 - **Example Usage**:
 
   ```bash
-  python plotting/plot_action_pca_variance.py --activations_dir data/activations/285_64670238 --out_dir data/figures/cumulative_variance/285_64670238
+  python plotting/plot_action_pca_variance.py --activations_dir data/activations/example_64670238 --out_dir data/figures/cumulative_variance/example_64670238
   ```
 
 ## CSI Analysis
@@ -654,7 +671,7 @@ Learning-curve figures. Figures are written under `data/figures/`.
 ### Single-Task Student Policy Curves
 
 - **Script**: `plotting/plot_student_policy_curves.py`
-- **Description**: Plots the learning curves of single-task student policies (PPO fine-tuning) after the multi-task OBC student curves. Relies on the raw TensorBoard frames.
+- **Description**: Plots single-task imitation-learning histories from the per-task TensorBoard logs in `data/final_benchmarks/arnold_single_task/`.
 - **Output**: `data/figures/student_policies/` (`.png`).
 - **Example Usage**:
 
@@ -699,7 +716,7 @@ remain available.
   `analyze_baoding_kinematics.py`.
 - [Control subspaces](docs/csi-analysis.md): PCA/NMF interventions and PVD/PAD comparisons.
 - [EMG and gait factors](docs/emg-analysis.md): collection, segmentation, human correlations
-  and rotated PCA. Processed human profiles must be supplied separately.
+  and rotated PCA. Human profiles can be loaded with `src/analysis/import_human_emg.py`; supplied simulation profiles and gait recordings are under `data/analysis/emg/`.
 - [Analysis signals](docs/signals.md): compact collection and import of existing recordings.
 
 Reusable numerical methods and shared task labels live in `src/analysis/`; analysis
@@ -708,7 +725,10 @@ supports the solved-fraction and PCA definitions; smoothness, EMG and NMF are ad
 analyses from the PRs/legacy repository.
 
 Learning-curve inputs: single-task and transfer experiments are under
-`data/final_benchmarks/arnold_single_task/` and `arnold_multi_task/`.
+`data/final_benchmarks/arnold_single_task/` and `transfer_learning/`.
 CSI TensorBoard logs live in the corresponding `data/final_benchmarks_extra/csi*/training/`
 folders. Arnold RL fine-tuning logs live separately in
 `data/final_benchmarks_extra/rl_finetuning/`.
+
+The base OBC training logs used by `plot_rl_finetuning_curves.py` are in
+`data/final_benchmarks/example_training_curve/`.
