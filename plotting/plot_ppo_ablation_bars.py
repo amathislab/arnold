@@ -5,41 +5,12 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from definitions import ROOT_DIR
+from analysis.metadata import benchmark_result_paths, task_display_names
 
 # Reuse the same mappings from plot_radar.py
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little reach",
-    "hand_index_reach": "Index reach",
-    "hand_middle_reach": "Middle reach",
-    "hand_ring_reach": "Ring reach",
-    "hand_thumb_reach": "Thumb reach",
-    "reorient": "Die reorient",
-    "pen": "Pen reorient",
-    "baoding_p1_cw": "Baoding CW",
-    "baoding_p1_ccw": "Baoding CCW",
-    "baoding_p2_overlap": "Baoding hard",
-    "baoding_p2": "Baoding harder",
-    "elbow_pose": "Elbow pose",
-    "relocate": "Object relocation",
-    "kinesis": "Walk to point",
-}
+TASK_NAME_MAPPING = task_display_names(multiline=False)
 
-TASK_METRIC_MAP = {
-    "hand_little_reach": "solved_steps",
-    "hand_index_reach": "solved_steps",
-    "hand_middle_reach": "solved_steps",
-    "hand_ring_reach": "solved_steps",
-    "hand_thumb_reach": "solved_steps",
-    "reorient": "solved",
-    "pen": "solved_steps",
-    "baoding_p1_cw": "solved_steps",
-    "baoding_p1_ccw": "solved_steps",
-    "baoding_p2_overlap": "solved_steps",
-    "baoding_p2": "solved_steps",
-    "elbow_pose": "solved_steps",
-    "relocate": "solved",
-    "kinesis": "solved",
-}
+TASK_METRIC_MAP = {task: "solved_step_frac" for task in TASK_NAME_MAPPING}
 
 
 def load_results(filepath):
@@ -47,33 +18,30 @@ def load_results(filepath):
         return json.load(f)
 
 
-def aggregate_seed_results(method_dir, base="data/final_benchmarks"):
-    """Aggregate a multi-seed method dir (``<base>/<method_dir>/*/*_results.json``).
+def aggregate_seed_results(method_dir):
+    """Aggregate the registered final benchmark results for a released method.
 
     Returns a single results dict (one entry per task) whose ``avg_*``/``std_*``
     fields are aggregated across seeds so it plugs into the shared plotting loop.
     The per-task ``std`` is the standard deviation of the per-seed means and
-    ``n_episodes`` is the number of seeds, so the ``sem = std / sqrt(n_episodes)``
+    ``n_seeds`` is the number of seeds, so the ``sem = std / sqrt(n_seeds)``
     formula below yields the SEM across seeds.
     """
-    pattern = os.path.join(ROOT_DIR, base, method_dir, "*", "*_results.json")
-    seed_files = sorted(glob.glob(pattern))
-    if not seed_files:
-        raise FileNotFoundError(f"No results files found: {pattern}")
+    seed_files = benchmark_result_paths(method_dir, root=ROOT_DIR)
     seed_results = [load_results(f) for f in seed_files]
 
     aggregated = {}
     for task in seed_results[0].keys():
         agg = {}
-        for metric in ("solved_steps", "solved"):
+        for metric in ("solved_step_frac",):
             avg_key, std_key = f"avg_{metric}", f"std_{metric}"
             seed_means = [
                 r[task][avg_key] for r in seed_results if avg_key in r[task]
             ]
             if seed_means:
                 agg[avg_key] = float(np.mean(seed_means))
-                agg[std_key] = float(np.std(seed_means))
-        agg["n_episodes"] = len(seed_results)
+                agg[std_key] = float(np.std(seed_means, ddof=1))
+        agg["n_seeds"] = len(seed_results)
         aggregated[task] = agg
     return aggregated
 
@@ -143,9 +111,10 @@ def create_bar_plots():
             performances.append(relative_performance)
 
             # Calculate SEM
-            std = results[task][f"std_{metric}"] / expert_score * 100
-            n = results[task].get("n_episodes", 50)  # default to 50 if not specified
-            sem = std / np.sqrt(n)
+            # Only multi-seed arms have seed SEM; one run cannot estimate it.
+            n = results[task].get("n_seeds", 1)
+            sem = (results[task][f"std_{metric}"] / expert_score * 100 / np.sqrt(n)
+                   if n > 1 else 0.0)
             sems.append(sem)
 
         offset = i * bar_width - (n_methods - 1) * bar_width / 2

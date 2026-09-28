@@ -1,7 +1,7 @@
 # Data and checkpoints
 
-The git repository contains only the code plus the small configuration files. Everything
-else lives on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the
+The git repository contains code, small configuration files, expert reference summaries
+and compact curve caches. Model weights and full benchmark downloads live on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the
 `data/` directory before running the training, evaluation or plotting scripts.
 
 ## Included in the repository
@@ -55,3 +55,20 @@ Scripts also write into `data/` as they run — `data/activations/`, `data/pca_a
     requires a logged-in `wandb` account with access to the runs referenced in the script.
     External users may not have access to the original wandb runs, and they may eventually
     be deleted by the Arnold team.
+
+## Analysis inputs
+
+`data/analysis/reproduction/` contains selected benchmark filenames, analysis cohorts,
+EMG muscle mappings and human reference values. Shared task labels live in
+`src/analysis/metadata.py`. Recording axes come from file metadata or the task model. Bundled expert summaries under
+`data/final_benchmarks/expert_policies/` provide the reference for relative performance.
+Recordings use the existing `data/activations/` directory; intervention results use
+`data/pca_analysis/`. `data/analysis/` holds EMG inputs, exported tables and portable
+learning curves. The small `data/analysis/learning_curves.csv.gz` and
+`data/analysis/historical_curves.csv`
+files are historical plot caches from the reproduction branches, not raw recordings.
+
+Collect/export hand recordings with [Analysis signals](signals.md). Human EMG requires
+external preprocessed subject profiles; [EMG analysis](emg-analysis.md) documents their
+format and import command. Neither the old repository's private paths nor an unpublished
+analysis-signal archive is required by the code.

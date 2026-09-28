@@ -176,3 +176,8 @@ Both read the benchmark result JSONs written in step 4, which ship in
 python plotting/plot_csi_analysis.py
 python plotting/plot_csi_curves.py
 ```
+
+The CSI learning-curve plot reads migrated TensorBoard logs under
+`data/final_benchmarks_extra/csi_notrain_server/training/`,
+`csi_server/training/` and `csi_bc_server/training/`. Evaluation JSONs alone
+do not contain the training histories.

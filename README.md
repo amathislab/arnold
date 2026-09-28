@@ -116,7 +116,7 @@ apt-get update && apt-get install -y libgl1-mesa-glx libosmesa6
 
 ## Downloading Pretrained Models and Expert Policies
 
-The git repository contains only the code plus the small configuration files. Everything else lives on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the `data/` directory before running the training, evaluation, or plotting scripts. Your `data/` directory should end up with the sub-directories listed below.
+The git repository contains code, small configuration files, expert reference summaries and compact analysis caches. Model weights and full benchmark datasets live on [Zenodo](https://zenodo.org/records/21493316) and must be unzipped into the `data/` directory before running the training, evaluation, or plotting scripts. Your `data/` directory should end up with the sub-directories listed below.
 
 **Included in the repository (no download needed):**
 
@@ -130,7 +130,7 @@ The git repository contains only the code plus the small configuration files. Ev
 | Directory | Contents | Needed for |
 | --- | --- | --- |
 | `data/student_policies/` | Trained OBC / Arnold / single- and multi-task student policy checkpoints (`.zip` + `vecnormalize.pkl`) and their TensorBoard training logs. | Evaluation (`src/benchmark.py`), activation collection (`plotting/collect_activations.py`), and the student / transfer learning-curve plots. |
-| `data/expert_policies/` | (Super-)expert policy checkpoints and their TensorBoard logs (`EXPERT_POLICIES_PATH`). | Expert evaluation (`src/benchmark.py --expert`) and `plotting/plot_rl_finetuning_curves.py`. |
+| `data/expert_policies/` | (Super-)expert policy checkpoints and their TensorBoard logs (`EXPERT_POLICIES_PATH`). | Expert evaluation (`src/benchmark.py --expert`) using the expert checkpoints. |
 | `data/final_benchmarks/` | Per-method, per-seed benchmark result JSONs, plus `expert_policies/` result JSONs used as the baseline. | The paper's radar and ablation bar plots, and the expert baseline in every performance plot. |
 | `data/final_benchmarks_extra/` | CSI (`csi_*`), bilateral, and the PPO w/o-rew-norm benchmark result JSONs, plus the cached MT-SAC / MT-PPO learning curves in `mt-curves/`. | `plotting/plot_csi_analysis.py`, `plotting/plot_csi_curves.py`, the PPO ablation plot, and `plotting/plot_mt_algos.py`. |
 | `data/kinesis/` | MuJoCo model assets for the `kinesis` locomotion task. | Any run that instantiates the `kinesis` environment. |
@@ -253,7 +253,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+    --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
     --num_episodes 10 \
@@ -374,7 +374,7 @@ Principal Component Analysis (PCA) of the action space of trained policies, to s
   # Collect activations for multiple tasks
   for task in hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach hand_little_reach reorient pen baoding_p1_ccw baoding_p1_cw baoding_p2 baoding_p2_overlap; do
       python plotting/collect_activations.py \
-          --load data/student_policies/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
+          --load data/final_benchmarks/arnold_multi_task/285_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1/rl_model_64670238_steps.zip \
           --task $task \
           --num_episodes 100 \
           --arnold \
@@ -384,27 +384,30 @@ Principal Component Analysis (PCA) of the action space of trained policies, to s
   done
   ```
 
-### 2. Running PCA Inactivation Analysis
+### 2. Running PCA / NMF Inactivation Analysis
 
-- **Script**: `plotting/analyze_pca_inactivation.py`
-- **Description**: Runs PCA on the collected actions (per-task and global) and measures performance while progressively inactivating principal components. Input/output paths are hardcoded near the top of the script.
-- **Output**: Pickle (`.pkl`) files under `data/pca_analysis/<policy_id>/`.
-- **Example Usage**:
+Use the existing per-episode recordings or compact signals with explicit paths:
 
-  ```bash
-  python plotting/analyze_pca_inactivation.py
-  ```
+```bash
+python plotting/analyze_pca_inactivation.py \
+    --load path/to/rl_model_64670238_steps.zip \
+    --signals data/activations/285_64670238 --method pca --scope global \
+    --out_dir data/pca_analysis/285_64670238/global
+```
+
+The command writes `curves.csv`, episode results and fitted components. Use `--scope task`
+for per-task fits. NMF requires physical controls from the compact signal collector.
+See [CSI analysis](docs/csi-analysis.md) for the methods and cached-result provenance.
 
 ### 3. Plotting PCA Inactivation Performance
 
-- **Script**: `plotting/plot_pca_inactivation.py`
-- **Description**: Plots performance (from step 2) versus the number of active principal components, comparing per-task and global PCA. Run after step 2.
-- **Output**: `data/figures/pca_inactivation/<policy_id>/` (`.png` / `.svg`).
-- **Example Usage**:
+```bash
+python plotting/plot_pca_inactivation.py \
+    --curves data/pca_analysis/285_64670238/global/curves.csv
+```
 
-  ```bash
-  python plotting/plot_pca_inactivation.py
-  ```
+Figures are saved to `data/figures/pca_inactivation/`. Without `--curves`, the included
+historical PCA/NMF summary is plotted.
 
 ### 4. Plotting Cumulative Explained Variance of Actions
 
@@ -683,3 +686,29 @@ this repository and must be obtained separately from myo_sim and Kinesis under
 the Apache License 2.0.
 
 See the [LICENSE](LICENSE) file for the full terms and per-file attributions.
+
+## Additional reproduction analyses
+
+The reproduction PRs are adapted to the existing `src/`, `plotting/` and `data/` layout.
+Training/evaluation entry points and the original TensorBoard learning-curve commands
+remain available.
+
+- [Tables and portable learning curves](docs/replicate-plots.md): `ablation_table.py`,
+  capacity/bilateral/relative-performance plots and `plot_learning_curves.py`.
+- [Hand smoothness and Baoding PCA](docs/hand-analysis.md): `analyze_smoothness.py` and
+  `analyze_baoding_kinematics.py`.
+- [Control subspaces](docs/csi-analysis.md): PCA/NMF interventions and PVD/PAD comparisons.
+- [EMG and gait factors](docs/emg-analysis.md): collection, segmentation, human correlations
+  and rotated PCA. Processed human profiles must be supplied separately.
+- [Analysis signals](docs/signals.md): compact collection and import of existing recordings.
+
+Reusable numerical methods and shared task labels live in `src/analysis/`; analysis
+selections and human references live in `data/analysis/reproduction/`; generated figures stay under `data/figures/`. The supplied manuscript
+supports the solved-fraction and PCA definitions; smoothness, EMG and NMF are additional
+analyses from the PRs/legacy repository.
+
+Learning-curve inputs: single-task and transfer experiments are under
+`data/final_benchmarks/arnold_single_task/` and `arnold_multi_task/`.
+CSI TensorBoard logs live in the corresponding `data/final_benchmarks_extra/csi*/training/`
+folders. Arnold RL fine-tuning logs live separately in
+`data/final_benchmarks_extra/rl_finetuning/`.

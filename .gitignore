@@ -8,10 +8,10 @@ data/myosuite
 data/student_policies
 data/videos/
 data/benchmarks
-data/final_benchmarks
+data/final_benchmarks/
 data/final_benchmarks_extra
 data/figures
-
+data/analysis
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -168,3 +168,11 @@ figs
 docker
 logs
 wandb
+
+# Analysis inputs and generated results; keep metadata and released curve caches.
+data/activations/
+data/pca_analysis/
+data/analysis/*
+!data/analysis/learning_curves.csv.gz
+!data/analysis/historical_curves.csv
+!data/analysis/reproduction/

@@ -43,7 +43,7 @@ EXPERIMENT_PAIRS = [
 def main():
     # Setup paths
     student_policies_dir = os.path.join(
-        ROOT_DIR, "data", "student_policies", "arnold_multi_task"
+        ROOT_DIR, "data", "final_benchmarks", "arnold_multi_task"
     )
     attribute = "solved"
 

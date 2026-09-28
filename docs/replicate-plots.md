@@ -40,7 +40,7 @@ python plotting/plot_ppo_ablation_bars.py
 
 | Bar | Source directory | Seeds |
 | --- | --- | --- |
-| PPO | `data/final_benchmarks/ppo_t_sv/` | 3 |
+| PPO | `data/final_benchmarks/ppo_t_sv/` | 5 |
 | PPO w/o rew norm | `data/final_benchmarks_extra/ppo_wo_rew_norm/` | 1 |
 | PPO w/o obs norm | `data/final_benchmarks_extra/ppo_wo_obs_norm/` | 1 |
 | MT-PPO | `data/final_benchmarks/mt_ppo/` | 3 |
@@ -74,7 +74,7 @@ with PPO, plotting the solved fraction versus training steps from TensorBoard lo
 Experiment paths are set near the top of the script.
 
 - **Script**: `plotting/plot_rl_finetuning_curves.py`
-- **Requires**: `data/expert_policies/`, `data/student_policies/` (TensorBoard logs)
+- **Requires**: `data/final_benchmarks_extra/rl_finetuning/` and `data/final_benchmarks/arnold_multi_task/` (TensorBoard logs)
 - **Output**: `data/figures/rl_finetuning_combined/rl_finetuning_combined_solved_curves.png` / `.svg`
 
 ```bash
@@ -104,7 +104,7 @@ Plots the learning curves of single-task student policies (PPO fine-tuning) afte
 multi-task OBC student curves. Relies on the raw TensorBoard frames.
 
 - **Script**: `plotting/plot_student_policy_curves.py`
-- **Requires**: `data/student_policies/` (TensorBoard logs)
+- **Requires**: `data/final_benchmarks/arnold_single_task/` (TensorBoard logs)
 - **Output**: `data/figures/student_policies/` (`.png`)
 
 ```bash
@@ -118,9 +118,66 @@ scratch for four downstream tasks: `pen`, `reorient`, `hand_middle_reach` and
 `hand_little_reach`.
 
 - **Script**: `plotting/plot_transfer_vs_scratch.py`
-- **Requires**: `data/student_policies/` (TensorBoard logs)
+- **Requires**: `data/final_benchmarks/arnold_multi_task/` (TensorBoard logs)
 - **Output**: `data/figures/transfer_learning/transfer_vs_scratch_comparison.png` / `.svg`
 
 ```bash
 python plotting/plot_transfer_vs_scratch.py
 ```
+
+## Additional tables and plots
+
+The exact benchmark selections are recorded in `data/analysis/reproduction/policies.json`;
+shared task labels live in `src/analysis/metadata.py`.
+These use the existing `data/final_benchmarks/` and `data/final_benchmarks_extra/` layout:
+
+```bash
+python plotting/ablation_table.py
+python plotting/plot_relative_dotplot.py
+python plotting/plot_capacity_performance.py
+python plotting/plot_bilateral_reward.py
+python plotting/plot_csi_analysis.py
+```
+
+Tables (CSV and LaTeX) are written under `data/analysis/tables/`. They report relative
+solved-step fractions and SEM across seeds, with task-paired Wilcoxon tests and Holm
+correction. The single-run capacity comparison uses episode SEM, explicitly reported in
+its CSV. PPO normalization-ablation arms have one run and show no seed error bar. Radar
+and PPO bars now consistently use the paper's relative solved-step fraction.
+
+The PR's optional portable CSV plotting workflow supplements the existing TensorBoard
+commands above:
+
+```bash
+python plotting/plot_learning_curves.py --panel finetuning --raw \
+    --smoothing savgol --window 101 --combine_tasks
+python src/analysis/export_learning_curves.py \
+    --events path/to/events.out.tfevents.example --tag MuscleDieReorientP0-v0/solved \
+    --panel transfer --method Transfer --task reorient --stage transfer --seed 0 \
+    --output data/analysis/curves/transfer_reorient.csv
+python plotting/plot_learning_curves.py \
+    --curves data/analysis/curves/transfer_reorient.csv --panel transfer
+```
+
+Only the `finetuning` panel is included in `data/analysis/learning_curves.csv.gz`.
+Other panels require exported CSVs. Columns are
+`panel,method,seed,task,stage,step,value,metric`. Supply resumed event files in chronological
+resume order. `--offsets stage=50000000` subtracts that value from that stage's recorded
+steps. Multiple seeds are aligned on shared steps and shaded with standard deviation.
+Portable plots go to `data/figures/learning_curves/`; the original learning-curve entry
+points and their output paths are retained.
+
+## Migrated training logs
+
+The local single-task and multi-task folders were copied from the legacy repository,
+including checkpoints, configuration and TensorBoard logs. The legacy copies are retained.
+CSI event files and run arguments are stored under `training/` in `csi`,
+`csi_server`, `csi_bc_server` and `csi_notrain_server`, within
+`data/final_benchmarks_extra/`. The CSI curve plot keeps its selected runs: baseline 111,
+RL 555 and OBC 666; other migrated runs remain available.
+
+Arnold RL fine-tuning is a separate experiment, stored under `rl_finetuning/` in the
+same parent folder. Its elbow curve uses the available `elbow_263_78374700` run,
+whose arguments identify elbow pose and the 249 OBC base checkpoint; the previously
+referenced `elbow_pose_271_95774700` run was unavailable. This is a different run,
+so the curve is not claimed to reproduce that missing run.
