@@ -4,12 +4,8 @@ The git repository contains code and environment/expert configuration files. Ben
 results, model weights, training logs and analysis data are external inputs. The release
 record is [Zenodo v3](https://zenodo.org/records/21807280).
 
-The current local layout below is the target layout for `final_benchmarks.tar.gz`,
-`final_benchmarks_extra.tar.gz` and `analysis.tar.gz`. Rebuild packages after directory
-changes and use archives matching this checkout; the updated packages are not assumed
-to be uploaded yet. The existing v3
-release uses different archive names and does not necessarily contain the newly migrated logs.
-Expert policies, Kinesis assets and the full checkpoint collection remain separate downloads.
+Environment and expert configurations are already included under `data/env_configs/` and
+`data/expert_configs/` without need to download from Zenodo. External inputs from Zenodo use this layout:
 
 ## External inputs
 
@@ -26,8 +22,9 @@ Extract the updated packages from the repository root:
 
 ```bash
 mkdir -p data
-tar -xzf final_benchmarks.tar.gz -C data
-tar -xzf final_benchmarks_extra.tar.gz -C data
+tar -xzf final-benchmarks.tar.gz -C data
+tar -xzf final-benchmarks-extra.tar.gz -C data
+tar -xzf expert-policies.tar.gz -C data
 tar -xzf analysis.tar.gz -C data
 ```
 

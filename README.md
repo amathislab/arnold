@@ -118,17 +118,10 @@ apt-get update && apt-get install -y libgl1-mesa-glx libosmesa6
 
 The git repository contains code and environment/expert configuration files. Benchmark
 results, model weights, training logs and analysis data are external inputs. The release
-record is [Zenodo v3](https://zenodo.org/records/21807280).
+record is [Zenodo v3](https://zenodo.org/records/21807280). See this record for file structure.
 
-The current local layout below is the target layout for `final_benchmarks.tar.gz`,
-`final_benchmarks_extra.tar.gz` and `analysis.tar.gz`. Rebuild packages after directory
-changes and use archives matching this checkout; the updated packages are not assumed
-to be uploaded yet. The existing v3
-release uses different archive names and does not necessarily contain the newly migrated logs.
-Expert policies, Kinesis assets and the full checkpoint collection remain separate downloads.
-
-Environment and expert configurations are included under `data/env_configs/` and
-`data/expert_configs/`. External inputs use this layout:
+Environment and expert configurations are already included under `data/env_configs/` and
+`data/expert_configs/` without need to download from Zenodo. External inputs from Zenodo use this layout:
 
 | Directory | Contents | Needed for |
 | --- | --- | --- |
@@ -143,16 +136,11 @@ Extract the updated packages from the repository root:
 
 ```bash
 mkdir -p data
-tar -xzf final_benchmarks.tar.gz -C data
-tar -xzf final_benchmarks_extra.tar.gz -C data
+tar -xzf final-benchmarks.tar.gz -C data
+tar -xzf final-benchmarks-extra.tar.gz -C data
+tar -xzf expert-policies.tar.gz -C data
 tar -xzf analysis.tar.gz -C data
 ```
-
-The single-task and transfer folders contain training logs and configurations, not model
-checkpoints. The retained example checkpoint is
-`data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip`, accompanied by
-`rl_model_vecnormalize_64670238_steps.pkl`. Other checkpoint paths require the separate
-model release. Training logs alone cannot generate new rollout recordings.
 
 See [Data and checkpoints](docs/data.md) for input requirements and cache behavior.
 
