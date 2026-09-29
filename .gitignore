@@ -168,11 +168,3 @@ figs
 docker
 logs
 wandb
-
-# Analysis inputs and generated results; keep metadata and released curve caches.
-data/activations/
-data/pca_analysis/
-data/analysis/*
-!data/analysis/learning_curves.csv.gz
-!data/analysis/historical_curves.csv
-!data/analysis/reproduction/
