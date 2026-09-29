@@ -38,7 +38,7 @@ released ones, and reproduce figures in the paper.
 
 The model and benchmark release is available on Zenodo:
 
-[:material-database: Zenodo record 21807280](https://zenodo.org/records/21807280){ .md-button .md-button--primary }
+[:material-database: Zenodo record 23015391](https://zenodo.org/records/23015391){ .md-button .md-button--primary }
 
 The git repository contains only the code plus small configuration files. External inputs
 must be extracted into `data/` before running the corresponding scripts. See [Data and checkpoints](data.md) for the exact directory layout.

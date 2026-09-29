@@ -1,7 +1,7 @@
 # Arnold: a multi-task, multi-embodiment muscle transformer policy
 
 ## Model checkpoints and benchmark results
-Available on [Zenodo](https://zenodo.org/records/21807280)
+Available on [Zenodo](https://zenodo.org/records/23015391)
 
 What is contained?
 
@@ -118,7 +118,7 @@ apt-get update && apt-get install -y libgl1-mesa-glx libosmesa6
 
 The git repository contains code and environment/expert configuration files. Benchmark
 results, model weights, training logs and analysis data are external inputs. The release
-record is [Zenodo v3](https://zenodo.org/records/21807280). See this record for file structure.
+record is [Zenodo](https://zenodo.org/records/23015391). See this record for file structure.
 
 Environment and expert configurations are already included under `data/env_configs/` and
 `data/expert_configs/` without need to download from Zenodo. External inputs from Zenodo use this layout:
@@ -240,7 +240,7 @@ The `src/benchmark.py` script allows you to evaluate the performance of various 
 
 ### Evaluating OBC and Arnold Models
 
-To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/21807280).
+To test a model trained with OBC or Arnold, you need to specify the path to the saved model (`.zip` file) and the task you want to evaluate. We provide trained models that you can download from [Zenodo](https://zenodo.org/records/23015391).
 
 Here's an example command:
 

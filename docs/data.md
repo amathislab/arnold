@@ -2,7 +2,7 @@
 
 The git repository contains code and environment/expert configuration files. Benchmark
 results, model weights, training logs and analysis data are external inputs. The release
-record is [Zenodo v3](https://zenodo.org/records/21807280).
+record is [Zenodo](https://zenodo.org/records/23015391).
 
 Environment and expert configurations are already included under `data/env_configs/` and
 `data/expert_configs/` without need to download from Zenodo. External inputs from Zenodo use this layout:
