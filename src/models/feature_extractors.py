@@ -4,6 +4,7 @@ import torch
 from torch import nn
 from gymnasium import spaces
 from models.helpers import SinCosPositionalEncoding, LearnedPositionalEncoding
+from models.task_specific_embeddings import TaskSpecificPositionalEncoding
 from definitions import (
     MASK_SUFFIX,
     OBS_KEY,
@@ -49,6 +50,8 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         vocabulary=None,
         activation_fn=torch.nn.ReLU,
         device=None,
+        task_names=None,
+        task_specific_learnable=True,
     ):
         super().__init__(observation_space=observation_space, features_dim=1)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -57,6 +60,8 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         self.dropout = dropout
         self.position_embedding = position_embedding
         self.vocabulary = vocabulary if vocabulary is not None else VOCABULARY
+        self.task_names = task_names
+        self.task_specific_learnable = task_specific_learnable
         random_obs = observation_space.sample()
         _, num_timesteps = random_obs["obs"].shape
 
@@ -94,15 +99,27 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
 
     def forward(self, observation_dict):
         obs = observation_dict[OBS_KEY]
+        unbatched_task = self.position_embedding == "task_specific" and obs.ndim == 2
+        if unbatched_task:
+            obs = obs.unsqueeze(0)
         obs_token = self.tokenizer(obs)
 
         obs_ids = observation_dict[OBS_ID_KEY]
         if len(obs_ids.shape) != len(obs.shape) :
             obs_ids = obs_ids.unsqueeze(0)
-        positional_encoded_obs = self.positional_encoder(obs_token, obs_ids)
+        if self.position_embedding == "task_specific":
+            if "env_id" not in observation_dict:
+                raise ValueError("Task-specific embeddings require observation['env_id']")
+            task_ids = observation_dict["env_id"].reshape(obs.shape[0], -1)[:, 0].long()
+            positional_encoded_obs = self.positional_encoder(obs_token, obs_ids, task_ids)
+        else:
+            task_ids = None
+            positional_encoded_obs = self.positional_encoder(obs_token, obs_ids)
 
         # Run the transformer encoder (works also without a mask)
         obs_mask = observation_dict.get(OBS_KEY + MASK_SUFFIX)
+        if unbatched_task and obs_mask is not None:
+            obs_mask = obs_mask.unsqueeze(0)
         encodings = self.encoder(
             positional_encoded_obs, src_key_padding_mask=obs_mask
         )  # (batch, num_obs, embedding_size)
@@ -114,16 +131,26 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         action_target = torch.zeros(*action_ids.shape[:-1], self._features_dim).to(
             self.device
         )
-        positional_encoded_action_target = self.positional_encoder(
-            action_target, action_ids
-        )
+        if task_ids is not None:
+            positional_encoded_action_target = self.positional_encoder(
+                action_target, action_ids, task_ids
+            )
+        else:
+            positional_encoded_action_target = self.positional_encoder(
+                action_target, action_ids
+            )
         action_mask = observation_dict.get(ACTION_ID_KEY + MASK_SUFFIX)
+        if unbatched_task and action_mask is not None:
+            action_mask = action_mask.unsqueeze(0)
 
         value_target = torch.zeros(*action_ids.shape[:-2], 1, self._features_dim).to(
             self.device
         )
         value_idx = torch.tensor(self.vocabulary[VALUE_KEY]).to(self.device)
-        value_target = self.positional_encoder(value_target, value_idx)
+        if task_ids is not None:
+            value_target = self.positional_encoder(value_target, value_idx, task_ids)
+        else:
+            value_target = self.positional_encoder(value_target, value_idx)
 
         return (
             encodings,
@@ -148,6 +175,15 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
                 dropout=self.dropout,
                 padding_idx=self.vocabulary.get(PADDING_KEY),
             ).to(self.device)
+        elif self.position_embedding == "task_specific":
+            return TaskSpecificPositionalEncoding(
+                num_tokens=self.num_tokens,
+                d_model=self._features_dim,
+                task_names=self.task_names,
+                dropout=self.dropout,
+                padding_idx=self.vocabulary.get(PADDING_KEY),
+                learnable=self.task_specific_learnable,
+            ).to(self.device)
         else:
             raise ValueError(
                 "Unknown position embedding type:", self.position_embedding
@@ -157,6 +193,18 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         if new_vocabulary != self.vocabulary:
             assert all([key in new_vocabulary for key in self.vocabulary])
             self.num_tokens = len(new_vocabulary)
+            if isinstance(self.positional_encoder, TaskSpecificPositionalEncoding):
+                old_encoder = self.positional_encoder
+                old_vocabulary = self.vocabulary
+                self.vocabulary = new_vocabulary
+                self.positional_encoder = self.make_positional_encoder()
+                with torch.no_grad():
+                    for name, embedding in old_encoder.task_embeddings.items():
+                        for key, index in old_vocabulary.items():
+                            self.positional_encoder.task_embeddings[name].weight[
+                                new_vocabulary[key]
+                            ].copy_(embedding.weight[index])
+                return
             old_embedding = self.positional_encoder.embedding
             self.positional_encoder = self.make_positional_encoder()
             new_idx_map = torch.zeros(self.num_tokens, dtype=torch.int32)
@@ -177,11 +225,14 @@ class TransformerFeaturesExtractor(BaseFeaturesExtractor):
         r"""Initiate parameters in the transformer model."""
 
         for p in self.parameters():
-            if p.dim() > 1:
+            if p.dim() > 1 and p.requires_grad:
                 nn.init.xavier_uniform_(p)
         padding_idx = self.vocabulary.get(PADDING_KEY)
         if isinstance(self.positional_encoder, LearnedPositionalEncoding):
             self.positional_encoder.embedding.weight.data[padding_idx].fill_(0)
+        elif isinstance(self.positional_encoder, TaskSpecificPositionalEncoding):
+            for embedding in self.positional_encoder.task_embeddings.values():
+                embedding.weight.data[padding_idx].zero_()
 
 
 class PredictiveTransformerFeaturesExtractor(TransformerFeaturesExtractor):

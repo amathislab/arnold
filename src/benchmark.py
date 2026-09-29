@@ -28,18 +28,12 @@ from definitions import (
 from envs.expert_wrapper import ExpertWrapper
 from envs.loaders import load_expert_policy_and_env
 from models.csi_model import CSIActionNet
-
-def get_tasks_from_args_json(policy_path):
-    """Get list of tasks from args.json in the policy directory"""
-    policy_dir = os.path.dirname(policy_path)
-    args_path = os.path.join(policy_dir, "args.json")
-
-    if not os.path.exists(args_path):
-        return None, None
-
-    with open(args_path, "r") as f:
-        args = json.load(f)
-        return list(set(args.get("tasks", None))), args.get("num_memory_steps", None)
+from eval_task_utils import (
+    add_task_embedding_env_id,
+    get_task_embedding_index,
+    get_tasks_from_args_json,
+    load_training_args,
+)
 
 
 def parse_args():
@@ -183,18 +177,21 @@ def save_video(frames, out_dir, task_name):
 
 if __name__ == "__main__":
     args = parse_args()
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    training_args = load_training_args(args.load)
+    training_tasks = training_args.get("tasks", [])
+    num_memory_steps = training_args.get("num_memory_steps")
 
     # For multi-task policies, get tasks from args.json if not specified
     if args.task is None and args.load is not None:
-        args.task, num_memory_steps = get_tasks_from_args_json(args.load)
+        args.task, _ = get_tasks_from_args_json(args.load)
         if args.task is None:
             raise ValueError(
                 "No tasks specified and couldn't find args.json with tasks"
             )
     elif args.task is None:
         raise ValueError("Must specify --task when not loading a policy")
-    else:
-        num_memory_steps = None
 
     scores = {}
     arnold_envs = args.arnold
@@ -282,6 +279,11 @@ if __name__ == "__main__":
                 csi_mean = torch.from_numpy(csi_mean)
                 policy.change_projection(csi_projection, csi_mean, trainable=False)
             policy.to(args.device)
+            task_embedding_index = get_task_embedding_index(
+                policy, task_name, training_tasks
+            )
+            if task_embedding_index is not None and not arnold_envs:
+                raise ValueError("Task-specific checkpoints require --arnold")
 
             # Load environment for student policy
             prefix = "arnold_" if arnold_envs else "dense_"
@@ -292,6 +294,7 @@ if __name__ == "__main__":
                 eval_env_config = json.load(f)
             if num_memory_steps is not None:
                 eval_env_config["num_memory_steps"] = num_memory_steps
+            eval_env_config["seed"] = args.seed
             if task_name == "kinesis":
                 eval_env_config["headless"] = not args.render
 
@@ -305,10 +308,11 @@ if __name__ == "__main__":
                     ).replace(".zip", ".pkl")
                 print("Loading vecnormalize from", vecnormalize_path)
                 vecnormalize = create_vec_env(
-                    env_config_list=[eval_env_config],
+                    env_config_list=[eval_env_config.copy()],
                     load_env_path=vecnormalize_path,
                     multi_env=args.arnold,
                     old_vocabulary=vocabulary,
+                    seed=args.seed,
                 )
             else:
                 vecnormalize = None
@@ -389,6 +393,9 @@ if __name__ == "__main__":
                                 obs_i_normalized = vecnormalize.normalize_obs(obs)
                             else:
                                 obs_i_normalized = obs
+                        obs_i_normalized = add_task_embedding_env_id(
+                            obs_i_normalized, task_embedding_index
+                        )
 
                         # Get action based on policy type
                         if isinstance(policy, BilateralMuscleTransformerPolicy):

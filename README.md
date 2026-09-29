@@ -146,12 +146,14 @@ See [Data and checkpoints](docs/data.md) for input requirements and cache behavi
 
 ## Arnold Training
 
+For the Task-SV sensorimotor vocabulary ablation, see
+[training and evaluation instructions](docs/vocabulary-ablation.md).
+
 Run the training stages in order:
 
 1. Train OBC from scratch for 50M steps.
 2. Continue OBC for 5M steps at the reduced learning rate.
 3. Train the final Arnold agent from the 55M-step checkpoint using super-expert policies.
-
 
 ### OBC from scratch
 This command starts an On-policy Behavioral Cloning (OBC) training from scratch using all the 14 tasks.
