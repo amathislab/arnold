@@ -27,6 +27,6 @@ The human values in `data/analysis/reproduction/baoding_human.csv` use the Ball 
 Angle scaling, 20 joints in Tables 1–2 of
 [Todorov and Ghahramani (2004)](https://roboti.us/lab/papers/TodorovEMBC04.pdf).
 
-These are additional analyses from the hand-analysis PR. The supplied manuscript PDF does
-not describe these smoothness metrics or the human Baoding comparison. The numerical methods
-follow the legacy smoothness scripts and the PR; unit timestep is intentional.
+The supplied manuscript PDF does not describe these smoothness metrics or the human
+Baoding comparison. Smoothness derivatives use a unit timestep, so their values are
+expressed per simulation step rather than per second.

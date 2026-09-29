@@ -58,8 +58,8 @@ done
 
 ## 2. Running PCA or NMF inactivation analysis
 
-The command uses the current policy loader and environment factory. Supply the checkpoint
-and the directory containing either legacy per-episode recordings or compact signals:
+Supply the checkpoint and the directory containing either per-episode recordings or
+compact signals:
 
 ```bash
 python plotting/analyze_pca_inactivation.py \
@@ -129,7 +129,6 @@ in degrees. Shading is standard deviation across pairs. The default selections c
 Arnold, expert, multi-task OBC and single-task OBC; these are additional comparisons and
 are not the multiple-Arnold-checkpoint comparison described in Figure 7 of the supplied PDF.
 
-The CSI learning-curve plot reads migrated TensorBoard logs under
-`data/final_benchmarks_extra/csi_notrain_server/training/`,
-`csi_server/training/` and `csi_bc_server/training/`. Evaluation JSONs alone
-do not contain the training histories.
+
+For learning curves of policies trained inside a constrained subspace, see
+[CSI-Finetuning](csi-finetuning.md).

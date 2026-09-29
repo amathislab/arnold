@@ -12,6 +12,12 @@ each script tells you which one.
 These read the benchmark result JSONs in `data/final_benchmarks/` (and, for the PPO
 ablation, `data/final_benchmarks_extra/`).
 
+Benchmark selections are recorded in `data/analysis/reproduction/policies.json`;
+shared task labels live in `src/analysis/metadata.py`. Tables, relative-performance and
+capacity plots read `data/final_benchmarks/`; bilateral rewards read
+`data/final_benchmarks_extra/`. Radar and PPO bars use relative solved-step fractions.
+PPO normalization-ablation arms have one run and show no seed error bar.
+
 ### Radar plot
 
 Radar chart comparing multi-task performance (PPO, BC, Arnold) against the single-task
@@ -62,6 +68,43 @@ against the experts, plus an improvement-over-baseline version.
 ```bash
 python plotting/plot_arnold_ablation_bars.py
 ```
+
+### Ablation Tables
+
+```bash
+python plotting/ablation_table.py
+```
+
+Writes CSV and LaTeX tables to `data/analysis/tables/`, reporting relative solved-step
+fractions, SEM across seeds, and task-paired Wilcoxon tests with Holm correction.
+
+### Relative-Performance Plot
+
+```bash
+python plotting/plot_relative_dotplot.py
+```
+
+Compares per-task solved-step fractions for `obc_task_sv` against `obc` by default.
+Use `--method` and `--reference` to select policies. Writes `data/figures/relative_dotplot.svg`.
+
+### Model Capacity Plot
+
+```bash
+python plotting/plot_capacity_performance.py
+```
+
+Compares OBC model sizes against expert performance. Writes `capacity.svg` and
+`performance.csv` under `data/figures/capacity/`. Error bars show episode SEM for
+one run per model size.
+
+### Bilateral Reward Plot
+
+```bash
+python plotting/plot_bilateral_reward.py
+```
+
+Reads `data/final_benchmarks_extra/bilateral/bilateral.json` and compares episode
+rewards. Writes `data/figures/bilateral_reward.svg`.
 
 ## Learning curves
 
@@ -124,28 +167,9 @@ scratch for four downstream tasks: `pen`, `reorient`, `hand_middle_reach` and
 python plotting/plot_transfer_vs_scratch.py
 ```
 
-## Additional tables and plots
+### Learning curves from CSV inputs
 
-The exact benchmark selections are recorded in `data/analysis/reproduction/policies.json`;
-shared task labels live in `src/analysis/metadata.py`.
-These use the existing `data/final_benchmarks/` and `data/final_benchmarks_extra/` layout:
-
-```bash
-python plotting/ablation_table.py
-python plotting/plot_relative_dotplot.py
-python plotting/plot_capacity_performance.py
-python plotting/plot_bilateral_reward.py
-python plotting/plot_csi_analysis.py
-```
-
-Tables (CSV and LaTeX) are written under `data/analysis/tables/`. They report relative
-solved-step fractions and SEM across seeds, with task-paired Wilcoxon tests and Holm
-correction. The single-run capacity comparison uses episode SEM, explicitly reported in
-its CSV. PPO normalization-ablation arms have one run and show no seed error bar. Radar
-and PPO bars now consistently use the paper's relative solved-step fraction.
-
-The PR's optional portable CSV plotting workflow supplements the existing TensorBoard
-commands above:
+Plot the supplied fine-tuning CSV cache, or export TensorBoard logs to CSV:
 
 ```bash
 python plotting/plot_learning_curves.py --panel finetuning --raw \
@@ -163,22 +187,15 @@ Other panels require exported CSVs. Columns are
 `panel,method,seed,task,stage,step,value,metric`. Supply resumed event files in chronological
 resume order. `--offsets stage=50000000` subtracts that value from that stage's recorded
 steps. Multiple seeds are aligned on shared steps and shaded with standard deviation.
-Portable plots go to `data/figures/learning_curves/`; the original learning-curve entry
-points and their output paths are retained.
+CSV-based plots go to `data/figures/learning_curves/`.
 
-## Migrated training logs
+### Training-log inputs
 
-The retained learning-curve inputs are `arnold_single_task/`, `transfer_learning/`
-and `example_training_curve/` under `data/final_benchmarks/`. Unused experiment folders
-and their checkpoints/pickle files have been removed. Only `example_checkpoint/` retains
-the model and matching normalization file used by the examples.
-CSI event files and run arguments are stored under `training/` in `csi`,
-`csi_server`, `csi_bc_server` and `csi_notrain_server`, within
-`data/final_benchmarks_extra/`. The CSI curve plot keeps its selected runs: baseline 111,
-RL 555 and OBC 666; other migrated runs remain available.
+Single-task, transfer and base OBC logs are under `data/final_benchmarks/` in
+`arnold_single_task/`, `transfer_learning/` and `example_training_curve/`, respectively.
+These folders contain training logs and configurations. The model and matching
+normalization file used in examples are under `example_checkpoint/`.
 
-Arnold RL fine-tuning is a separate experiment, stored under `rl_finetuning/` in the
-same parent folder. Its elbow curve uses the available `elbow_263_78374700` run,
-whose arguments identify elbow pose and the 249 OBC base checkpoint; the previously
-referenced `elbow_pose_271_95774700` run was unavailable. This is a different run,
-so the curve is not claimed to reproduce that missing run.
+Arnold RL fine-tuning logs are under `data/final_benchmarks_extra/rl_finetuning/`.
+The elbow curve uses `elbow_263_78374700`, an elbow-pose run initialized from the
+249 OBC base checkpoint. It does not reproduce the unavailable `elbow_pose_271_95774700` run.

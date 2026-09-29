@@ -169,15 +169,18 @@ python src/benchmark.py \
     Both scripts and their output directory are named `csi_analysis`, but they belong to
     CSI-Finetuning, not to the [CSI analysis](csi-analysis.md) page.
 
-Both read the benchmark result JSONs written in step 4, which ship in
-`data/final_benchmarks_extra/` — so these run without steps 1–4.
+The performance plot reads benchmark result JSONs; the learning-curve plot reads
+TensorBoard logs. Both inputs ship in `data/final_benchmarks_extra/`, so the figures
+can be generated without running steps 1–4.
 
 ```bash
 python plotting/plot_csi_analysis.py
 python plotting/plot_csi_curves.py
 ```
 
-The CSI learning-curve plot reads migrated TensorBoard logs under
+The CSI learning-curve plot reads TensorBoard logs under
 `data/final_benchmarks_extra/csi_notrain_server/training/`,
 `csi_server/training/` and `csi_bc_server/training/`. Evaluation JSONs alone
 do not contain the training histories.
+
+The learning-curve plot selects baseline run 111, RL run 555 and OBC run 666.

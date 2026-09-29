@@ -1,10 +1,10 @@
 # Analysis signals
 
-The existing `plotting/collect_activations.py` continues to produce intermediate transformer
-activations and per-episode HDF5 files under `data/activations/`. New analyses can read
+`plotting/collect_activations.py` produces intermediate transformer activations and
+per-episode HDF5 files under `data/activations/`. Analysis scripts can read
 those files directly when their configured policy directory matches the recording folder.
 The analysis scripts default to the supplied compact files under
-`data/analysis/signals/<policy_id>/<task>.h5`. To analyze legacy recordings, pass
+`data/analysis/signals/<policy_id>/<task>.h5`. To analyze per-episode recordings, pass
 `--data_dir data/activations` and use matching policy selections.
 
 ## Collect compact hand recordings
@@ -24,7 +24,7 @@ python plotting/collect_signals.py --expert --task baoding_p1_ccw \
 
 Repeat for every policy/task in `data/analysis/reproduction/signals.json`. That file specifies
 analysis cohorts, not checkpoint download paths. Use each analysis's `--selections` option
-to provide a JSON with your local policy IDs. For legacy recordings use
+to provide a JSON with your local policy IDs. For per-episode recordings use
 `--data_dir data/activations` and map policy IDs to the existing recording subdirectories.
 
 Each compact file has `episode_N` groups with `actions`, `action_means`, `joint_positions`,
@@ -35,8 +35,7 @@ These are distinct from policy actions. Add `--num_success 100 --max_attempts 10
 retain successful episodes only. Failed attempts retain their episode IDs in the seed sequence.
 
 This command supports the 11 MyoHand tasks with the current compositional policy.
-For locomotion use [collect_gait.py](emg-analysis.md). It does not require atomic vocabulary
-or Task-SV changes from the rolled-back training branch.
+For locomotion use [collect_gait.py](emg-analysis.md).
 
 ## Export existing recordings
 
@@ -49,11 +48,11 @@ python src/analysis/export_signals.py \
 ```
 
 Set `--horizon` and `--dt` to the recording's environment settings. `--episodes` selects
-specific episode IDs. The importer reads raw joint positions from the legacy observation
+specific episode IDs. The importer reads raw joint positions from the per-episode observation
 layout and flattens singleton action dimensions. `muscle_controls` can be exported only
-when the original file actually contains them (or the legacy physical `activations`
-dataset); they cannot be reconstructed from policy actions alone. Legacy physical controls
-are marked `before_step`, following their original recording convention.
+when the original file actually contains them (or a physical `activations`
+dataset); they cannot be reconstructed from policy actions alone. Physical controls
+imported from per-episode recordings are marked `before_step`, following their original recording convention.
 
 The supplied compact recordings can be analyzed directly. Collect or import recordings
 when adding policies or tasks beyond the supplied selections.

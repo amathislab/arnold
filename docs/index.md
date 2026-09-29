@@ -36,22 +36,23 @@ released ones, and reproduce figures in the paper.
 
 ## Model checkpoints and benchmark results
 
-The existing model and benchmark release is available on Zenodo:
+The model and benchmark release is available on Zenodo:
 
 [:material-database: Zenodo record 21807280](https://zenodo.org/records/21807280){ .md-button .md-button--primary }
 
 The git repository contains only the code plus small configuration files. External inputs
-must be extracted into `data/` before running the corresponding scripts. Newly prepared
-packages use an updated layout; see [Data and checkpoints](data.md) for the exact directory layout.
+must be extracted into `data/` before running the corresponding scripts. See [Data and checkpoints](data.md) for the exact directory layout.
 
-## Reproducing the paper
+## Plots and analyses
 
 | Result | Page |
 | --- | --- |
-| Radar plot, ablation bar plots, and all learning curves | [Replicate plots](replicate-plots.md) |
-| Effective dimensionality of the learned actions | [CSI analysis](csi-analysis.md) |
+| Performance plots, ablation tables, and learning curves | [Replicate plots](replicate-plots.md) |
+| Effective action dimensionality and control-subspace comparisons | [CSI analysis](csi-analysis.md) |
 | Training inside a constrained action subspace | [CSI-Finetuning](csi-finetuning.md) |
 | MT-SAC vs. MT-PPO | [Multi-task RL baselines](mt-baselines.md) |
+| Hand smoothness and Baoding dimensionality | [Hand analysis](hand-analysis.md) |
+| Human EMG correlations and gait factors | [EMG and gait analysis](emg-analysis.md) |
 
 All figures are written under `data/figures/`.
 

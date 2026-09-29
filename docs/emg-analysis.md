@@ -36,7 +36,7 @@ Human profiles use subjects 04–12 walking at 4.5 km/h from
 licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 The profiles are derived gait-cycle averages of the nine recorded muscles.
 
-## Human input and legacy migration
+## Importing human profiles
 
 The importer first loads subjects 04–12 at 4.5 km/h directly from the Mathis Lab
 [Kinesis assets dataset](https://huggingface.co/datasets/amathislab/kinesis-assets/tree/main/emg_assets/human_emg):
@@ -63,15 +63,14 @@ To explicitly use local/custom profiles without a network request:
 python src/analysis/import_human_emg.py --local-only --input_dir path/to/human_emg
 ```
 
-The initial local download was verified against the Hugging Face LFS SHA-256 hashes;
-its file URLs and checksums are saved in `human_profiles/source.json`.
+Source URLs and SHA-256 checksums for the supplied local profiles are recorded in
+`human_profiles/source.json`.
 
-Simulation profiles are produced by `collect_gait.py` and `segment_gait.py`, without the
-old repository's private absolute paths or duplicate rollout implementations.
+Simulation profiles are produced by `collect_gait.py` and `segment_gait.py`.
 
 The cross-human reference uses each subject's correlation with the mean of the other
-subjects (the PR definition). The legacy notebook instead averaged pairwise correlations;
-these definitions are different. Policy statistics pair subjects, Fisher-transform their
+subjects, rather than the average of pairwise subject correlations. Policy statistics
+pair subjects, Fisher-transform their
 mean correlations, and apply Bonferroni correction across the three policy comparisons.
 These EMG and factor analyses extend the supplied manuscript PDF rather than reproducing
 an EMG figure contained in that version.

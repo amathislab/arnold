@@ -127,12 +127,12 @@ Environment and expert configurations are already included under `data/env_confi
 | --- | --- | --- |
 | `data/final_benchmarks/` | Per-method/per-seed result JSONs and expert references; `arnold_single_task/` and `transfer_learning/` logs; `example_training_curve/` base OBC logs; `example_checkpoint/` with one checkpoint and matching normalization file. | Performance, ablation, student, transfer and fine-tuning plots; checkpoint-loading examples. |
 | `data/final_benchmarks_extra/` | CSI evaluation results and `csi*/training/` logs; bilateral and normalization ablations; `mt-curves/` caches; `rl_finetuning/` logs. | CSI, baseline and RL fine-tuning plots. |
-| `data/analysis/` | Curve caches, `reproduction/` metadata, compact hand signals, human/simulation EMG inputs, gait recordings and exported tables. | Portable learning curves, PCA/NMF summaries and additional analyses. |
+| `data/analysis/` | Curve caches, `reproduction/` metadata, compact hand signals, human/simulation EMG inputs, gait recordings and exported tables. | Learning curves, PCA/NMF summaries, hand and EMG analyses. |
 | `data/final_checkpoints/` | Separately released model checkpoints and associated normalization/configuration files. | Evaluation, fresh recordings and resumed training beyond the bundled example. |
 | `data/expert_policies/` | Expert policy checkpoints (`EXPERT_POLICIES_PATH`). | Expert evaluation and rollout collection. |
 | `data/kinesis/` | Locomotion model assets. | Instantiating the Kinesis environment. |
 
-Extract the updated packages from the repository root:
+Extract the packages from the repository root:
 
 ```bash
 mkdir -p data
@@ -329,7 +329,7 @@ You can choose `<task_name>` from the following list:
 
 ## Generating Performance Plots (used in the paper)
 
-Scripts for the paper's performance plots. Figures are written under `data/figures/`.
+Scripts for performance plots and benchmark tables. Figures are written under `data/figures/`.
 
 ### Radar Plot
 
@@ -363,6 +363,46 @@ Scripts for the paper's performance plots. Figures are written under `data/figur
   ```bash
   python plotting/plot_arnold_ablation_bars.py
   ```
+
+### Ablation Tables
+
+```bash
+python plotting/ablation_table.py
+```
+
+Writes CSV and LaTeX tables to `data/analysis/tables/`, reporting relative solved-step
+fractions, SEM across seeds, and task-paired Wilcoxon tests with Holm correction.
+
+### Relative-Performance Plot
+
+```bash
+python plotting/plot_relative_dotplot.py
+```
+
+Compares per-task solved-step fractions for `obc_task_sv` against `obc` by default.
+Use `--method` and `--reference` to select policies. Writes `data/figures/relative_dotplot.svg`.
+
+### Model Capacity Plot
+
+```bash
+python plotting/plot_capacity_performance.py
+```
+
+Compares OBC model sizes against expert performance. Writes `capacity.svg` and
+`performance.csv` under `data/figures/capacity/`. Error bars show episode SEM for
+one run per model size.
+
+### Bilateral Reward Plot
+
+```bash
+python plotting/plot_bilateral_reward.py
+```
+
+Reads `data/final_benchmarks_extra/bilateral/bilateral.json` and compares episode
+rewards. Writes `data/figures/bilateral_reward.svg`.
+
+See [Performance plots and tables](docs/replicate-plots.md#performance-plots) for input
+requirements and benchmark selections.
 
 ## PCA Analysis of Trained Policies
 
@@ -425,9 +465,44 @@ historical PCA/NMF summary is plotted.
   python plotting/plot_action_pca_variance.py --activations_dir data/activations/example_64670238 --out_dir data/figures/cumulative_variance/example_64670238
   ```
 
+### Comparing Control Subspaces
+
+```bash
+python plotting/analyze_subspaces.py --data_dir data/analysis/signals
+python plotting/analyze_subspaces.py --selection capacity_recordings --successful 100
+```
+
+Compares control subspaces using PVD and PAD and writes measurements and figures to
+`data/figures/subspaces/`. See [Control subspace comparisons](docs/csi-analysis.md#comparing-subspaces)
+for policy selections and interpretation, and [Analysis signals](docs/signals.md) for
+collecting or importing the required recordings.
+
+## Hand Smoothness and Baoding PCA
+
+```bash
+python plotting/analyze_smoothness.py
+python plotting/analyze_baoding_kinematics.py
+```
+
+Uses compact hand recordings under `data/analysis/signals/`. Smoothness metrics and
+figures go to `data/figures/smoothness/`; Baoding dimensionality and human-comparison
+figures go to `data/figures/baoding_pca/`. See [Hand smoothness and Baoding PCA](docs/hand-analysis.md)
+for inputs, metric definitions and recording commands.
+
+## EMG and Gait Factors
+
+```bash
+python plotting/analyze_emg.py
+python plotting/analyze_gait_factors.py
+```
+
+Uses human and simulation profiles under `data/analysis/emg/` and writes CSVs and SVGs
+to `data/figures/emg/` and `data/figures/gait_factors/`. See [EMG and gait factors](docs/emg-analysis.md)
+for human-profile import, gait collection, segmentation and analysis methods.
+
 ## CSI Analysis
 
-The released benchmark results in `data/final_benchmarks_extra/` already cover every arm, so **to reproduce only the figures, skip to step 5**. Steps 1-4 regenerate the experiments from scratch.
+The released benchmark results and training logs in `data/final_benchmarks_extra/` already cover every arm, so **to reproduce only the figures, skip to step 5**. Steps 1-4 regenerate the experiments from scratch.
 
 Below, `<task>` is one of the 14 tasks listed above and `<dim>` is one of the seven action-space sizes used in the paper: `1, 2, 5, 10, 20, 30, 40`.
 
@@ -636,6 +711,7 @@ Learning-curve figures. Figures are written under `data/figures/`.
 
 ### RL Fine-tuning Curves
 
+- **Inputs**: `data/final_benchmarks_extra/rl_finetuning/` and `data/final_benchmarks/example_training_curve/` (TensorBoard logs).
 - **Script**: `plotting/plot_rl_finetuning_curves.py`
 - **Description**: Compares the base multi-task OBC policy against several single-task policies fine-tuned with PPO, plotting the solved fraction versus training steps from TensorBoard logs. Experiment paths are set near the top of the script.
 - **Output**: `data/figures/rl_finetuning_combined/rl_finetuning_combined_solved_curves.png` / `.svg`.
@@ -678,6 +754,18 @@ Learning-curve figures. Figures are written under `data/figures/`.
   python plotting/plot_transfer_vs_scratch.py
   ```
 
+### Learning Curves from CSV Inputs
+
+```bash
+python plotting/plot_learning_curves.py --panel finetuning --raw \
+    --smoothing savgol --window 101 --combine_tasks
+```
+
+Reads the supplied fine-tuning cache at `data/analysis/learning_curves.csv.gz` and
+writes figures to `data/figures/learning_curves/`. Other panels require exported CSVs.
+See [Learning curves from CSV inputs](docs/replicate-plots.md#learning-curves-from-csv-inputs)
+for the export command, column definitions and multi-seed behavior.
+
 ## License
 
 This project is licensed under the BSD 3-Clause License.
@@ -691,32 +779,3 @@ this repository and must be obtained separately from myo_sim and Kinesis under
 the Apache License 2.0.
 
 See the [LICENSE](LICENSE) file for the full terms and per-file attributions.
-
-## Additional reproduction analyses
-
-The reproduction PRs are adapted to the existing `src/`, `plotting/` and `data/` layout.
-Training/evaluation entry points and the original TensorBoard learning-curve commands
-remain available.
-
-- [Tables and portable learning curves](docs/replicate-plots.md): `ablation_table.py`,
-  capacity/bilateral/relative-performance plots and `plot_learning_curves.py`.
-- [Hand smoothness and Baoding PCA](docs/hand-analysis.md): `analyze_smoothness.py` and
-  `analyze_baoding_kinematics.py`.
-- [Control subspaces](docs/csi-analysis.md): PCA/NMF interventions and PVD/PAD comparisons.
-- [EMG and gait factors](docs/emg-analysis.md): collection, segmentation, human correlations
-  and rotated PCA. Human profiles can be loaded with `src/analysis/import_human_emg.py`; supplied simulation profiles and gait recordings are under `data/analysis/emg/`.
-- [Analysis signals](docs/signals.md): compact collection and import of existing recordings.
-
-Reusable numerical methods and shared task labels live in `src/analysis/`; analysis
-selections and human references live in `data/analysis/reproduction/`; generated figures stay under `data/figures/`. The supplied manuscript
-supports the solved-fraction and PCA definitions; smoothness, EMG and NMF are additional
-analyses from the PRs/legacy repository.
-
-Learning-curve inputs: single-task and transfer experiments are under
-`data/final_benchmarks/arnold_single_task/` and `transfer_learning/`.
-CSI TensorBoard logs live in the corresponding `data/final_benchmarks_extra/csi*/training/`
-folders. Arnold RL fine-tuning logs live separately in
-`data/final_benchmarks_extra/rl_finetuning/`.
-
-The base OBC training logs used by `plot_rl_finetuning_curves.py` are in
-`data/final_benchmarks/example_training_curve/`.
