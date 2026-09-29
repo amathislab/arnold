@@ -47,13 +47,13 @@ nav:
       - Installation: installation.md
       - Data and checkpoints: data.md
       - Tasks: tasks.md
-  - Usage:
+  - Basic Usage:
       - Training: training.md
       - Evaluation: evaluation.md
-      - Analysis signals: signals.md
-      - Vocabulary ablation: vocabulary-ablation.md
   - Plots and analyses:
       - Replicate plots: replicate-plots.md
+      - Analysis signals: signals.md
+      - Vocabulary ablation: vocabulary-ablation.md
       - Hand smoothness and PCA: hand-analysis.md
       - EMG and gait factors: emg-analysis.md
       - CSI analysis: csi-analysis.md
