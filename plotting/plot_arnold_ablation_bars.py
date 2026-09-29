@@ -8,22 +8,9 @@ import matplotlib.pyplot as plt
 from definitions import ROOT_DIR
 
 # Reuse the same mappings from plot_radar.py
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little\n reach",
-    "hand_index_reach": "Index\n reach",
-    "hand_middle_reach": "Middle\n reach",
-    "hand_ring_reach": "Ring\n reach",
-    "hand_thumb_reach": "Thumb\n reach",
-    "reorient": "Die\n reorient",
-    "pen": "Pen\n reorient",
-    "baoding_p1_cw": "Baoding\n CW",
-    "baoding_p1_ccw": "Baoding\n CCW",
-    "baoding_p2_overlap": "Baoding\n hard",
-    "baoding_p2": "Baoding\n harder",
-    "elbow_pose": "Elbow\n pose",
-    "relocate": "Object\n relocation",
-    "kinesis": "Walk to\n point",
-}
+from analysis.metadata import task_display_names
+
+TASK_NAME_MAPPING = task_display_names(multiline=True)
 
 TASK_METRIC_MAP = {
     "hand_little_reach": "solved_step_frac",
@@ -204,7 +191,9 @@ def create_bar_plots_internal(subtract_baseline=False):
 
         # Calculate average performance and SEM
         avg_performance = np.mean(performances)
-        avg_sem = np.std(performances) / np.sqrt(len(performances))
+        seed_averages = [np.mean([result[task]["avg_solved_step_frac"] / expert_results[task]["avg_solved_step_frac"] * 100
+                                 for task in tasks]) for result in results_list]
+        avg_sem = np.std(seed_averages, ddof=1) / np.sqrt(len(seed_averages))
 
         # Store average performance
         method_average_performances[method] = avg_performance

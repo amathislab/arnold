@@ -9,22 +9,21 @@ from scipy.signal import savgol_filter
 import itertools
 
 # Define the base directory for fine-tuning experiments
-FINETUNE_EXPERIMENTS_BASE_DIR = os.path.join(ROOT_DIR, "data", "expert_policies")
+FINETUNE_EXPERIMENTS_BASE_DIR = os.path.join(ROOT_DIR, "data", "final_benchmarks_extra", "rl_finetuning")
 
 # Base experiment path (student policy)
 BASE_EXPERIMENT_PATH = os.path.join(
     ROOT_DIR,
     "data",
-    "student_policies",
-    "arnold_multi_task",
-    "249_arnold_htr_hir_hmr_hrr_hlr_r_p_bpc_bpc_bp_bpo_ep_r_k_k_r_bpc_bp_bpo_k_k_r_bpc_bp_bpo_k_k_bc_ppo_seed_1",
+    "final_benchmarks",
+    "example_training_curve",
 )
 
 # List of fine-tuning experiment names
 FINETUNE_EXPERIMENT_NAMES = [
     "baoding_p2_overlap_262_67874700",
     "baoding_p2_261_64874700",
-    "elbow_pose_271_95774700",
+    "elbow_263_78374700",
     "reorient_258_71274700",
     "kinesis_264_68074700",
 ]

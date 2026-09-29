@@ -3,7 +3,15 @@
 Both baselines are trained with the same script, `src/main_sac_multi_task.py` (multi-task
 SAC/PPO with an MLP policy); MT-PPO is selected with `--algo ppo`.
 
-## 1. Training
+To generate new baseline benchmark results:
+
+1. Train the chosen baseline, MT-SAC or MT-PPO.
+2. Benchmark its saved checkpoints.
+3. Generate the performance figures from the benchmark results.
+
+Learning curves use training histories and do not require benchmarking.
+
+## Training
 
 === "MT-SAC"
 
@@ -48,7 +56,7 @@ SAC/PPO with an MLP policy); MT-PPO is selected with `--algo ppo`.
         --seed 771
     ```
 
-## 2. Benchmarking
+## Benchmarking
 
 Both baselines are evaluated with `src/benchmark_multi_task_mlp.py`. The task order,
 environment id and algorithm are recovered from the `args.json` saved next to each

@@ -53,23 +53,23 @@ def find_finetune_curve_file(
     ) :
     # output/training/server/ongoing/222_baoding_p1_ccw_csi1_baoding_p1_ccw_mlp_ppo_seed_0_20251014092354
     pattern = os.path.join(base_path, f"{prefix}_{task}_csi{csi_dim}_*", "PPO_0", "events.out.tfevents.*")
-    files = glob.glob(pattern)
+    files = sorted(glob.glob(pattern))
     # assert len(files) == 1, f"Expected 1 file, got {len(files)}"
     if len(files) == 0:
         return None
-    return files[0]
+    return os.path.dirname(files[0])
 
 def find_training_curve_file(
         base_path,
         prefix,
         task,
     ) :
-    pattern = os.path.join(base_path, f"{prefix}_gpu_csi_all_bc_student_{task}*", "PPO_0", "events.out.tfevents.*")
-    files = glob.glob(pattern)
+    pattern = os.path.join(base_path, f"{prefix}_gpu_csi_all_bc_student_{task}{task}_*", "PPO_0", "events.out.tfevents.*")
+    files = sorted(glob.glob(pattern))
     # assert len(files) == 1, f"Expected 1 file, got {len(files)}"
     if len(files) == 0:
         return None
-    return files[0]
+    return os.path.dirname(files[0])
 
 def plot_all_tasks_comparison(all_tasks_data) :
     '''
@@ -286,7 +286,7 @@ if __name__ == "__main__" :
         "baoding_p2_overlap",
     ]
     csi_dims = [1, 2, 5, 10, 20, 30, 40]
-    root = "output/training/server/ongoing"
+    root = os.path.join(ROOT_DIR, "data", "final_benchmarks_extra")
 
     # file = find_finetune_curve_file(
     #     base_path = root,
@@ -321,7 +321,7 @@ if __name__ == "__main__" :
         all_tasks_data[task]["csi_subspaces"] = this_csi_subspaces
         
         training_curve_file = find_training_curve_file(
-            base_path = root,
+            base_path = os.path.join(root, "csi_notrain_server", "training"),
             prefix = "111",
             task = task,
         )
@@ -331,7 +331,7 @@ if __name__ == "__main__" :
         
         for csi_dim in this_csi_subspaces :
             rl_finetune_curve_file = find_finetune_curve_file(
-                base_path = root,
+                base_path = os.path.join(root, "csi_server", "training"),
                 prefix = "555",
                 task = task,
                 csi_dim = csi_dim,
@@ -340,7 +340,7 @@ if __name__ == "__main__" :
                 all_tasks_data[task]["rl_finetune"].append(rl_finetune_curve_file)
         for csi_dim in this_csi_subspaces :
             bc_finetune_curve_file = find_finetune_curve_file(
-                base_path = root,
+                base_path = os.path.join(root, "csi_bc_server", "training"),
                 prefix = "666",
                 task = task,
                 csi_dim = csi_dim,

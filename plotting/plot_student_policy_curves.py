@@ -9,25 +9,9 @@ from definitions import ROOT_DIR
 from matplotlib.cm import plasma
 
 # Add the task name mapping at the top of the file
-TASK_NAME_MAPPING = {
-    "hand_little_reach": "Little reach",
-    "hand_index_reach": "Index reach",
-    "hand_middle_reach": "Middle reach",
-    "hand_ring_reach": "Ring reach",
-    "hand_thumb_reach": "Thumb reach",
-    "hand_pose": "Hand pose",
-    "pen": "Pen reorient",
-    "reorient": "Die reorient",
-    "relocate": "Object relocation",
-    "baoding_p1_cw": "Baoding CW",
-    "baoding_p1_ccw": "Baoding CCW",
-    "baoding_p2_overlap": "Baoding hard",
-    "baoding_p2": "Baoding harder",
-    "elbow_pose": "Elbow pose",
-    "elbow_joint_pose": "Elbow joint",
-    "finger_pose": "Finger pose",
-    "kinesis": "Walk to point",
-}
+from analysis.metadata import task_display_names
+
+TASK_NAME_MAPPING = task_display_names(include_extra=True)
 
 # The tensorboard "solved" scalar is a per-episode solved-step fraction in [0, 1],
 # except for these tasks, which log it as a percentage in [0, 100].
@@ -146,7 +130,7 @@ def running_average(x, window_size=100):
 def main():
     # Setup paths and parameters
     student_policies_dir = os.path.join(
-        ROOT_DIR, "data", "student_policies", "arnold_single_task"
+        ROOT_DIR, "data", "final_benchmarks", "arnold_single_task"
     )
     attribute = "solved"  # The metric we want to plot
 

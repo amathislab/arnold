@@ -50,8 +50,11 @@ nav:
   - Usage:
       - Training: training.md
       - Evaluation: evaluation.md
-  - Reproducing the paper:
+      - Analysis signals: signals.md
+  - Plots and analyses:
       - Replicate plots: replicate-plots.md
+      - Hand smoothness and PCA: hand-analysis.md
+      - EMG and gait factors: emg-analysis.md
       - CSI analysis: csi-analysis.md
       - CSI-Finetuning: csi-finetuning.md
       - Multi-task RL baselines: mt-baselines.md
@@ -97,7 +100,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/amathislab/arnold
     - icon: fontawesome/solid/database
-      link: https://zenodo.org/records/21493316
+      link: https://zenodo.org/records/21807280
 
 extra_css:
   - stylesheets/extra.css

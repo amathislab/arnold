@@ -35,7 +35,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/arnold/rl_model_64670238_steps.zip \
+    --load data/final_benchmarks/example_checkpoint/rl_model_64670238_steps.zip \
     --task kinesis \
     --arnold \
     --num_episodes 10 \
@@ -47,7 +47,7 @@ python src/benchmark.py \
 
 ```bash
 python src/benchmark.py \
-    --load data/student_policies/obc/rl_model_54974700_steps.zip \
+    --load data/final_checkpoints/obc/seed_0/rl_model_54974700_steps.zip \
     --task relocate \
     --arnold \
     --num_episodes 10 \

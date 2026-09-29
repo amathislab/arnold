@@ -8,10 +8,10 @@ data/myosuite
 data/student_policies
 data/videos/
 data/benchmarks
-data/final_benchmarks
+data/final_benchmarks/
 data/final_benchmarks_extra
 data/figures
-
+data/analysis
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
