@@ -52,7 +52,7 @@ and 2; the archive has no shared seeds 0 and 2 at this step.
 Evaluate each checkpoint with the same 14 tasks and 200 episodes per task.
 `benchmark.py` reads the task list and observation history from the run's
 `args.json`; it restores observation normalization with `--normalize` and
-passes the original training task index to Task-SV checkpoints. Repeated task
+passes the original training task index to Task-SV checkpoints. The vocabulary type (task-specific or shared) is also loaded from the checkpoint. Repeated task
 names are evaluated once. Use stochastic actions for comparison with the
 paper; add `--deterministic` only for a separately labelled analysis.
 
