@@ -30,10 +30,16 @@ into a shared subspace.
 `elbow_pose` (MyoElbow, 6 muscles), `relocate` (MyoArm, 63) and `kinesis` (MyoLeg, 80) have
 different action dimensionalities and are excluded. See [Tasks](tasks.md).
 
-!!! warning "Run the steps in order"
-    Each step consumes the output of the previous one.
+To generate new inactivation results:
 
-## 1. Collecting activations and actions
+1. Collect activations and actions from a trained policy.
+2. Fit PCA or NMF components and evaluate inactivation performance.
+3. Plot the resulting inactivation curves.
+
+Cumulative explained variance uses the recordings from the first step and can be plotted
+independently of the inactivation analysis.
+
+## Collecting activations and actions
 
 Rolls out a trained policy and saves per-episode observations, action means, rewards, and
 (for Arnold) intermediate activations. The action means feed the PCA steps below.
@@ -56,7 +62,7 @@ for task in hand_thumb_reach hand_index_reach hand_middle_reach hand_ring_reach 
 done
 ```
 
-## 2. Running PCA or NMF inactivation analysis
+## Running PCA or NMF inactivation analysis
 
 Supply the checkpoint and the directory containing either per-episode recordings or
 compact signals:
@@ -84,7 +90,7 @@ For the additional NMF analysis, collect physical signals with
 actuator controls after actuator processing; it does not factor signed policy actions.
 NMF uses ranks 1–38 and ten seeded fits; PCA uses ranks 1–39. `--dimensions` selects a subset.
 
-## 3. Plotting PCA inactivation performance
+## Plotting PCA inactivation performance
 
 ```bash
 python plotting/plot_pca_inactivation.py \
@@ -100,7 +106,7 @@ reproduction results should therefore be distinguished.
 
 Figures are saved under `data/figures/pca_inactivation/` as PNG and SVG.
 
-## 4. Plotting cumulative explained variance of actions
+## Plotting cumulative explained variance of actions
 
 Plots the cumulative explained variance of the actions (per-task and global) versus the
 number of principal components.

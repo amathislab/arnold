@@ -6,7 +6,7 @@ To reproduce the training experiments there are two supported ways to set up an 
     The installation usually takes less than 30 minutes on a modern computer with a fast
     internet connection.
 
-## Method 1: Docker
+## Docker
 
 The provided `Dockerfile` builds an image that can run all the Arnold experiments. This
 assumes Docker is installed on your system.
@@ -26,7 +26,7 @@ docker run -it --rm arnold_image /bin/bash
 This starts an interactive session inside the container, from which you can execute the
 training or evaluation scripts.
 
-## Method 2: Conda environment
+## Conda environment
 
 Alternatively, create a conda environment and install the dependencies manually.
 

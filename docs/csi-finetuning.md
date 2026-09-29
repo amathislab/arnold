@@ -21,7 +21,15 @@ action-space sizes used in the paper: `1, 2, 5, 10, 20, 30, 40`. Unlike the
 [CSI analysis](csi-analysis.md), this experiment is not restricted to MyoHand — the released
 results cover all 14 tasks at every dimension.
 
-## 1. Train the base MLP policy (OBC, 5M steps)
+Run the experiment in this order:
+
+1. Train the base MLP policy with OBC.
+2. Extract its CSI action subspace.
+3. Fine-tune the OBC and PPO arms inside that subspace; keep the frozen arm untrained.
+4. Benchmark the frozen and fine-tuned arms.
+5. Generate the [related figures](#related-figures).
+
+## Train the base MLP policy (OBC, 5M steps)
 
 Trains the unconstrained MLP policy with On-policy Behavioral Cloning (`imitation_coef=1`,
 `pg_coef=0`).
@@ -40,7 +48,7 @@ python src/main_bc_ppo.py \
 
 The checkpoint is written to `output/training/ongoing/<run_name>/rl_model_5000000_steps.zip`.
 
-## 2. Extract the CSI action subspace
+## Extract the CSI action subspace
 
 Rolls the trained policy out and runs PCA on its actions to obtain the control subspace.
 
@@ -55,7 +63,7 @@ python src/main_csi_get_subspace.py \
 
 This writes `output/<task>_csi/subspace.npy` and `output/<task>_csi/mean.npy`.
 
-## 3. Constrain to `<dim>` components and fine-tune
+## Constrain to `<dim>` components and fine-tune
 
 Three arms are compared, all constrained to the same subspace.
 
@@ -111,7 +119,7 @@ Three arms are compared, all constrained to the same subspace.
 Both fine-tuning arms resume from the 5M-step base checkpoint, so their own checkpoints are
 saved at `rl_model_10000000_steps.zip`.
 
-## 4. Benchmark each arm
+## Benchmark each arm
 
 Evaluate every (task, `<dim>`) pair and write the results where the plotting scripts look
 for them:
