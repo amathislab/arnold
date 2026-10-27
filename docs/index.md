@@ -1,6 +1,6 @@
 # Arnold
 
-**A generalist muscle transformer policy.**
+**A multi-task, multi-embodiment muscle transformer policy.**
 
 Arnold is a transformer policy trained to control musculoskeletal models across 14
 manipulation and locomotion tasks spanning four embodiments. This site documents how to

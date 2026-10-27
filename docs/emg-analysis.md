@@ -72,5 +72,4 @@ The cross-human reference uses each subject's correlation with the mean of the o
 subjects, rather than the average of pairwise subject correlations. Policy statistics
 pair subjects, Fisher-transform their
 mean correlations, and apply Bonferroni correction across the three policy comparisons.
-These EMG and factor analyses extend the supplied manuscript PDF rather than reproducing
-an EMG figure contained in that version.
+The revised manuscript reports these EMG and gait-factor analyses in Figure 4.

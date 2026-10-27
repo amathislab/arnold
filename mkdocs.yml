@@ -1,5 +1,5 @@
 site_name: Arnold
-site_description: A generalist muscle transformer policy
+site_description: A multi-task, multi-embodiment muscle transformer policy
 site_url: https://amathislab.github.io/arnold/
 repo_url: https://github.com/amathislab/arnold
 repo_name: amathislab/arnold
